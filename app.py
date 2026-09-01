@@ -190,6 +190,53 @@ def translator_list():
     return render_template('translator_list.html', profiles=pagination.items,
                            pagination=pagination, lang_filter=lang, LANGUAGES=LANGUAGES)
 
+@app.route('/api/translators')
+def api_translators():
+    """JSON API cho client-side filtering realtime."""
+    profiles = TranslatorProfile.query.order_by(TranslatorProfile.rating.desc()).all()
+    data = []
+    for p in profiles:
+        # Lấy giá thấp nhất từ services
+        min_price = None
+        if p.services:
+            prices = [s.basic_price for s in p.services if s.basic_price]
+            min_price = min(prices) if prices else None
+
+        # Lấy thời gian hoàn thành thấp nhất từ services (parse số ngày)
+        min_days = None
+        if p.services:
+            for s in p.services:
+                for field in [s.basic_delivery, s.standard_delivery, s.premium_delivery]:
+                    if field:
+                        import re
+                        nums = re.findall(r'\d+', field)
+                        if nums:
+                            d = int(nums[0])
+                            if min_days is None or d < min_days:
+                                min_days = d
+
+        # Tách languages và badges thành list
+        langs = [l.strip() for l in (p.languages or '').split(',') if l.strip()]
+        badges = [b.strip() for b in (p.badges or '').split(',') if b.strip()]
+
+        data.append({
+            'id': p.id,
+            'user_id': p.user_id,
+            'name': p.user.name,
+            'initial': p.user.name[0].upper() if p.user.name else '?',
+            'title': p.title or '',
+            'languages': langs,
+            'badges': badges,
+            'rating': float(p.rating or 0),
+            'total_reviews': p.total_reviews or 0,
+            'min_price': min_price,
+            'completion_days': min_days,
+            'is_verified': p.is_verified,
+            'profile_url': url_for('translator_profile', profile_id=p.id),
+            'chat_url': url_for('direct_chat', translator_user_id=p.user_id),
+        })
+    return jsonify(data)
+
 @app.route('/translator/<int:profile_id>')
 def translator_profile(profile_id):
     profile = TranslatorProfile.query.get_or_404(profile_id)
