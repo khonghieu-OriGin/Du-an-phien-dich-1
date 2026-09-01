@@ -1,3 +1,4 @@
+
 # VietTranslate - Nền tảng Thuê Phiên Dịch Viên
 
 Đây là phiên bản prototype của nền tảng kết nối Người thuê dịch thuật và Phiên dịch viên (Freelancer), được xây dựng bằng Python (Flask) và Tailwind CSS.
@@ -42,3 +43,6 @@
 ## Công nghệ sử dụng
 - **Backend:** Flask, Flask-SQLAlchemy (SQLite)
 - **Frontend:** HTML5, Tailwind CSS (via CDN), Vanilla JavaScript
+=======
+# Du-an-phien-dich-1
+>>>>>>> 9117594e2197d3f28c750d6771124f7d442b7ff5
