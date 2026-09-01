@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-gray-50 flex-grow py-8">
+    <div class="container mx-auto px-4 max-w-6xl">
+        
+        <div class="mb-6">
+            <a href="{{ url_for('admin_dashboard') }}" class="text-sm text-blue-600 hover:underline flex items-center gap-1 mb-2">&larr; Dashboard</a>
+            <h1 class="text-2xl font-bold text-gray-800">Quản lý Bài đăng (Jobs)</h1>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Filter -->
+            <div class="bg-gray-50 border-b border-gray-200 px-6 py-4 flex gap-4">
+                <a href="?status=all" class="px-3 py-1.5 rounded text-sm font-medium {% if status_filter == 'all' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Tất cả</a>
+                <a href="?status=open" class="px-3 py-1.5 rounded text-sm font-medium {% if status_filter == 'open' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Đang mở</a>
+                <a href="?status=flagged" class="px-3 py-1.5 rounded text-sm font-medium text-red-600 {% if status_filter == 'flagged' %}bg-red-50 border border-red-200{% else %}hover:bg-red-50{% endif %}">Bị gỡ (Flagged)</a>
+                <a href="?status=completed" class="px-3 py-1.5 rounded text-sm font-medium {% if status_filter == 'completed' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Đã hoàn thành</a>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-sm text-gray-500">
+                            <th class="px-6 py-3 font-medium">Tiêu đề Job</th>
+                            <th class="px-6 py-3 font-medium">Người đăng</th>
+                            <th class="px-6 py-3 font-medium">Trạng thái</th>
+                            <th class="px-6 py-3 font-medium">Ngày đăng</th>
+                            <th class="px-6 py-3 font-medium text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        {% for job in jobs %}
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 {% if job.is_flagged %}bg-red-50/30{% endif %}">
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-gray-800 max-w-xs truncate" title="{{ job.title }}">{{ job.title }}</div>
+                                <div class="text-xs text-gray-500">{{ job.category }} | {{ job.source_lang }} ➔ {{ job.target_lang }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">{{ job.hirer.name }}</td>
+                            <td class="px-6 py-4">
+                                {% if job.is_flagged %}
+                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">Bị gỡ</span>
+                                {% elif job.status == 'open' %}
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">Đang mở</span>
+                                {% elif job.status == 'contracted' %}
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">Đã ký HĐ</span>
+                                {% elif job.status == 'completed' %}
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">Hoàn thành</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-gray-500">{{ job.created_at.strftime('%d/%m/%Y') }}</td>
+                            <td class="px-6 py-4 text-right space-x-2">
+                                <a href="{{ url_for('job_detail', job_id=job.id) }}" target="_blank" class="text-blue-600 hover:underline text-xs">Xem</a>
+                                
+                                <form method="POST" action="{{ url_for('admin_flag_job', job_id=job.id) }}" class="inline">
+                                    {% if job.is_flagged %}
+                                    <button type="submit" class="text-green-600 hover:underline text-xs">Khôi phục</button>
+                                    {% else %}
+                                    <button type="submit" class="text-yellow-600 hover:underline text-xs" onclick="return confirm('Gỡ bỏ bài đăng này khỏi danh sách công khai?');">Gỡ bỏ</button>
+                                    {% endif %}
+                                </form>
+
+                                <form method="POST" action="{{ url_for('admin_delete_job', job_id=job.id) }}" class="inline">
+                                    <button type="submit" class="text-red-600 hover:underline text-xs" onclick="return confirm('CẢNH BÁO: Xoá vĩnh viễn bài đăng này khỏi cơ sở dữ liệu?');">Xoá vĩnh viễn</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">Không có dữ liệu bài đăng.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

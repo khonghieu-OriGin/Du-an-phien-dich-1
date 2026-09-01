@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-blue-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">Tìm Phiên Dịch Viên Phù Hợp</h1>
+        <p class="text-blue-100 max-w-2xl mx-auto text-sm md:text-base">Lựa chọn từ hàng ngàn chuyên gia được đánh giá cao trên nền tảng của chúng tôi. Tìm kiếm theo ngôn ngữ, đánh giá và kỹ năng.</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+        
+        <!-- Sidebar Filter -->
+        <aside class="w-full lg:w-1/4">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 sticky top-24">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-800">Bộ lọc tìm kiếm</h3>
+                    <a href="{{ url_for('translator_list') }}" class="text-xs text-blue-600 hover:underline">Xoá lọc</a>
+                </div>
+                
+                <form method="GET" action="{{ url_for('translator_list') }}" class="space-y-6">
+                    <!-- Ngôn ngữ -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Ngôn ngữ</label>
+                        <select name="lang" class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 border bg-gray-50">
+                            <option value="">Tất cả ngôn ngữ</option>
+                            {% for l, flag, cert in LANGUAGES %}
+                                <option value="{{ l }}" {% if lang_filter == l %}selected{% endif %}>{{ flag }} {{ l }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Đánh giá -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Đánh giá tối thiểu</label>
+                        <select name="rating" class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 border bg-gray-50">
+                            <option value="">Mọi đánh giá</option>
+                            <option value="4.5" {% if request.args.get('rating') == '4.5' %}selected{% endif %}>Từ 4.5 sao trở lên</option>
+                            <option value="4.0" {% if request.args.get('rating') == '4.0' %}selected{% endif %}>Từ 4.0 sao trở lên</option>
+                            <option value="3.0" {% if request.args.get('rating') == '3.0' %}selected{% endif %}>Từ 3.0 sao trở lên</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+                        Áp dụng lọc
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="w-full lg:w-3/4">
+            
+            <div class="flex justify-between items-center mb-6">
+                <p class="text-gray-600 text-sm">Hiển thị <span class="font-bold text-gray-800">{{ pagination.total }}</span> kết quả</p>
+                <!-- Sort (Mock) -->
+                <select class="text-sm border-gray-300 rounded p-1 border text-gray-600 focus:outline-none">
+                    <option>Xếp hạng cao nhất</option>
+                    <option>Nhiều review nhất</option>
+                </select>
+            </div>
+
+            <!-- List -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for profile in profiles %}
+                <div class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col">
+                    <div class="p-5 flex-grow">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold">
+                                {{ profile.user.name[0]|upper }}
+                            </div>
+                            {% if profile.is_verified %}
+                            <span class="bg-green-50 border border-green-200 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                Verified
+                            </span>
+                            {% endif %}
+                        </div>
+                        <h3 class="font-bold text-gray-800 text-sm mb-1 line-clamp-1">{{ profile.user.name }}</h3>
+                        <p class="text-xs text-gray-500 mb-3 line-clamp-2 h-8">{{ profile.title }}</p>
+                        
+                        <div class="flex items-center gap-1 text-sm mb-3">
+                            <span class="text-yellow-400">★</span>
+                            <span class="font-bold text-gray-800">{{ profile.rating }}</span>
+                            <span class="text-gray-400 text-xs">({{ profile.total_reviews }} đánh giá)</span>
+                        </div>
+                        
+                        <div class="text-xs text-gray-600 mb-3 flex items-center gap-1">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
+                            <span class="truncate">{{ profile.languages }}</span>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-100 p-3 bg-gray-50 flex gap-2">
+                        <a href="{{ url_for('translator_profile', profile_id=profile.id) }}" class="flex-1 text-center text-xs font-medium text-blue-600 border border-blue-600 bg-white rounded-lg py-2 hover:bg-blue-50 transition">Xem hồ sơ</a>
+                        <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="flex-1 text-center text-xs font-medium text-white bg-blue-600 rounded-lg py-2 hover:bg-blue-700 transition">Chat ngay</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-16 bg-white rounded-xl border border-gray-200">
+                    <div class="text-5xl mb-4">🕵️‍♂️</div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Không tìm thấy kết quả</h3>
+                    <p class="text-gray-500 text-sm">Thử thay đổi bộ lọc hoặc tìm kiếm ngôn ngữ khác.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if pagination.pages > 1 %}
+            <div class="flex justify-center mt-10">
+                <nav class="flex gap-1">
+                    {% if pagination.has_prev %}
+                    <a href="{{ url_for('translator_list', page=pagination.prev_num, lang=lang_filter, rating=request.args.get('rating')) }}" class="px-3 py-1 border rounded hover:bg-gray-50 text-sm">&laquo;</a>
+                    {% endif %}
+                    
+                    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                        {% if p %}
+                            {% if p == pagination.page %}
+                            <span class="px-3 py-1 border bg-blue-600 text-white rounded text-sm">{{ p }}</span>
+                            {% else %}
+                            <a href="{{ url_for('translator_list', page=p, lang=lang_filter, rating=request.args.get('rating')) }}" class="px-3 py-1 border rounded hover:bg-gray-50 text-sm">{{ p }}</a>
+                            {% endif %}
+                        {% else %}
+                            <span class="px-3 py-1 text-gray-500">...</span>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if pagination.has_next %}
+                    <a href="{{ url_for('translator_list', page=pagination.next_num, lang=lang_filter, rating=request.args.get('rating')) }}" class="px-3 py-1 border rounded hover:bg-gray-50 text-sm">&raquo;</a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

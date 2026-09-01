@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VietTranslate – Thuê Phiên Dịch Viên Chuyên Nghiệp{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#4f46e5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak]{display:none!important}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+        .nav-link{position:relative;padding-bottom:2px}
+        .nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:#2563eb;transition:width .2s}
+        .nav-link:hover::after{width:100%}
+        .card-hover{transition:transform .2s,box-shadow .2s}
+        .card-hover:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.1)}
+        .star-rating-input input{display:none}
+        .star-rating-input label{cursor:pointer;font-size:1.5rem;color:#d1d5db}
+        .star-rating-input input:checked ~ label,.star-rating-input label:hover,.star-rating-input label:hover ~ label{color:#f59e0b}
+        .star-rating-input{display:flex;flex-direction:row-reverse;justify-content:flex-end}
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
+
+<!-- ═══ HEADER ═══ -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+            <!-- Logo -->
+            <a href="{{ url_for('index') }}" class="flex items-center gap-2 text-xl font-bold text-primary">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+                </svg>
+                VietTranslate
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-7 font-medium text-sm text-gray-700">
+                <a href="{{ url_for('translator_list') }}" class="nav-link hover:text-primary">Tìm Phiên Dịch</a>
+                <a href="{{ url_for('job_list') }}" class="nav-link hover:text-primary">Việc Làm</a>
+                <a href="{{ url_for('about') }}" class="nav-link hover:text-primary">Giới Thiệu</a>
+                <a href="{{ url_for('payment_info') }}" class="nav-link hover:text-primary">Thanh Toán</a>
+            </nav>
+
+            <!-- Auth -->
+            <div class="flex items-center gap-3">
+                {% if current_user %}
+                    {% if current_user.role == 'hirer' %}
+                    <a href="{{ url_for('post_job') }}" class="hidden md:inline-flex items-center gap-1 bg-primary text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Đăng Job
+                    </a>
+                    {% endif %}
+                    {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="hidden md:inline-flex items-center gap-1 bg-red-600 text-white text-sm font-medium px-3 py-2 rounded-lg hover:bg-red-700 transition">
+                        ⚙️ Admin
+                    </a>
+                    {% endif %}
+                    <!-- Avatar dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 transition rounded-full pl-3 pr-4 py-1.5">
+                            <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold">
+                                {{ current_user.name[0] | upper }}
+                            </div>
+                            <span class="hidden md:block text-sm font-medium text-gray-700 max-w-[100px] truncate">{{ current_user.name }}</span>
+                        </button>
+                        <!-- Dropdown -->
+                        <div class="absolute right-0 pt-1 w-52 hidden group-hover:block z-50">
+                            <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-1">
+                                <div class="px-4 py-2 border-b border-gray-50">
+                                    <p class="font-semibold text-sm text-gray-800 truncate">{{ current_user.name }}</p>
+                                    <p class="text-xs text-gray-500">{{ current_user.email }}</p>
+                                </div>
+                                <a href="{{ url_for('account_profile') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 text-gray-700">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    Tài khoản
+                                </a>
+                                <a href="{{ url_for('account_history') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 text-gray-700">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                    Hợp đồng
+                                </a>
+                                <div class="border-t border-gray-100 mt-1">
+                                    <a href="{{ url_for('logout') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                        Đăng xuất
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="text-sm font-medium text-gray-700 hover:text-primary">Đăng Nhập</a>
+                    <a href="{{ url_for('register') }}" class="bg-primary text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition">Đăng Ký</a>
+                {% endif %}
+
+                <!-- Mobile hamburger -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div id="mobile-nav" class="hidden md:hidden border-t border-gray-100 mt-3 pt-3 pb-2 space-y-1">
+            <a href="{{ url_for('translator_list') }}" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">Tìm Phiên Dịch</a>
+            <a href="{{ url_for('job_list') }}" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">Việc Làm</a>
+            <a href="{{ url_for('about') }}" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">Giới Thiệu</a>
+            {% if current_user and current_user.role == 'hirer' %}
+            <a href="{{ url_for('post_job') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-primary hover:bg-blue-50">+ Đăng Job</a>
+            {% endif %}
+            {% if current_user %}
+            <a href="{{ url_for('logout') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50">Đăng xuất</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">Đăng Nhập</a>
+            <a href="{{ url_for('register') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-primary hover:bg-blue-50">Đăng Ký</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="container mx-auto px-4 mt-4 space-y-2">
+    {% for category, message in messages %}
+    <div class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium
+        {% if category == 'error' %}bg-red-50 text-red-700 border border-red-200
+        {% elif category == 'success' %}bg-green-50 text-green-700 border border-green-200
+        {% elif category == 'warning' %}bg-yellow-50 text-yellow-700 border border-yellow-200
+        {% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+        {% if category == 'success' %}✅{% elif category == 'error' %}❌{% elif category == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- Main -->
+<main class="flex-grow">{% block content %}{% endblock %}</main>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-400 pt-12 pb-6 mt-16">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            <div class="col-span-2 md:col-span-1">
+                <div class="text-white font-bold text-lg mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+                    </svg>
+                    VietTranslate
+                </div>
+                <p class="text-sm leading-relaxed">Kết nối người cần dịch thuật với phiên dịch viên chuyên nghiệp tại Việt Nam.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-3 text-sm">Dịch vụ</h4>
+                <ul class="space-y-2 text-sm">
+                    {% for lang, flag, cert in LANGUAGES[:5] %}
+                    <li><a href="{{ url_for('translator_list', lang=lang) }}" class="hover:text-white transition">{{ flag }} {{ lang }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-3 text-sm">Ngôn ngữ khác</h4>
+                <ul class="space-y-2 text-sm">
+                    {% for lang, flag, cert in LANGUAGES[5:] %}
+                    <li><a href="{{ url_for('translator_list', lang=lang) }}" class="hover:text-white transition">{{ flag }} {{ lang }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-3 text-sm">Hỗ trợ</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="{{ url_for('payment_info') }}" class="hover:text-white transition">Thanh toán & Escrow</a></li>
+                    <li><a href="{{ url_for('about') }}" class="hover:text-white transition">Về chúng tôi</a></li>
+                    <li><a href="#" class="hover:text-white transition">Câu hỏi thường gặp</a></li>
+                    <li><a href="mailto:support@viettranslate.vn" class="hover:text-white transition">Liên hệ hỗ trợ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm">
+            <p>&copy; 2024 VietTranslate. All rights reserved.</p>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-white">Điều khoản</a>
+                <a href="#" class="hover:text-white">Chính sách bảo mật</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-nav')?.classList.toggle('hidden');
+});
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

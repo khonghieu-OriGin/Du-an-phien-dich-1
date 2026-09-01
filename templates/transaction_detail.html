@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-gray-50 py-8 border-b border-gray-200">
+    <div class="container mx-auto px-4 max-w-5xl">
+        
+        <div class="mb-6 flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">
+                    Hợp đồng: 
+                    {% if contract.job %}
+                        {{ contract.job.title }}
+                    {% else %}
+                        Dịch vụ {{ contract.service.name }}
+                    {% endif %}
+                </h1>
+                
+                <!-- Hiển thị lịch hẹn rõ ràng cho cả hai bên -->
+                {% if contract.scheduled_date %}
+                <div class="mt-3 flex flex-wrap gap-4 text-sm bg-blue-50 text-blue-800 p-3 rounded-lg border border-blue-100 inline-flex items-center">
+                    <div class="flex items-center gap-1 font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Ngày hẹn: {{ contract.scheduled_date.strftime('%d/%m/%Y') }}
+                    </div>
+                    {% if contract.scheduled_time_start %}
+                    <div class="flex items-center gap-1 font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Từ {{ contract.scheduled_time_start }} đến {{ contract.scheduled_time_end }}
+                    </div>
+                    {% endif %}
+                    {% if contract.location %}
+                    <div class="flex items-center gap-1 font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Tại: {{ contract.location }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="flex-shrink-0 mt-2 md:mt-0">
+                {% if contract.status == 'escrow_pending' %}
+                    <span class="bg-yellow-100 text-yellow-800 font-bold px-4 py-1.5 rounded-full text-sm inline-block">Chờ thanh toán Escrow</span>
+                {% elif contract.status == 'in_progress' %}
+                    <span class="bg-blue-100 text-blue-800 font-bold px-4 py-1.5 rounded-full text-sm inline-block">Đang thực hiện</span>
+                {% elif contract.status == 'completed' %}
+                    <span class="bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full text-sm inline-block">Đã nghiệm thu</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- Left Column: Business Process Stepper -->
+            <div class="w-full lg:w-7/12 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-bold mb-6 text-gray-800">Tiến trình Hợp đồng</h2>
+                    <div class="relative">
+                        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                        
+                        <div class="space-y-6">
+                            <!-- Steps 1-3 -->
+                            <div class="relative pl-12">
+                                <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
+                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <h4 class="font-bold text-gray-800">Thương lượng & Chốt Deal</h4>
+                                <p class="text-sm text-gray-500">Đã chốt giá: {{ "{:,.0f}".format(contract.agreed_price) }}đ</p>
+                            </div>
+                            
+                            <!-- Step 4: Escrow -->
+                            <div class="relative pl-12">
+                                {% if contract.status == 'escrow_pending' %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
+                                    <h4 class="font-bold text-blue-600">Thanh toán tạm giữ (Escrow)</h4>
+                                    {% if current_user.role == 'hirer' %}
+                                    <a href="{{ url_for('payment_mockup', contract_id=contract.id) }}" class="mt-2 inline-block bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">Thanh toán ngay</a>
+                                    {% else %}
+                                    <p class="text-sm text-gray-500 mt-1">Đang chờ khách hàng thanh toán để bắt đầu công việc.</p>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
+                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    </div>
+                                    <h4 class="font-bold text-gray-800">Thanh toán tạm giữ (Escrow)</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Đã thanh toán an toàn.</p>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Step 5: Execution -->
+                            <div class="relative pl-12">
+                                {% if contract.status in ['escrow_pending'] %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-gray-300 border-4 border-white"></div>
+                                    <h4 class="font-bold text-gray-400">Thực hiện công việc</h4>
+                                {% elif contract.status == 'in_progress' %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
+                                    <h4 class="font-bold text-blue-600">Thực hiện công việc</h4>
+                                    <p class="text-sm text-gray-700 mt-1">Trao đổi tiến độ hoặc giao nhận file tài liệu kết quả.</p>
+                                    
+                                    {% if current_user.role == 'translator' %}
+                                    <div class="mt-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                        <p class="text-sm font-medium mb-2">Tải lên file kết quả (nếu có):</p>
+                                        <form method="POST" enctype="multipart/form-data" action="{{ url_for('transaction_detail', contract_id=contract.id) }}" class="flex flex-col sm:flex-row gap-2">
+                                            <input type="file" name="file" required class="text-sm w-full bg-white border border-gray-300 rounded p-1.5 focus:outline-none focus:border-blue-500">
+                                            <button type="submit" class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 whitespace-nowrap">Gửi file</button>
+                                        </form>
+                                    </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
+                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    </div>
+                                    <h4 class="font-bold text-gray-800">Thực hiện công việc</h4>
+                                {% endif %}
+                                
+                                <!-- List files -->
+                                {% if contract.deliverables %}
+                                <div class="mt-3 space-y-2">
+                                    {% for doc in contract.deliverables %}
+                                    <div class="flex items-center gap-2 p-2 bg-blue-50/50 text-blue-800 rounded text-sm border border-blue-100">
+                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                                        <a href="/static/uploads/{{ doc.filepath }}" target="_blank" class="hover:underline font-medium">{{ doc.filename }}</a>
+                                        <span class="text-xs text-gray-500 ml-auto">{{ doc.created_at.strftime('%d/%m %H:%M') }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Step 6: Approval -->
+                            <div class="relative pl-12">
+                                {% if contract.status == 'completed' %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
+                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    </div>
+                                    <h4 class="font-bold text-gray-800">Nghiệm thu & Giải ngân</h4>
+                                    <p class="text-sm text-green-600 font-medium mt-1">Đã nghiệm thu và giải ngân thành công.</p>
+                                {% elif contract.status == 'in_progress' %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
+                                    <h4 class="font-bold text-blue-600">Nghiệm thu & Giải ngân</h4>
+                                    {% if current_user.role == 'hirer' %}
+                                    <div class="bg-yellow-50 border border-yellow-200 p-3 mt-2 rounded text-sm text-yellow-800 mb-2">
+                                        Chỉ bấm phê duyệt khi công việc/sự kiện đã diễn ra và bạn đã hoàn toàn hài lòng với kết quả. Tiền sẽ được chuyển cho Phiên dịch viên.
+                                    </div>
+                                    <form method="POST" action="{{ url_for('approve_contract', contract_id=contract.id) }}" class="mt-2" onsubmit="return confirm('Bạn chắc chắn muốn nghiệm thu và giải ngân?');">
+                                        <button type="submit" class="bg-green-600 text-white px-5 py-2 rounded-lg font-medium text-sm hover:bg-green-700 shadow">Phê duyệt & Giải ngân</button>
+                                    </form>
+                                    {% else %}
+                                    <p class="text-sm text-gray-500 mt-1">Chờ khách hàng phê duyệt để nhận tiền.</p>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-gray-300 border-4 border-white"></div>
+                                    <h4 class="font-bold text-gray-400">Nghiệm thu & Giải ngân</h4>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Step 7: Review -->
+                            <div class="relative pl-12">
+                                {% if contract.status == 'completed' %}
+                                    {% set has_reviewed = namespace(value=false) %}
+                                    {% for r in contract.reviews %}
+                                        {% if r.reviewer_id == current_user.id %}
+                                            {% set has_reviewed.value = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
+                                    <h4 class="font-bold text-blue-600">Đánh giá đối tác</h4>
+                                    
+                                    {% if has_reviewed.value %}
+                                        <p class="text-sm text-gray-600 mt-1">Bạn đã gửi đánh giá cho giao dịch này. Cảm ơn bạn!</p>
+                                    {% else %}
+                                        <form method="POST" action="{{ url_for('submit_review', contract_id=contract.id) }}" class="mt-3 p-4 border border-blue-100 rounded-lg bg-blue-50/30">
+                                            
+                                            <!-- Star Rating UI -->
+                                            <div class="mb-3 text-center">
+                                                <p class="text-sm font-medium mb-2">Chất lượng công việc</p>
+                                                <div class="star-rating-input inline-flex">
+                                                    <input type="radio" id="star5" name="rating" value="5" required />
+                                                    <label for="star5" title="5 sao">★</label>
+                                                    <input type="radio" id="star4" name="rating" value="4" />
+                                                    <label for="star4" title="4 sao">★</label>
+                                                    <input type="radio" id="star3" name="rating" value="3" />
+                                                    <label for="star3" title="3 sao">★</label>
+                                                    <input type="radio" id="star2" name="rating" value="2" />
+                                                    <label for="star2" title="2 sao">★</label>
+                                                    <input type="radio" id="star1" name="rating" value="1" />
+                                                    <label for="star1" title="1 sao">★</label>
+                                                </div>
+                                            </div>
+
+                                            <textarea name="comment" rows="3" class="w-full p-3 border border-gray-300 rounded-lg text-sm mb-3 focus:ring-blue-500 focus:border-blue-500" placeholder="Viết nhận xét của bạn để giúp đối tác xây dựng uy tín..."></textarea>
+                                            <button type="submit" class="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full transition">Gửi đánh giá</button>
+                                        </form>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-gray-300 border-4 border-white"></div>
+                                    <h4 class="font-bold text-gray-400">Đánh giá</h4>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Chat System -->
+            <div class="w-full lg:w-5/12 flex flex-col h-[650px] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
+                <div class="bg-white text-gray-800 p-4 font-bold border-b border-gray-200 flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                        Phòng làm việc
+                    </span>
+                    <span class="text-xs font-normal bg-gray-100 text-gray-500 px-2 py-1 rounded">Đối tác: {{ contract.translator.name if current_user.role == 'hirer' else contract.hirer.name }}</span>
+                </div>
+                
+                <!-- Messages Box -->
+                <div id="chat-box" class="flex-grow p-4 overflow-y-auto bg-gray-50/50 space-y-4">
+                    <!-- Loaded via JS -->
+                </div>
+                
+                <!-- Input -->
+                <div class="p-3 border-t border-gray-200 bg-white">
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input" class="flex-grow px-4 py-2.5 bg-gray-100 border-transparent rounded-xl focus:bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-sm transition" placeholder="Nhập tin nhắn...">
+                        <button id="send-btn" class="bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    const contractId = {{ contract.id }};
+    const currentUserId = {{ current_user.id }};
+    const chatBox = document.getElementById('chat-box');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    
+    function fetchMessages() {
+        fetch(`/api/messages/${contractId}`)
+            .then(res => res.json())
+            .then(data => {
+                const isScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 1;
+                chatBox.innerHTML = '';
+                data.forEach(msg => {
+                    const isMe = msg.sender_id === currentUserId;
+                    const div = document.createElement('div');
+                    div.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'}`;
+                    
+                    div.innerHTML = `
+                        <span class="text-[11px] text-gray-400 mb-1 px-1">${msg.sender_name} - ${msg.time}</span>
+                        <div class="px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm ${isMe ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'}">
+                            ${msg.content}
+                        </div>
+                    `;
+                    chatBox.appendChild(div);
+                });
+                if(isScrolledToBottom) {
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            });
+    }
+
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        
+        chatInput.value = '';
+        fetch(`/api/messages/${contractId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: text })
+        }).then(() => {
+            fetchMessages();
+            setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
+        });
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    fetchMessages();
+    setInterval(fetchMessages, 3000);
+</script>
+{% endblock %}
