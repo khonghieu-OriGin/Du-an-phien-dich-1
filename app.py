@@ -394,6 +394,28 @@ def job_detail(job_id):
         return redirect(url_for('job_detail', job_id=job.id))
     return render_template('job_detail.html', job=job)
 
+@app.route('/api/jobs')
+def api_jobs():
+    """JSON endpoint – trả danh sách job mở để job_list filter client-side."""
+    jobs = Job.query.filter_by(status='open', is_flagged=False).order_by(Job.created_at.desc()).all()
+    result = []
+    for j in jobs:
+        result.append({
+            'id': j.id,
+            'title': j.title,
+            'category': j.category,
+            'source_lang': j.source_lang,
+            'target_lang': j.target_lang,
+            'budget_type': j.budget_type,
+            'budget_min': j.budget_min,
+            'budget_max': j.budget_max,
+            'description': j.description[:200] if j.description else '',
+            'proposal_count': len(j.proposals),
+            'created_at': j.created_at.isoformat() if j.created_at else None,
+            'detail_url': url_for('job_detail', job_id=j.id),
+        })
+    return jsonify(result)
+
 # ─── CONTRACT / BUSINESS PROCESS ───────────────────────────────────────────────
 
 @app.route('/accept-proposal/<int:proposal_id>', methods=['POST'])
