@@ -1,453 +1,113 @@
 {% extends "base.html" %}
 
-{% block head %}
-<style>
-  .filter-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
-  .filter-sidebar::-webkit-scrollbar { width: 4px; }
-  .filter-sidebar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
-  .filter-cb, .filter-rb { display: none; }
-  .filter-label {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 8px; border-radius: 6px; cursor: pointer;
-    font-size: 0.875rem; color: #374151; transition: background .15s;
-    user-select: none;
-  }
-  .filter-label:hover { background: #eff6ff; color: #4f46e5; }
-  .filter-cb:checked + .filter-label,
-  .filter-rb:checked + .filter-label {
-    background: #eff6ff; color: #4f46e5; font-weight: 500;
-  }
-  .filter-indicator {
-    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
-    border-radius: 3px; flex-shrink: 0; display: flex;
-    align-items: center; justify-content: center; transition: all .15s;
-    background: white;
-  }
-  .filter-rb-indicator {
-    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
-    border-radius: 50%; flex-shrink: 0; display: flex;
-    align-items: center; justify-content: center; transition: all .15s;
-    background: white;
-  }
-  .filter-cb:checked + .filter-label .filter-indicator {
-    background: #4f46e5; border-color: #4f46e5;
-  }
-  .filter-cb:checked + .filter-label .filter-indicator::after {
-    content: ''; display: block; width: 9px; height: 5px;
-    border-left: 2px solid white; border-bottom: 2px solid white;
-    transform: rotate(-45deg) translateY(-1px);
-  }
-  .filter-rb:checked + .filter-label .filter-rb-indicator {
-    border-color: #4f46e5; border-width: 4px; background: white;
-  }
-  #drawer-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.45); z-index: 40; backdrop-filter: blur(2px);
-  }
-  #filter-drawer {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    max-height: 92vh; overflow-y: auto; background: white;
-    border-radius: 20px 20px 0 0; z-index: 50;
-    transform: translateY(100%); transition: transform .28s ease;
-  }
-  #filter-drawer.open { transform: translateY(0); }
-  #drawer-overlay.open { display: block; }
-  #result-count-badge {
-    display: inline-flex; align-items: center;
-    background: #ede9fe; color: #4338ca; font-weight: 600;
-    border-radius: 9999px; padding: 2px 10px; font-size: 0.875rem;
-  }
-  #empty-state { display: none; }
-  #mobile-filter-count {
-    display: none;
-    background: #ef4444; color: white;
-    font-size: 0.65rem; font-weight: 700;
-    width: 18px; height: 18px; border-radius: 50%;
-    align-items: center; justify-content: center;
-    position: absolute; top: -6px; right: -6px;
-  }
-  #mobile-filter-count.show { display: flex; }
-  .filter-section + .filter-section { border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: 0.25rem; }
-  .job-card { transition: box-shadow .18s, transform .18s; }
-  .job-card:hover { box-shadow: 0 4px 20px rgba(79,70,229,.10); transform: translateY(-2px); }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="bg-indigo-900 text-white py-12">
-  <div class="container mx-auto px-4 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold mb-3">Bảng Tin Việc Làm Dịch Thuật</h1>
-    <p class="text-indigo-200 max-w-2xl mx-auto text-sm md:text-base">
-      Tìm kiếm các dự án phù hợp với kỹ năng ngôn ngữ và kỳ vọng thu nhập của bạn. Gửi đề xuất ngay hôm nay!
-    </p>
-  </div>
+<div class="bg-indigo-900 text-white py-10">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-2">Bảng Tin Việc Làm Dịch Thuật</h1>
+        <p class="text-indigo-200">Tìm kiếm các dự án phù hợp với kỹ năng ngôn ngữ của bạn và gửi đề xuất ngay.</p>
+    </div>
 </div>
 
 <div class="container mx-auto px-4 py-8">
-  <div class="flex flex-col lg:flex-row gap-8">
-
-    <!-- ─── Sidebar Desktop ─── -->
-    <aside class="hidden lg:block w-64 xl:w-72 shrink-0">
-      <div class="filter-sidebar bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="font-bold text-gray-800 text-base">Bộ lọc</h3>
-          <button id="clear-filters-desktop" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium hidden transition">
-            Xoá bộ lọc
-          </button>
+    <div class="flex flex-col lg:flex-row gap-8">
+        
+        <!-- Filter Sidebar -->
+        <div class="w-full lg:w-1/4">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm sticky top-24">
+                <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
+                    <h3 class="font-bold text-lg">Bộ lọc</h3>
+                    <a href="#" class="text-sm text-indigo-600 hover:underline">Xoá lọc</a>
+                </div>
+                
+                <!-- Ngôn ngữ -->
+                <div class="mb-6">
+                    <h4 class="font-medium mb-3 text-gray-800">Ngôn ngữ đích</h4>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-sm text-gray-700">Tiếng Anh</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-sm text-gray-700">Tiếng Nhật</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-gray-100 text-gray-800 font-medium py-2 rounded-lg hover:bg-gray-200 transition">Áp dụng</button>
+            </div>
         </div>
-        <div id="filter-form-desktop"></div>
-      </div>
-    </aside>
-
-    <!-- ─── Main Content ─── -->
-    <div class="flex-1 min-w-0">
-      <!-- Toolbar -->
-      <div class="flex justify-between items-center mb-6 gap-3">
-        <p class="text-gray-600 text-sm">Hiển thị <span id="result-count-badge">...</span> công việc</p>
-        <div class="flex items-center gap-2">
-          <!-- Mobile filter button -->
-          <div class="relative lg:hidden">
-            <button id="mobile-filter-btn" class="flex items-center gap-1.5 text-sm font-medium border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-50 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
-              </svg>
-              Bộ lọc
-            </button>
-            <span id="mobile-filter-count"></span>
-          </div>
-          <!-- Sort -->
-          <select id="sort-select" class="text-sm border-gray-300 rounded-lg p-2 border text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-            <option value="newest">Mới nhất</option>
-            <option value="budget_desc">Ngân sách cao nhất</option>
-            <option value="budget_asc">Ngân sách thấp nhất</option>
-            <option value="proposals_asc">Ít đề xuất nhất</option>
-          </select>
+        
+        <!-- Job List -->
+        <div class="w-full lg:w-3/4">
+            
+            <!-- Sort -->
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-600 font-medium">{{ jobs|length }} công việc tìm thấy</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-500">Sắp xếp:</span>
+                    <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 bg-white">
+                        <option>Mới nhất</option>
+                        <option>Ngân sách cao nhất</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- List -->
+            <div class="space-y-4">
+                {% for job in jobs %}
+                <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition">
+                    <div class="flex flex-col md:flex-row justify-between gap-4 mb-3">
+                        <h2 class="text-xl font-bold text-gray-800 hover:text-indigo-600">
+                            <a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.title }}</a>
+                        </h2>
+                        <div class="text-left md:text-right flex-shrink-0">
+                            {% if job.budget_type == 'fixed' %}
+                                <span class="text-lg font-bold text-gray-800">{{ "{:,.0f}".format(job.budget_min) }}đ</span>
+                                <span class="text-xs text-gray-500 block">Giá cố định</span>
+                            {% elif job.budget_type == 'range' %}
+                                <span class="text-lg font-bold text-gray-800">{{ "{:,.0f}".format(job.budget_min) }}đ - {{ "{:,.0f}".format(job.budget_max) }}đ</span>
+                                <span class="text-xs text-gray-500 block">Khoảng giá</span>
+                            {% else %}
+                                <span class="text-lg font-bold text-gray-800">Thương lượng</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            {{ job.category }}
+                        </span>
+                        <span class="text-gray-300">|</span>
+                        <span class="flex items-center gap-1">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
+                            {{ job.source_lang }} ➔ {{ job.target_lang }}
+                        </span>
+                        <span class="text-gray-300">|</span>
+                        <span class="flex items-center gap-1">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Đăng lúc {{ job.created_at.strftime('%d/%m/%Y') }}
+                        </span>
+                    </div>
+                    
+                    <p class="text-gray-600 text-sm line-clamp-2 mb-4">{{ job.description }}</p>
+                    
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4">
+                        <div class="text-sm text-gray-500">
+                            <strong>{{ job.proposals|length }}</strong> đề xuất đã gửi
+                        </div>
+                        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="bg-indigo-50 text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-100 transition">Xem và Đề xuất</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-12 bg-white rounded-xl border border-gray-200">
+                    <p class="text-gray-500">Hiện chưa có công việc nào.</p>
+                </div>
+                {% endfor %}
+            </div>
+            
         </div>
-      </div>
-
-      <!-- Job Cards -->
-      <div id="job-grid" class="space-y-4"></div>
-
-      <!-- Empty state -->
-      <div id="empty-state" class="text-center py-20 bg-white rounded-xl border border-gray-200">
-        <div class="text-5xl mb-4">🔍</div>
-        <h3 class="text-lg font-bold text-gray-800 mb-2">Không tìm thấy công việc phù hợp</h3>
-        <p class="text-gray-500 text-sm max-w-sm mx-auto">Hãy thử thay đổi hoặc xoá một số bộ lọc để mở rộng kết quả.</p>
-        <button onclick="clearAllFilters()" class="mt-4 text-sm text-indigo-600 border border-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">
-          Xoá tất cả bộ lọc
-        </button>
-      </div>
     </div>
-  </div>
-</div>
-
-<!-- ─── Mobile Bottom Drawer ─── -->
-<div id="drawer-overlay"></div>
-<div id="filter-drawer" role="dialog" aria-modal="true" aria-label="Bộ lọc việc làm">
-  <div class="flex justify-center pt-3 pb-1">
-    <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
-  </div>
-  <div class="flex justify-between items-center px-5 py-3 border-b border-gray-100 sticky top-0 bg-white z-10">
-    <h3 class="font-bold text-gray-800 text-base">Bộ lọc</h3>
-    <button id="close-drawer" aria-label="Đóng bộ lọc" class="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-      </svg>
-    </button>
-  </div>
-  <div id="filter-form-mobile" class="px-5 py-4 pb-36"></div>
-  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-5 py-3 flex gap-3 z-10">
-    <button onclick="clearAllFilters()" class="flex-1 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg py-2.5 hover:bg-gray-50 transition">
-      Xoá bộ lọc
-    </button>
-    <button id="apply-drawer" class="flex-1 text-sm font-medium bg-indigo-600 text-white rounded-lg py-2.5 hover:bg-indigo-700 transition">
-      Áp dụng
-    </button>
-  </div>
 </div>
 {% endblock %}
-
-{% block scripts %}
-<script>
-// ─── Dữ liệu bộ lọc ───────────────────────────────────────────────────────────
-const LANG_LIST = [
-  { name: 'Ti\u1ebfng Anh',         flag: '\ud83c\uddec\ud83c\udde7' },
-  { name: 'Ti\u1ebfng Nh\u1eadt',   flag: '\ud83c\uddef\ud83c\uddf5' },
-  { name: 'Ti\u1ebfng H\u00e0n',    flag: '\ud83c\uddf0\ud83c\uddf7' },
-  { name: 'Ti\u1ebfng Trung',       flag: '\ud83c\udde8\ud83c\uddf3' },
-  { name: 'Ti\u1ebfng Nga',         flag: '\ud83c\uddf7\ud83c\uddfa' },
-  { name: 'Ti\u1ebfng Th\u00e1i',   flag: '\ud83c\uddf9\ud83c\udded' },
-  { name: 'Ti\u1ebfng Ph\u00e1p',   flag: '\ud83c\uddeb\ud83c\uddf7' },
-  { name: 'Ti\u1ebfng \u0110\u1ee9c', flag: '\ud83c\udde9\ud83c\uddea' },
-  { name: 'Ti\u1ebfng B\u1ed3 \u0110\u00e0o Nha', flag: '\ud83c\udde7\ud83c\uddf7' },
-  { name: 'Ti\u1ebfng T\u00e2y Ban Nha', flag: '\ud83c\uddea\ud83c\uddf8' },
-];
-
-const PRICE_RANGES = [
-  { label: 'D\u01b0\u1edbi 500.000\u0111',          value: 'under500', min: 0,       max: 499999   },
-  { label: '500.000 \u2013 1.000.000\u0111',         value: '500-1m',   min: 500000,  max: 1000000  },
-  { label: '1.000.000 \u2013 3.000.000\u0111',       value: '1m-3m',    min: 1000001, max: 3000000  },
-  { label: '3.000.000 \u2013 5.000.000\u0111',       value: '3m-5m',    min: 3000001, max: 5000000  },
-  { label: 'Tr\u00ean 5.000.000\u0111',              value: 'over5m',   min: 5000001, max: Infinity },
-];
-
-const DATE_RANGES = [
-  { label: 'H\u00f4m nay',           value: 'today',  days: 1    },
-  { label: '3 ng\u00e0y g\u1ea7n nh\u1ea5t', value: '3days',  days: 3    },
-  { label: '7 ng\u00e0y g\u1ea7n nh\u1ea5t', value: '7days',  days: 7    },
-  { label: '30 ng\u00e0y g\u1ea7n nh\u1ea5t',value: '30days', days: 30   },
-  { label: 'T\u1ea5t c\u1ea3',        value: 'all',    days: null },
-];
-
-// ─── Trạng thái ───────────────────────────────────────────────────────────────
-let filters = { languages: [], priceRange: null, dateRange: null };
-let allJobs  = [];
-let sortBy   = 'newest';
-
-// ─── Xây form bộ lọc ─────────────────────────────────────────────────────────
-function buildFilterForm(s) {
-  let html = '';
-
-  // Ngôn ngữ
-  html += `<div class="filter-section">
-    <h4 class="text-sm font-semibold text-gray-800 mb-1">Ng\u00f4n ng\u1eef</h4>
-    <p class="text-xs text-gray-400 mb-2">Ch\u1ecdn ng\u00f4n ng\u1eef b\u1ea1n th\u1ea1o \u2014 ch\u1ec9 hi\u1edn job ph\u00f9 h\u1ee3p</p>
-    <div class="space-y-0.5">`;
-  LANG_LIST.forEach(l => {
-    const id = `lang-${l.name.replace(/\s/g,'-')}-${s}`;
-    html += `<div><input type="checkbox" class="filter-cb lang-cb-${s}" id="${id}" value="${l.name}">
-    <label for="${id}" class="filter-label"><span class="filter-indicator"></span><span>${l.flag} ${l.name}</span></label></div>`;
-  });
-  html += `</div></div>`;
-
-  // Mức giá
-  html += `<div class="filter-section mt-4">
-    <h4 class="text-sm font-semibold text-gray-800 mb-1">M\u1ee9c gi\u00e1</h4>
-    <p class="text-xs text-gray-400 mb-2">L\u1ecdc theo ng\u00e2n s\u00e1ch ng\u01b0\u1eddi \u0111\u0103ng \u0111\u1eb7t ra</p>
-    <div class="space-y-0.5">`;
-  PRICE_RANGES.forEach(p => {
-    const id = `price-${p.value}-${s}`;
-    html += `<div><input type="radio" class="filter-rb price-rb-${s}" id="${id}" name="price-${s}" value="${p.value}">
-    <label for="${id}" class="filter-label"><span class="filter-rb-indicator"></span>${p.label}</label></div>`;
-  });
-  html += `</div></div>`;
-
-  // Ngày đăng
-  html += `<div class="filter-section mt-4">
-    <h4 class="text-sm font-semibold text-gray-800 mb-1">Ng\u00e0y \u0111\u0103ng</h4>
-    <p class="text-xs text-gray-400 mb-2">Job c\u0169 th\u01b0\u1eddng \u0111\u00e3 nh\u1eadn \u0111\u1ee7 \u0111\u1ec1 xu\u1ea5t</p>
-    <div class="space-y-0.5">`;
-  DATE_RANGES.forEach(d => {
-    const id = `date-${d.value}-${s}`;
-    html += `<div><input type="radio" class="filter-rb date-rb-${s}" id="${id}" name="date-${s}" value="${d.value}">
-    <label for="${id}" class="filter-label"><span class="filter-rb-indicator"></span>${d.label}</label></div>`;
-  });
-  html += `</div></div>`;
-
-  return html;
-}
-
-// ─── Logic lọc ────────────────────────────────────────────────────────────────
-function filterJobs(list, f) {
-  const now = new Date();
-  return list.filter(job => {
-    // Ngôn ngữ: match nếu source_lang hoặc target_lang chứa ngôn ngữ đã chọn
-    if (f.languages.length > 0) {
-      const jobLangs = [job.source_lang || '', job.target_lang || ''].map(l => l.toLowerCase());
-      const match = f.languages.some(fl => {
-        const key = fl.toLowerCase();
-        return jobLangs.some(jl => jl.includes(key));
-      });
-      if (!match) return false;
-    }
-    // Mức giá
-    if (f.priceRange) {
-      const r = PRICE_RANGES.find(p => p.value === f.priceRange);
-      if (r && job.budget_min != null) {
-        if (job.budget_min < r.min || job.budget_min > r.max) return false;
-      }
-    }
-    // Ngày đăng
-    if (f.dateRange && f.dateRange !== 'all') {
-      const dr = DATE_RANGES.find(d => d.value === f.dateRange);
-      if (dr && dr.days && job.created_at) {
-        const posted = new Date(job.created_at);
-        const diffDays = (now - posted) / (1000 * 60 * 60 * 24);
-        if (diffDays > dr.days) return false;
-      }
-    }
-    return true;
-  });
-}
-
-// ─── Logic sắp xếp ────────────────────────────────────────────────────────────
-function sortJobs(list, by) {
-  const c = [...list];
-  if (by === 'budget_desc')   return c.sort((a, b) => (b.budget_min || 0) - (a.budget_min || 0));
-  if (by === 'budget_asc')    return c.sort((a, b) => (a.budget_min || 0) - (b.budget_min || 0));
-  if (by === 'proposals_asc') return c.sort((a, b) => a.proposal_count - b.proposal_count);
-  return c.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-}
-
-// ─── Format ngân sách ─────────────────────────────────────────────────────────
-function formatBudget(job) {
-  const fmt = n => n.toLocaleString('vi-VN') + '\u0111';
-  if (job.budget_type === 'fixed' && job.budget_min != null)
-    return `<span class="font-bold text-gray-800">${fmt(job.budget_min)}</span><span class="text-xs text-gray-400 block">Gi\u00e1 c\u1ed1 \u0111\u1ecbnh</span>`;
-  if (job.budget_type === 'range' && job.budget_min != null && job.budget_max != null)
-    return `<span class="font-bold text-gray-800">${fmt(job.budget_min)} \u2013 ${fmt(job.budget_max)}</span><span class="text-xs text-gray-400 block">Kho\u1ea3ng gi\u00e1</span>`;
-  return `<span class="font-bold text-gray-600">Th\u01b0\u01a1ng l\u01b0\u1ee3ng</span>`;
-}
-
-// ─── Format thời gian tương đối ───────────────────────────────────────────────
-function timeAgo(isoString) {
-  if (!isoString) return '';
-  const diff = (Date.now() - new Date(isoString)) / 1000;
-  if (diff < 60)    return 'V\u1eeba xong';
-  if (diff < 3600)  return `${Math.floor(diff/60)} ph\u00fat tr\u01b0\u1edbc`;
-  if (diff < 86400) return `${Math.floor(diff/3600)} gi\u1edd tr\u01b0\u1edbc`;
-  if (diff < 2592000) return `${Math.floor(diff/86400)} ng\u00e0y tr\u01b0\u1edbc`;
-  return new Date(isoString).toLocaleDateString('vi-VN');
-}
-
-// ─── Render thẻ job ───────────────────────────────────────────────────────────
-function renderCard(job) {
-  const proposalBadge = job.proposal_count > 0
-    ? `<span class="text-xs text-gray-500"><strong>${job.proposal_count}</strong> \u0111\u1ec1 xu\u1ea5t</span>`
-    : `<span class="text-xs text-green-600 font-medium">Ch\u01b0a c\u00f3 \u0111\u1ec1 xu\u1ea5t</span>`;
-
-  return `
-  <div class="job-card bg-white rounded-xl border border-gray-200 p-6">
-    <div class="flex flex-col md:flex-row justify-between gap-4 mb-3">
-      <h2 class="text-lg font-bold text-gray-800 hover:text-indigo-600 transition">
-        <a href="${job.detail_url}">${job.title}</a>
-      </h2>
-      <div class="text-left md:text-right flex-shrink-0">${formatBudget(job)}</div>
-    </div>
-    <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 mb-3">
-      <span class="flex items-center gap-1">
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-        </svg>
-        ${job.category || 'Ch\u01b0a ph\u00e2n lo\u1ea1i'}
-      </span>
-      <span class="flex items-center gap-1">
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
-        </svg>
-        ${job.source_lang} \u27a4 ${job.target_lang}
-      </span>
-      <span class="flex items-center gap-1">
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        ${timeAgo(job.created_at)}
-      </span>
-    </div>
-    <p class="text-gray-600 text-sm line-clamp-2 mb-4">${job.description}</p>
-    <div class="flex justify-between items-center border-t border-gray-100 pt-4">
-      ${proposalBadge}
-      <a href="${job.detail_url}"
-         class="bg-indigo-50 text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-100 transition text-sm">
-        Xem v\u00e0 \u0110\u1ec1 xu\u1ea5t
-      </a>
-    </div>
-  </div>`;
-}
-
-// ─── Đếm bộ lọc đang bật ─────────────────────────────────────────────────────
-function countActiveFilters() {
-  let c = 0;
-  if (filters.languages.length)                         c++;
-  if (filters.priceRange)                               c++;
-  if (filters.dateRange && filters.dateRange !== 'all') c++;
-  return c;
-}
-
-// ─── Render danh sách ─────────────────────────────────────────────────────────
-function renderList() {
-  const filtered = filterJobs(allJobs, filters);
-  const sorted   = sortJobs(filtered, sortBy);
-  const grid     = document.getElementById('job-grid');
-  const empty    = document.getElementById('empty-state');
-  const badge    = document.getElementById('result-count-badge');
-
-  badge.textContent = filtered.length;
-
-  if (sorted.length === 0) {
-    grid.innerHTML = ''; grid.style.display = 'none'; empty.style.display = 'block';
-  } else {
-    grid.style.display = ''; empty.style.display = 'none';
-    grid.innerHTML = sorted.map(renderCard).join('');
-  }
-
-  const has = countActiveFilters() > 0;
-  document.getElementById('clear-filters-desktop')?.classList.toggle('hidden', !has);
-  const mc = document.getElementById('mobile-filter-count');
-  if (has) { mc.textContent = countActiveFilters(); mc.classList.add('show'); }
-  else     { mc.classList.remove('show'); }
-}
-
-// ─── Đồng bộ filter ↔ DOM ────────────────────────────────────────────────────
-function syncFiltersFromDOM(s) {
-  filters.languages = [...document.querySelectorAll(`.lang-cb-${s}:checked`)].map(e => e.value);
-  const pe = document.querySelector(`.price-rb-${s}:checked`);
-  filters.priceRange = pe ? pe.value : null;
-  const de = document.querySelector(`.date-rb-${s}:checked`);
-  filters.dateRange  = de ? de.value : null;
-}
-
-function syncDOMFromFilters(s) {
-  document.querySelectorAll(`.lang-cb-${s}`).forEach(e  => { e.checked = filters.languages.includes(e.value); });
-  document.querySelectorAll(`.price-rb-${s}`).forEach(e => { e.checked = e.value === filters.priceRange; });
-  document.querySelectorAll(`.date-rb-${s}`).forEach(e  => { e.checked = e.value === filters.dateRange; });
-}
-
-// ─── Xoá tất cả bộ lọc ───────────────────────────────────────────────────────
-function clearAllFilters() {
-  filters = { languages: [], priceRange: null, dateRange: null };
-  syncDOMFromFilters('d'); syncDOMFromFilters('m'); renderList();
-}
-
-// ─── Drawer mobile ────────────────────────────────────────────────────────────
-function openDrawer() {
-  syncDOMFromFilters('m');
-  document.getElementById('filter-drawer').classList.add('open');
-  document.getElementById('drawer-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeDrawer() {
-  document.getElementById('filter-drawer').classList.remove('open');
-  document.getElementById('drawer-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-  document.getElementById('mobile-filter-btn')?.focus();
-}
-
-// ─── Init ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
-  document.getElementById('filter-form-desktop').innerHTML = buildFilterForm('d');
-  document.getElementById('filter-form-mobile').innerHTML  = buildFilterForm('m');
-
-  try {
-    const res = await fetch('/api/jobs');
-    allJobs = await res.json();
-  } catch(e) { allJobs = []; console.error(e); }
-
-  renderList();
-
-  document.getElementById('filter-form-desktop').addEventListener('change', () => { syncFiltersFromDOM('d'); renderList(); });
-  document.getElementById('filter-form-mobile').addEventListener('change',  () => { syncFiltersFromDOM('m'); renderList(); });
-  document.getElementById('sort-select').addEventListener('change', e => { sortBy = e.target.value; renderList(); });
-  document.getElementById('mobile-filter-btn').addEventListener('click', openDrawer);
-  document.getElementById('close-drawer').addEventListener('click', closeDrawer);
-  document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
-  document.getElementById('apply-drawer').addEventListener('click', closeDrawer);
-  document.getElementById('clear-filters-desktop')?.addEventListener('click', clearAllFilters);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
-});
-</script>
-{% endblock %}
-
