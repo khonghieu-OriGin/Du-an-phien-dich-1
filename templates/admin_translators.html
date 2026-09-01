@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-gray-50 flex-grow py-8">
+    <div class="container mx-auto px-4 max-w-6xl">
+        
+        <div class="mb-6">
+            <a href="{{ url_for('admin_dashboard') }}" class="text-sm text-blue-600 hover:underline flex items-center gap-1 mb-2">&larr; Dashboard</a>
+            <h1 class="text-2xl font-bold text-gray-800">Duyệt Phiên dịch viên</h1>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Filter -->
+            <div class="bg-gray-50 border-b border-gray-200 px-6 py-4 flex gap-4">
+                <a href="?show=pending" class="px-3 py-1.5 rounded text-sm font-medium {% if show == 'pending' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Chờ duyệt xác minh</a>
+                <a href="?show=verified" class="px-3 py-1.5 rounded text-sm font-medium {% if show == 'verified' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Đã xác minh (Tích xanh)</a>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-sm text-gray-500">
+                            <th class="px-6 py-3 font-medium">Phiên dịch viên</th>
+                            <th class="px-6 py-3 font-medium">Ngôn ngữ</th>
+                            <th class="px-6 py-3 font-medium">Chuyên môn / Tiêu đề</th>
+                            <th class="px-6 py-3 font-medium text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        {% for profile in profiles %}
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-gray-800">{{ profile.user.name }}</div>
+                                <div class="text-xs text-gray-500">{{ profile.user.email }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600 max-w-[200px] truncate" title="{{ profile.languages }}">{{ profile.languages }}</td>
+                            <td class="px-6 py-4 text-gray-600">
+                                <div class="truncate max-w-[300px]" title="{{ profile.title }}">{{ profile.title }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-right space-x-2">
+                                <a href="{{ url_for('translator_profile', profile_id=profile.id) }}" target="_blank" class="text-blue-600 hover:underline text-xs">Xem hồ sơ</a>
+                                
+                                {% if not profile.is_verified %}
+                                <form method="POST" action="{{ url_for('admin_verify_translator', profile_id=profile.id) }}" class="inline">
+                                    <input type="hidden" name="action" value="verify">
+                                    <button type="submit" class="text-green-600 hover:underline text-xs font-bold" onclick="return confirm('Cấp tích xanh Xác minh cho người này?');">Xác minh</button>
+                                </form>
+                                {% else %}
+                                <form method="POST" action="{{ url_for('admin_verify_translator', profile_id=profile.id) }}" class="inline">
+                                    <input type="hidden" name="action" value="unverify">
+                                    <button type="submit" class="text-yellow-600 hover:underline text-xs" onclick="return confirm('Thu hồi tích xanh Xác minh của người này?');">Thu hồi tích xanh</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                {% if show == 'pending' %}
+                                Không có hồ sơ nào đang chờ duyệt.
+                                {% else %}
+                                Chưa có hồ sơ nào được xác minh.
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

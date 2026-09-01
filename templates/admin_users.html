@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-gray-50 flex-grow py-8">
+    <div class="container mx-auto px-4 max-w-6xl">
+        
+        <div class="mb-6">
+            <a href="{{ url_for('admin_dashboard') }}" class="text-sm text-blue-600 hover:underline flex items-center gap-1 mb-2">&larr; Dashboard</a>
+            <h1 class="text-2xl font-bold text-gray-800">Quản lý Tài khoản</h1>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Filter -->
+            <div class="bg-gray-50 border-b border-gray-200 px-6 py-4 flex gap-4">
+                <a href="?role=all" class="px-3 py-1.5 rounded text-sm font-medium {% if role_filter == 'all' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Tất cả</a>
+                <a href="?role=hirer" class="px-3 py-1.5 rounded text-sm font-medium {% if role_filter == 'hirer' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Khách hàng (Hirer)</a>
+                <a href="?role=translator" class="px-3 py-1.5 rounded text-sm font-medium {% if role_filter == 'translator' %}bg-white border border-gray-300 shadow-sm text-gray-800{% else %}text-gray-500 hover:text-gray-800{% endif %}">Phiên dịch viên</a>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-sm text-gray-500">
+                            <th class="px-6 py-3 font-medium">Người dùng</th>
+                            <th class="px-6 py-3 font-medium">Vai trò</th>
+                            <th class="px-6 py-3 font-medium">Ngày tham gia</th>
+                            <th class="px-6 py-3 font-medium">Trạng thái</th>
+                            <th class="px-6 py-3 font-medium text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        {% for user in users %}
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 {% if not user.is_active %}bg-red-50/30{% endif %}">
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-gray-800">{{ user.name }}</div>
+                                <div class="text-xs text-gray-500">{{ user.email }} • {{ user.phone }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium uppercase">{{ user.role }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-500">{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                            <td class="px-6 py-4">
+                                {% if user.is_active %}
+                                <span class="text-green-600 font-medium flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span>Hoạt động</span>
+                                {% else %}
+                                <span class="text-red-600 font-medium flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span>Bị khoá</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <form method="POST" action="{{ url_for('admin_toggle_user', user_id=user.id) }}" class="inline">
+                                    {% if user.is_active %}
+                                    <button type="submit" class="text-red-600 hover:underline text-xs" onclick="return confirm('Khoá tài khoản này không cho phép đăng nhập?');">Khoá tài khoản</button>
+                                    {% else %}
+                                    <button type="submit" class="text-green-600 hover:underline text-xs">Mở khoá</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">Không có dữ liệu người dùng.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

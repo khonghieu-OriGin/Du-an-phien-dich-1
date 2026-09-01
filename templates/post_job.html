@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+<style>
+    .flatpickr-calendar { border-radius: 14px !important; box-shadow: 0 15px 40px rgba(0,0,0,.12) !important; border: none !important; }
+    .flatpickr-months { background: #2563eb !important; }
+    .flatpickr-month, .flatpickr-current-month, .flatpickr-monthDropdown-months { color: white !important; fill: white !important; }
+    .flatpickr-prev-month svg, .flatpickr-next-month svg { fill: white !important; }
+    .flatpickr-day.selected, .flatpickr-day.selected:hover { background: #2563eb !important; border-color: #2563eb !important; border-radius: 8px !important; }
+    .flatpickr-day.today { border-color: #2563eb !important; }
+    .flatpickr-day:hover { border-radius: 8px !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-10 max-w-3xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h1 class="text-3xl font-bold mb-2 text-gray-800 text-center">Đăng Yêu Cầu Dịch Thuật</h1>
+        <p class="text-gray-500 text-center mb-8">Nhận báo giá từ các phiên dịch viên hàng đầu trong vài phút.</p>
+        
+        <form method="POST" action="{{ url_for('post_job') }}">
+            <!-- Step 1: Cơ bản -->
+            <div class="mb-8 border-b border-gray-100 pb-8">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm">1</span>
+                    Thông tin cơ bản
+                </h2>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2 text-sm">Tiêu đề công việc <span class="text-red-500">*</span></label>
+                    <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="VD: Cần phiên dịch tiếng Nhật cho hội nghị 2 ngày tại HCM">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2 text-sm">Mô tả chi tiết <span class="text-red-500">*</span></label>
+                    <textarea name="description" required rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Mô tả rõ yêu cầu công việc, chuyên ngành, số lượng tài liệu hoặc thời gian làm việc..."></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2 text-sm">Loại hình</label>
+                        <select name="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-white">
+                            <option value="Dịch viết">Dịch tài liệu (Biên dịch)</option>
+                            <option value="Hội nghị">Phiên dịch Hội nghị / Cabin</option>
+                            <option value="Tháp tùng">Phiên dịch Tháp tùng / Sự kiện</option>
+                            <option value="Pháp lý">Phiên dịch Pháp lý / Toà án</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2 text-sm">Cặp ngôn ngữ <span class="text-red-500">*</span></label>
+                        <div class="flex items-center gap-2">
+                            <select name="source_lang" class="w-full px-2 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+                                <option>Tiếng Việt</option>
+                                <option>Tiếng Anh</option>
+                                <option>Tiếng Nhật</option>
+                            </select>
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            <select name="target_lang" class="w-full px-2 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+                                <option>Tiếng Anh</option>
+                                <option>Tiếng Nhật</option>
+                                <option>Tiếng Việt</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Ngân sách & Thời gian -->
+            <div class="mb-8">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm">2</span>
+                    Ngân sách & Thời gian
+                </h2>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-3 text-sm">Loại ngân sách</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="border border-gray-200 rounded-lg p-3 text-center cursor-pointer hover:border-blue-500 bg-gray-50 flex flex-col items-center gap-1">
+                            <input type="radio" name="budget_type" value="fixed" checked class="text-blue-600">
+                            <span class="font-medium text-sm">Giá cố định</span>
+                        </label>
+                        <label class="border border-gray-200 rounded-lg p-3 text-center cursor-pointer hover:border-blue-500 bg-gray-50 flex flex-col items-center gap-1">
+                            <input type="radio" name="budget_type" value="range" class="text-blue-600">
+                            <span class="font-medium text-sm">Khoảng giá</span>
+                        </label>
+                        <label class="border border-gray-200 rounded-lg p-3 text-center cursor-pointer hover:border-blue-500 bg-gray-50 flex flex-col items-center gap-1">
+                            <input type="radio" name="budget_type" value="negotiable" class="text-blue-600">
+                            <span class="font-medium text-sm">Thương lượng</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- NEW SECTION: Lịch trình (thêm vào theo request) -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-5">Lịch trình & Địa điểm</h3>
+
+                    <!-- Calendar Picker -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-3 text-sm">
+                            📅 Ngày diễn ra sự kiện / Cần hoàn thành
+                            <span class="text-gray-400 font-normal">(Không bắt buộc)</span>
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="event-date-display" placeholder="Nhấn để chọn ngày..."
+                                class="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-sm transition cursor-pointer hover:border-blue-400 hover:bg-blue-50"
+                                readonly>
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <input type="hidden" name="event_date" id="event-date-hidden">
+                        </div>
+                    </div>
+
+                    <!-- Time Pickers -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-3 text-sm">⏰ Giờ bắt đầu</label>
+                            <div class="relative">
+                                <input type="text" id="time-start-input" placeholder="--:--"
+                                    class="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-sm text-center transition cursor-pointer hover:border-blue-400"
+                                    readonly>
+                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <input type="hidden" name="event_time_start" id="event-time-start-hidden">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-3 text-sm">⏰ Giờ kết thúc</label>
+                            <div class="relative">
+                                <input type="text" id="time-end-input" placeholder="--:--"
+                                    class="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-sm text-center transition cursor-pointer hover:border-blue-400"
+                                    readonly>
+                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <input type="hidden" name="event_time_end" id="event-time-end-hidden">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-3 text-sm">📍 Địa điểm <span class="text-gray-400 font-normal">(Để "Online" nếu làm từ xa)</span></label>
+                        <div class="relative">
+                            <input type="text" name="event_location"
+                                placeholder="Ví dụ: Trung tâm triển lãm SECC, Q7, TP.HCM"
+                                class="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-sm transition">
+                            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2 text-sm">Ngân sách dự kiến (VND)</label>
+                    <input type="number" name="budget_min" class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="VD: 2000000">
+                </div>
+            </div>
+            
+            <div class="flex justify-end pt-6 border-t border-gray-100">
+                <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition shadow-md">
+                    Đăng Yêu Cầu
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Date Picker
+flatpickr('#event-date-display', {
+    locale: 'vn',
+    minDate: 'today',
+    dateFormat: 'Y-m-d',
+    altInput: true,
+    altFormat: 'D, d/m/Y',
+    onChange: function(sel, str) {
+        document.getElementById('event-date-hidden').value = str;
+    }
+});
+
+// Time Pickers
+flatpickr('#time-start-input', {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'H:i',
+    time_24hr: true,
+    minuteIncrement: 15,
+    defaultHour: 8,
+    onChange: function(sel, str) {
+        document.getElementById('event-time-start-hidden').value = str;
+    }
+});
+
+flatpickr('#time-end-input', {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'H:i',
+    time_24hr: true,
+    minuteIncrement: 15,
+    defaultHour: 17,
+    onChange: function(sel, str) {
+        document.getElementById('event-time-end-hidden').value = str;
+    }
+});
+</script>
+{% endblock %}

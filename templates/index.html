@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hero -->
+<section class="relative bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-20 w-64 h-64 bg-indigo-300 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative container mx-auto px-4 py-20 md:py-28">
+        <div class="max-w-3xl mx-auto text-center">
+            <div class="inline-block bg-white/20 text-white text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+                🌟 Nền tảng dịch thuật #1 Việt Nam
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">
+                Thuê Phiên Dịch Viên<br class="hidden md:block"> Chuyên Nghiệp – Nhanh & Tin Cậy
+            </h1>
+            <p class="text-lg text-blue-100 mb-10 max-w-xl mx-auto">
+                Hơn 5.000 phiên dịch viên được xác minh. Escrow bảo vệ 100% tiền của bạn. Bắt đầu trong 2 phút.
+            </p>
+
+            <!-- Quick Search -->
+            <div class="bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-2 shadow-2xl max-w-2xl mx-auto">
+                <select id="qs-lang" class="flex-1 px-4 py-3 text-gray-800 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50">
+                    <option value="">Chọn ngôn ngữ...</option>
+                    {% for lang, flag, cert in LANGUAGES %}
+                    <option value="{{ lang }}">{{ flag }} {{ lang }}</option>
+                    {% endfor %}
+                </select>
+                <select id="qs-type" class="flex-1 px-4 py-3 text-gray-800 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50">
+                    <option value="">Loại dịch vụ...</option>
+                    <option>Phiên dịch (Dịch nói)</option>
+                    <option>Biên dịch (Dịch viết)</option>
+                    <option>Phiên dịch Cabin</option>
+                    <option>Phiên dịch Tháp tùng</option>
+                </select>
+                <button onclick="quickSearch()" class="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition whitespace-nowrap">
+                    🔍 Tìm ngay
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Badges -->
+<section class="bg-white border-b border-gray-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="py-2">
+                <p class="text-2xl font-bold text-primary">5.000+</p>
+                <p class="text-xs text-gray-500 mt-1">Phiên dịch viên</p>
+            </div>
+            <div class="py-2">
+                <p class="text-2xl font-bold text-primary">12.000+</p>
+                <p class="text-xs text-gray-500 mt-1">Dự án thành công</p>
+            </div>
+            <div class="py-2">
+                <p class="text-2xl font-bold text-primary">4.8 ★</p>
+                <p class="text-xs text-gray-500 mt-1">Đánh giá trung bình</p>
+            </div>
+            <div class="py-2">
+                <p class="text-2xl font-bold text-primary">&lt; 1%</p>
+                <p class="text-xs text-gray-500 mt-1">Tỷ lệ tranh chấp</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Language Quick Links -->
+<section class="py-14 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center mb-2">Ngôn ngữ phổ biến</h2>
+        <p class="text-gray-500 text-center text-sm mb-8">Tìm phiên dịch viên theo ngôn ngữ bạn cần</p>
+        <div class="grid grid-cols-3 md:grid-cols-5 gap-3">
+            {% for lang, flag, cert in LANGUAGES %}
+            <a href="{{ url_for('translator_list', lang=lang) }}"
+               class="card-hover bg-white rounded-xl p-4 text-center border border-gray-200 hover:border-primary group">
+                <div class="text-3xl mb-2">{{ flag }}</div>
+                <p class="text-xs font-semibold text-gray-700 group-hover:text-primary">{{ lang.replace('Tiếng ', '') }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Top Translators -->
+{% if top_translators %}
+<section class="py-14 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h2 class="text-2xl font-bold mb-1">Phiên dịch viên nổi bật</h2>
+                <p class="text-gray-500 text-sm">Được đánh giá cao nhất trên nền tảng</p>
+            </div>
+            <a href="{{ url_for('translator_list') }}" class="text-sm text-primary font-medium hover:underline">Xem tất cả →</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {% for profile in top_translators %}
+            <div class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold">
+                            {{ profile.user.name[0]|upper }}
+                        </div>
+                        {% if profile.is_verified %}
+                        <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">✓ Verified</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm mb-0.5">{{ profile.user.name }}</h3>
+                    <p class="text-xs text-gray-500 mb-2 line-clamp-1">{{ profile.title }}</p>
+                    <div class="flex items-center gap-1 text-yellow-500 text-sm mb-3">
+                        <span>★</span>
+                        <span class="font-bold text-gray-800">{{ profile.rating }}</span>
+                        <span class="text-gray-400 text-xs">({{ profile.total_reviews }})</span>
+                    </div>
+                    {% if profile.badges %}
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        {% for b in profile.badges.split(',')[:2] %}
+                        <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{{ b.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="border-t border-gray-100 px-5 py-3 flex gap-2">
+                    <a href="{{ url_for('translator_profile', profile_id=profile.id) }}" class="flex-1 text-center text-xs font-medium text-primary border border-primary rounded-lg py-1.5 hover:bg-blue-50 transition">Xem hồ sơ</a>
+                    <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="flex-1 text-center text-xs font-medium text-white bg-primary rounded-lg py-1.5 hover:bg-blue-700 transition">Chat ngay</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- How It Works -->
+<section class="py-14 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center mb-2">Quy trình đơn giản – Chỉ 3 bước</h2>
+        <p class="text-gray-500 text-center text-sm mb-12">An toàn, minh bạch, bảo vệ cả hai bên</p>
+        <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">1</div>
+                <h3 class="font-bold text-lg mb-2">Tìm hoặc Đăng</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Tìm kiếm phiên dịch viên phù hợp hoặc đăng yêu cầu để nhận báo giá từ nhiều ứng viên.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">2</div>
+                <h3 class="font-bold text-lg mb-2">Thanh toán An toàn</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Tiền được giữ trong Escrow an toàn. Freelancer chỉ nhận tiền khi bạn hài lòng với kết quả.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-green-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">3</div>
+                <h3 class="font-bold text-lg mb-2">Nghiệm thu & Đánh giá</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Nhận kết quả chất lượng, phê duyệt và để lại đánh giá để giúp cộng đồng phát triển.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Banner -->
+<section class="py-14 bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">Bạn là Phiên dịch viên?</h2>
+        <p class="text-blue-100 mb-8 text-lg">Đăng ký miễn phí, tạo hồ sơ và bắt đầu nhận job ngay hôm nay.</p>
+        <a href="{{ url_for('register') }}" class="inline-block bg-white text-primary font-bold px-8 py-3 rounded-xl hover:bg-gray-50 transition shadow-lg">
+            Đăng ký ngay – Miễn phí 🚀
+        </a>
+    </div>
+</section>
+
+{% endblock %}
+{% block scripts %}
+<script>
+function quickSearch(){
+    const lang = document.getElementById('qs-lang').value;
+    const url = lang ? `/translator?lang=${encodeURIComponent(lang)}` : '/translator';
+    window.location.href = url;
+}
+</script>
+{% endblock %}

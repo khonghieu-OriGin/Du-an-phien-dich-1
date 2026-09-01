@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+    .tab-btn.active { background: #2563eb; color: white; font-weight: 600; }
+    .tab-btn { transition: all .2s; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-10">
+<div class="container mx-auto px-4 max-w-5xl">
+    <div class="flex flex-col md:flex-row gap-8">
+
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 flex-shrink-0">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
+                <!-- Avatar -->
+                <div class="p-6 text-center border-b border-gray-100 bg-gradient-to-br from-blue-50 to-indigo-50">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-md mb-3">
+                        {{ user.name[0]|upper }}
+                    </div>
+                    <h3 class="font-bold text-gray-800">{{ user.name }}</h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        {% if user.role == 'translator' %}🎯 Phiên Dịch Viên
+                        {% elif user.role == 'hirer' %}👔 Người Thuê
+                        {% else %}⚙️ Admin{% endif %}
+                    </p>
+                    {% if user.role == 'translator' and user.profile and user.profile.is_verified %}
+                    <span class="mt-2 inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded-full">✓ Đã xác minh</span>
+                    {% endif %}
+                </div>
+                <!-- Nav -->
+                <nav class="p-2">
+                    <a href="{{ url_for('account_profile') }}" class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 text-blue-700 font-semibold rounded-xl mb-1 text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        Hồ sơ cá nhân
+                    </a>
+                    <a href="{{ url_for('account_history') }}" class="flex items-center gap-2 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                        Lịch sử giao dịch
+                    </a>
+                    {% if user.role == 'translator' and user.profile %}
+                    <a href="{{ url_for('translator_profile', profile_id=user.profile.id) }}" target="_blank" class="flex items-center gap-2 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        Xem hồ sơ công khai
+                    </a>
+                    {% endif %}
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-grow space-y-6">
+
+            <!-- Tab Switcher -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-2 flex gap-2">
+                <button class="tab-btn active flex-1 py-2.5 rounded-xl text-sm" onclick="switchTab('basic')">Thông tin cơ bản</button>
+                {% if user.role == 'translator' %}
+                <button class="tab-btn flex-1 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-gray-100" onclick="switchTab('translator')">Hồ sơ nghề nghiệp</button>
+                {% endif %}
+                <button class="tab-btn flex-1 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-gray-100" onclick="switchTab('security')">Bảo mật</button>
+            </div>
+
+            <!-- Tab 1: Thông tin cơ bản -->
+            <div id="tab-basic" class="tab-panel active">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+                    <h2 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        Thông tin cơ bản
+                    </h2>
+                    <form method="POST" action="{{ url_for('account_profile') }}">
+                        <input type="hidden" name="action" value="basic">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Họ và tên <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" required value="{{ user.name }}"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" value="{{ user.email }}" readonly
+                                    class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 text-gray-500 text-sm cursor-not-allowed">
+                                <p class="text-xs text-gray-400 mt-1">Email không thể thay đổi</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
+                                <input type="tel" name="phone" value="{{ user.phone or '' }}"
+                                    placeholder="VD: 0901234567"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Vai trò</label>
+                                <div class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 text-gray-500 text-sm">
+                                    {% if user.role == 'hirer' %}👔 Người Thuê (Hirer)
+                                    {% elif user.role == 'translator' %}🎯 Phiên Dịch Viên
+                                    {% else %}⚙️ Quản trị viên{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-4 border-t border-gray-100">
+                            <button type="submit" class="bg-blue-600 text-white font-medium px-6 py-2.5 rounded-xl hover:bg-blue-700 transition shadow-sm flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab 2: Hồ sơ nghề nghiệp (chỉ translator) -->
+            {% if user.role == 'translator' %}
+            <div id="tab-translator" class="tab-panel">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+                    <h2 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                        Hồ sơ nghề nghiệp
+                    </h2>
+                    <form method="POST" action="{{ url_for('account_profile') }}" class="space-y-6">
+                        <input type="hidden" name="action" value="translator_profile">
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tiêu đề nghề nghiệp</label>
+                            <input type="text" name="title"
+                                value="{{ user.profile.title if user.profile else '' }}"
+                                placeholder="VD: Phiên dịch viên tiếng Nhật N1 · 5 năm kinh nghiệm"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ngôn ngữ hỗ trợ</label>
+                            <!-- Visual Tag Selector -->
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-2" id="lang-checkboxes">
+                                {% set selected_langs = (user.profile.languages or '').split(',') | map('trim') | list %}
+                                {% for lang, flag, cert in LANGUAGES %}
+                                <label class="flex items-center gap-2 p-2.5 border rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition text-sm
+                                    {% if lang in selected_langs %}border-blue-500 bg-blue-50{% else %}border-gray-200{% endif %}">
+                                    <input type="checkbox" name="lang_checks" value="{{ lang }}"
+                                        {% if lang in selected_langs %}checked{% endif %}
+                                        class="rounded text-blue-600 focus:ring-blue-500"
+                                        onchange="updateLangField()">
+                                    <span>{{ flag }}</span>
+                                    <span class="text-gray-700">{{ lang.replace('Tiếng ', '') }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="languages" id="languages-hidden" value="{{ user.profile.languages if user.profile else '' }}">
+                            <p class="text-xs text-gray-400 mt-1">Tích chọn các ngôn ngữ bạn có thể dịch</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Chuyên môn / Huy hiệu</label>
+                            <input type="text" name="badges"
+                                value="{{ user.profile.badges if user.profile else '' }}"
+                                placeholder="VD: Kinh tế, Pháp lý, Y tế, Kỹ thuật"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            <p class="text-xs text-gray-400 mt-1">Phân cách bằng dấu phẩy. Hiển thị dưới dạng thẻ trên hồ sơ.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Thời gian phản hồi thường</label>
+                            <select name="response_time" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                                {% set rt = user.profile.response_time if user.profile else '' %}
+                                <option value="< 1 giờ" {% if rt == '< 1 giờ' %}selected{% endif %}>Dưới 1 giờ</option>
+                                <option value="< 3 giờ" {% if rt == '< 3 giờ' %}selected{% endif %}>Dưới 3 giờ</option>
+                                <option value="< 12 giờ" {% if rt == '< 12 giờ' %}selected{% endif %}>Dưới 12 giờ</option>
+                                <option value="< 1 ngày" {% if rt == '< 1 ngày' %}selected{% endif %}>Dưới 1 ngày</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Giới thiệu bản thân / Kinh nghiệm</label>
+                            <textarea name="bio" rows="6"
+                                placeholder="Mô tả kinh nghiệm, lĩnh vực chuyên môn, chứng chỉ, và lý do khách hàng nên chọn bạn..."
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none">{{ user.profile.bio if user.profile else '' }}</textarea>
+                        </div>
+
+                        <div class="flex justify-end pt-4 border-t border-gray-100">
+                            <button type="submit" class="bg-blue-600 text-white font-medium px-6 py-2.5 rounded-xl hover:bg-blue-700 transition shadow-sm flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                Lưu hồ sơ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Tab 3: Bảo mật -->
+            <div id="tab-security" class="tab-panel">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+                    <h2 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        Đổi mật khẩu
+                    </h2>
+                    <form method="POST" action="{{ url_for('account_profile') }}" class="max-w-md space-y-5">
+                        <input type="hidden" name="action" value="change_password">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mật khẩu hiện tại</label>
+                            <input type="password" name="old_password" required
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mật khẩu mới</label>
+                            <input type="password" name="new_password" required minlength="6"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Xác nhận mật khẩu mới</label>
+                            <input type="password" name="confirm_password" required minlength="6"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div class="flex justify-end pt-4 border-t border-gray-100">
+                            <button type="submit" class="bg-blue-600 text-white font-medium px-6 py-2.5 rounded-xl hover:bg-blue-700 transition shadow-sm flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                Đổi mật khẩu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function switchTab(tab) {
+    // Hide all panels and deactivate all buttons
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('text-gray-600', 'hover:bg-gray-100');
+    });
+
+    // Activate selected tab
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+    event.target.classList.remove('text-gray-600', 'hover:bg-gray-100');
+}
+
+function updateLangField() {
+    const checks = document.querySelectorAll('input[name="lang_checks"]:checked');
+    const vals = Array.from(checks).map(c => c.value);
+    document.getElementById('languages-hidden').value = vals.join(', ');
+    
+    // Update visual border
+    document.querySelectorAll('#lang-checkboxes label').forEach(label => {
+        const cb = label.querySelector('input[type="checkbox"]');
+        if (cb.checked) {
+            label.classList.add('border-blue-500', 'bg-blue-50');
+            label.classList.remove('border-gray-200');
+        } else {
+            label.classList.remove('border-blue-500', 'bg-blue-50');
+            label.classList.add('border-gray-200');
+        }
+    });
+}
+</script>
+{% endblock %}
