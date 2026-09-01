@@ -1,113 +1,594 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+  /* ── Filter sidebar ── */
+  .jf-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
+  .jf-sidebar::-webkit-scrollbar { width: 4px; }
+  .jf-sidebar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+  /* ── Hidden native inputs ── */
+  .jf-cb, .jf-rb { display: none; }
+
+  /* ── Custom label ── */
+  .jf-label {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: 6px; cursor: pointer;
+    font-size: 0.875rem; color: #374151;
+    transition: background .15s; user-select: none;
+  }
+  .jf-label:hover { background: #eff6ff; color: #4f46e5; }
+  .jf-cb:checked + .jf-label,
+  .jf-rb:checked + .jf-label { background: #eff6ff; color: #4f46e5; font-weight: 500; }
+
+  /* ── Custom checkbox indicator ── */
+  .jf-box {
+    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
+    border-radius: 3px; flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center;
+    transition: all .15s; background: white;
+  }
+  .jf-cb:checked + .jf-label .jf-box { background: #4f46e5; border-color: #4f46e5; }
+  .jf-cb:checked + .jf-label .jf-box::after {
+    content: ''; display: block; width: 9px; height: 5px;
+    border-left: 2px solid white; border-bottom: 2px solid white;
+    transform: rotate(-45deg) translateY(-1px);
+  }
+
+  /* ── Custom radio indicator ── */
+  .jf-dot {
+    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
+    border-radius: 50%; flex-shrink: 0;
+    transition: all .15s; background: white;
+  }
+  .jf-rb:checked + .jf-label .jf-dot { border-color: #4f46e5; border-width: 4px; }
+
+  /* ── Section divider ── */
+  .jf-section + .jf-section { border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: 0.25rem; }
+
+  /* ── Result count badge ── */
+  #jf-count {
+    display: inline-flex; align-items: center;
+    background: #ede9fe; color: #4338ca; font-weight: 600;
+    border-radius: 9999px; padding: 2px 10px; font-size: 0.875rem;
+  }
+
+  /* ── Job card hover ── */
+  .jf-card { transition: box-shadow .18s, transform .18s; }
+  .jf-card:hover { box-shadow: 0 4px 20px rgba(79,70,229,.10); transform: translateY(-2px); }
+
+  /* ── Empty state ── */
+  #jf-empty { display: none; }
+
+  /* ── Mobile overlay ── */
+  #jf-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.45); z-index: 40; backdrop-filter: blur(2px);
+  }
+  #jf-overlay.open { display: block; }
+
+  /* ── Mobile drawer ── */
+  #jf-drawer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    max-height: 92vh; overflow-y: auto; background: white;
+    border-radius: 20px 20px 0 0; z-index: 50;
+    transform: translateY(100%); transition: transform .28s ease;
+  }
+  #jf-drawer.open { transform: translateY(0); }
+
+  /* ── Mobile filter badge ── */
+  #jf-mobile-badge {
+    display: none; background: #ef4444; color: white;
+    font-size: 0.65rem; font-weight: 700;
+    width: 18px; height: 18px; border-radius: 50%;
+    align-items: center; justify-content: center;
+    position: absolute; top: -6px; right: -6px;
+  }
+  #jf-mobile-badge.show { display: flex; }
+
+  /* ── Clear button ── */
+  #jf-clear-desk { display: none; }
+  #jf-clear-desk.show { display: inline-flex; }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="bg-indigo-900 text-white py-10">
-    <div class="container mx-auto px-4">
-        <h1 class="text-3xl font-bold mb-2">Bảng Tin Việc Làm Dịch Thuật</h1>
-        <p class="text-indigo-200">Tìm kiếm các dự án phù hợp với kỹ năng ngôn ngữ của bạn và gửi đề xuất ngay.</p>
-    </div>
+<!-- ── Hero ── -->
+<div class="bg-indigo-900 text-white py-12">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold mb-2">Bảng Tin Việc Làm Dịch Thuật</h1>
+    <p class="text-indigo-200 max-w-xl mx-auto text-sm md:text-base">
+      Tìm công việc phù hợp với chuyên môn và kỳ vọng của bạn.
+    </p>
+  </div>
 </div>
 
+<!-- ── Main layout ── -->
 <div class="container mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-8">
-        
-        <!-- Filter Sidebar -->
-        <div class="w-full lg:w-1/4">
-            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm sticky top-24">
-                <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
-                    <h3 class="font-bold text-lg">Bộ lọc</h3>
-                    <a href="#" class="text-sm text-indigo-600 hover:underline">Xoá lọc</a>
-                </div>
-                
-                <!-- Ngôn ngữ -->
-                <div class="mb-6">
-                    <h4 class="font-medium mb-3 text-gray-800">Ngôn ngữ đích</h4>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500">
-                            <span class="text-sm text-gray-700">Tiếng Anh</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500">
-                            <span class="text-sm text-gray-700">Tiếng Nhật</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <button class="w-full bg-gray-100 text-gray-800 font-medium py-2 rounded-lg hover:bg-gray-200 transition">Áp dụng</button>
-            </div>
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <!-- ════ SIDEBAR DESKTOP ════ -->
+    <aside class="hidden lg:block w-64 xl:w-72 shrink-0">
+      <div class="jf-sidebar bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+
+        <div class="flex justify-between items-center mb-5">
+          <h3 class="font-bold text-gray-800 text-base">BỘ LỌC VIỆC LÀM</h3>
+          <button id="jf-clear-desk"
+            class="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition items-center gap-1"
+            onclick="clearAllFilters()">
+            Xoá bộ lọc
+          </button>
         </div>
-        
-        <!-- Job List -->
-        <div class="w-full lg:w-3/4">
-            
-            <!-- Sort -->
-            <div class="flex justify-between items-center mb-6">
-                <span class="text-gray-600 font-medium">{{ jobs|length }} công việc tìm thấy</span>
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500">Sắp xếp:</span>
-                    <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 bg-white">
-                        <option>Mới nhất</option>
-                        <option>Ngân sách cao nhất</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- List -->
-            <div class="space-y-4">
-                {% for job in jobs %}
-                <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition">
-                    <div class="flex flex-col md:flex-row justify-between gap-4 mb-3">
-                        <h2 class="text-xl font-bold text-gray-800 hover:text-indigo-600">
-                            <a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.title }}</a>
-                        </h2>
-                        <div class="text-left md:text-right flex-shrink-0">
-                            {% if job.budget_type == 'fixed' %}
-                                <span class="text-lg font-bold text-gray-800">{{ "{:,.0f}".format(job.budget_min) }}đ</span>
-                                <span class="text-xs text-gray-500 block">Giá cố định</span>
-                            {% elif job.budget_type == 'range' %}
-                                <span class="text-lg font-bold text-gray-800">{{ "{:,.0f}".format(job.budget_min) }}đ - {{ "{:,.0f}".format(job.budget_max) }}đ</span>
-                                <span class="text-xs text-gray-500 block">Khoảng giá</span>
-                            {% else %}
-                                <span class="text-lg font-bold text-gray-800">Thương lượng</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-4">
-                        <span class="flex items-center gap-1">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            {{ job.category }}
-                        </span>
-                        <span class="text-gray-300">|</span>
-                        <span class="flex items-center gap-1">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
-                            {{ job.source_lang }} ➔ {{ job.target_lang }}
-                        </span>
-                        <span class="text-gray-300">|</span>
-                        <span class="flex items-center gap-1">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Đăng lúc {{ job.created_at.strftime('%d/%m/%Y') }}
-                        </span>
-                    </div>
-                    
-                    <p class="text-gray-600 text-sm line-clamp-2 mb-4">{{ job.description }}</p>
-                    
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4">
-                        <div class="text-sm text-gray-500">
-                            <strong>{{ job.proposals|length }}</strong> đề xuất đã gửi
-                        </div>
-                        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="bg-indigo-50 text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-100 transition">Xem và Đề xuất</a>
-                    </div>
-                </div>
-                {% else %}
-                <div class="text-center py-12 bg-white rounded-xl border border-gray-200">
-                    <p class="text-gray-500">Hiện chưa có công việc nào.</p>
-                </div>
-                {% endfor %}
-            </div>
-            
+
+        <div id="jf-form-desk"></div>
+      </div>
+    </aside>
+
+    <!-- ════ MAIN ════ -->
+    <div class="flex-1 min-w-0">
+
+      <!-- Toolbar -->
+      <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
+        <p class="text-gray-600 text-sm">
+          Hiển thị <span id="jf-count">…</span> việc làm
+        </p>
+        <div class="flex items-center gap-2">
+
+          <!-- Mobile filter btn -->
+          <div class="relative lg:hidden">
+            <button id="jf-mobile-btn"
+              class="flex items-center gap-1.5 text-sm font-medium border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-50 transition"
+              aria-haspopup="dialog" aria-controls="jf-drawer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+              </svg>
+              Bộ lọc
+            </button>
+            <span id="jf-mobile-badge" aria-hidden="true"></span>
+          </div>
+
+          <!-- Sort -->
+          <select id="jf-sort"
+            class="text-sm border border-gray-300 rounded-lg px-3 py-2 text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="newest">Mới nhất</option>
+            <option value="budget_desc">Ngân sách cao nhất</option>
+            <option value="budget_asc">Ngân sách thấp nhất</option>
+            <option value="proposals_asc">Ít đề xuất nhất</option>
+          </select>
         </div>
-    </div>
+      </div>
+
+      <!-- Job grid -->
+      <div id="jf-grid" class="space-y-4"></div>
+
+      <!-- Empty state -->
+      <div id="jf-empty" class="text-center py-20 bg-white rounded-xl border border-gray-200">
+        <div class="text-5xl mb-4">🔍</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Không tìm thấy việc làm phù hợp</h3>
+        <p class="text-gray-500 text-sm max-w-sm mx-auto">
+          Hãy thử thay đổi hoặc xoá một số bộ lọc để xem thêm công việc.
+        </p>
+        <button onclick="clearAllFilters()"
+          class="mt-4 text-sm text-indigo-600 border border-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">
+          Xoá tất cả bộ lọc
+        </button>
+      </div>
+
+    </div><!-- /main -->
+  </div>
 </div>
+
+<!-- ════ MOBILE OVERLAY ════ -->
+<div id="jf-overlay" onclick="closeDrawer()"></div>
+
+<!-- ════ MOBILE DRAWER ════ -->
+<div id="jf-drawer" role="dialog" aria-modal="true" aria-label="Bộ lọc việc làm">
+  <!-- Handle -->
+  <div class="flex justify-center pt-3 pb-1">
+    <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+  </div>
+  <!-- Header -->
+  <div class="flex justify-between items-center px-5 py-3 border-b border-gray-100 sticky top-0 bg-white z-10">
+    <h3 class="font-bold text-gray-800 text-base">BỘ LỌC VIỆC LÀM</h3>
+    <button id="jf-close" onclick="closeDrawer()" aria-label="Đóng bộ lọc"
+      class="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+  <!-- Body -->
+  <div id="jf-form-mob" class="px-5 py-4 pb-36"></div>
+  <!-- Footer actions -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-5 py-3 flex gap-3 z-10">
+    <button onclick="clearAllFilters()"
+      class="flex-1 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg py-2.5 hover:bg-gray-50 transition">
+      Xoá bộ lọc
+    </button>
+    <button id="jf-apply" onclick="closeDrawer()"
+      class="flex-1 text-sm font-medium bg-indigo-600 text-white rounded-lg py-2.5 hover:bg-indigo-700 transition">
+      Áp dụng
+    </button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ════════════════════════════════════════════════════════════════
+//  DỮ LIỆU JOB – inject thẳng từ Jinja2, không cần API fetch
+// ════════════════════════════════════════════════════════════════
+const ALL_JOBS = [
+  {% for job in jobs %}
+  {
+    id:             {{ job.id }},
+    title:          {{ job.title | tojson }},
+    category:       {{ (job.category or '') | tojson }},
+    source_lang:    {{ (job.source_lang or '') | tojson }},
+    target_lang:    {{ (job.target_lang or '') | tojson }},
+    budget_type:    {{ (job.budget_type or '') | tojson }},
+    budget_min:     {{ job.budget_min if job.budget_min is not none else 'null' }},
+    budget_max:     {{ job.budget_max if job.budget_max is not none else 'null' }},
+    description:    {{ (job.description or '') | truncate(200, true, '') | tojson }},
+    proposal_count: {{ job.proposals | length }},
+    created_at:     {{ job.created_at.isoformat() | tojson }},
+    detail_url:     {{ url_for('job_detail', job_id=job.id) | tojson }}
+  }{% if not loop.last %},{% endif %}
+  {% endfor %}
+];
+
+// ════════════════════════════════════════════════════════════════
+//  CẤU HÌNH BỘ LỌC
+// ════════════════════════════════════════════════════════════════
+const LANG_LIST = [
+  { name: 'Ti\u1ebfng Anh',         flag: '\ud83c\uddec\ud83c\udde7' },
+  { name: 'Ti\u1ebfng Nh\u1eadt',   flag: '\ud83c\uddef\ud83c\uddf5' },
+  { name: 'Ti\u1ebfng H\u00e0n',    flag: '\ud83c\uddf0\ud83c\uddf7' },
+  { name: 'Ti\u1ebfng Trung',       flag: '\ud83c\udde8\ud83c\uddf3' },
+  { name: 'Ti\u1ebfng Nga',         flag: '\ud83c\uddf7\ud83c\uddfa' },
+  { name: 'Ti\u1ebfng Th\u00e1i',   flag: '\ud83c\uddf9\ud83c\udded' },
+  { name: 'Ti\u1ebfng Ph\u00e1p',   flag: '\ud83c\uddeb\ud83c\uddf7' },
+  { name: 'Ti\u1ebfng \u0110\u1ee9c', flag: '\ud83c\udde9\ud83c\uddea' },
+  { name: 'Ti\u1ebfng B\u1ed3 \u0110\u00e0o Nha', flag: '\ud83c\udde7\ud83c\uddf7' },
+  { name: 'Ti\u1ebfng T\u00e2y Ban Nha', flag: '\ud83c\uddea\ud83c\uddf8' },
+];
+
+const PRICE_RANGES = [
+  { label: 'D\u01b0\u1edbi 500.000\u0111',           value: 'p1', min: 0,       max: 499999   },
+  { label: '500.000 \u2013 1.000.000\u0111',          value: 'p2', min: 500000,  max: 1000000  },
+  { label: '1.000.000 \u2013 3.000.000\u0111',        value: 'p3', min: 1000001, max: 3000000  },
+  { label: '3.000.000 \u2013 5.000.000\u0111',        value: 'p4', min: 3000001, max: 5000000  },
+  { label: 'Tr\u00ean 5.000.000\u0111',               value: 'p5', min: 5000001, max: Infinity },
+];
+
+const DATE_RANGES = [
+  { label: 'H\u00f4m nay',            value: 'd1', days: 1    },
+  { label: '3 ng\u00e0y g\u1ea7n nh\u1ea5t',  value: 'd3', days: 3    },
+  { label: '7 ng\u00e0y g\u1ea7n nh\u1ea5t',  value: 'd7', days: 7    },
+  { label: '30 ng\u00e0y g\u1ea7n nh\u1ea5t', value: 'd30',days: 30   },
+  { label: 'T\u1ea5t c\u1ea3',          value: 'all',days: null },
+];
+
+// ════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════
+let filters = { languages: [], priceRange: null, postedWithin: null };
+let sortBy  = 'newest';
+
+// ════════════════════════════════════════════════════════════════
+//  XÂY DỰNG FORM BỘ LỌC
+//  s = suffix: 'd' (desktop) hoặc 'm' (mobile) – tránh id trùng
+// ════════════════════════════════════════════════════════════════
+function buildForm(s) {
+  let h = '';
+
+  // ── Ngôn ngữ (checkbox) ──────────────────────────────────────
+  h += `<div class="jf-section">
+    <h4 class="text-sm font-semibold text-gray-800 mb-1">Ng\u00f4n ng\u1eef</h4>
+    <p class="text-xs text-gray-400 mb-2">Ch\u1ecdn ng\u00f4n ng\u1eef b\u1ea1n th\u1ea1o \u2014 ch\u1ec9 hi\u1edn job ph\u00f9 h\u1ee3p</p>
+    <div class="space-y-0.5">`;
+  LANG_LIST.forEach(l => {
+    const id = `jf-lang-${l.name.replace(/\s/g, '')}-${s}`;
+    h += `<div>
+      <input type="checkbox" class="jf-cb jf-lang-${s}" id="${id}" value="${l.name}">
+      <label for="${id}" class="jf-label">
+        <span class="jf-box" aria-hidden="true"></span>
+        <span>${l.flag} ${l.name}</span>
+      </label>
+    </div>`;
+  });
+  h += `</div></div>`;
+
+  // ── Mức giá (radio) ──────────────────────────────────────────
+  h += `<div class="jf-section mt-4">
+    <h4 class="text-sm font-semibold text-gray-800 mb-1">M\u1ee9c gi\u00e1</h4>
+    <p class="text-xs text-gray-400 mb-2">L\u1ecdc theo ng\u00e2n s\u00e1ch ng\u01b0\u1eddi \u0111\u0103ng \u0111\u1eb7t ra</p>
+    <div class="space-y-0.5">`;
+  PRICE_RANGES.forEach(p => {
+    const id = `jf-price-${p.value}-${s}`;
+    h += `<div>
+      <input type="radio" class="jf-rb jf-price-${s}" id="${id}" name="jf-price-${s}" value="${p.value}">
+      <label for="${id}" class="jf-label">
+        <span class="jf-dot" aria-hidden="true"></span>
+        ${p.label}
+      </label>
+    </div>`;
+  });
+  h += `</div></div>`;
+
+  // ── Ngày đăng (radio) ─────────────────────────────────────────
+  h += `<div class="jf-section mt-4">
+    <h4 class="text-sm font-semibold text-gray-800 mb-1">Ng\u00e0y \u0111\u0103ng</h4>
+    <p class="text-xs text-gray-400 mb-2">Job c\u0169 th\u01b0\u1eddng \u0111\u00e3 nh\u1eadn \u0111\u1ee7 \u0111\u1ec1 xu\u1ea5t</p>
+    <div class="space-y-0.5">`;
+  DATE_RANGES.forEach(d => {
+    const id = `jf-date-${d.value}-${s}`;
+    h += `<div>
+      <input type="radio" class="jf-rb jf-date-${s}" id="${id}" name="jf-date-${s}" value="${d.value}">
+      <label for="${id}" class="jf-label">
+        <span class="jf-dot" aria-hidden="true"></span>
+        ${d.label}
+      </label>
+    </div>`;
+  });
+  h += `</div></div>`;
+
+  return h;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  filterJobs – hàm thuần, không mutate dữ liệu gốc
+// ════════════════════════════════════════════════════════════════
+function filterJobs(jobs, f) {
+  const now = Date.now();
+  return jobs.filter(job => {
+
+    // ── Ngôn ngữ: OR trong nhóm ───────────────────────────────
+    if (f.languages.length > 0) {
+      const srcLow = (job.source_lang || '').toLowerCase();
+      const tgtLow = (job.target_lang || '').toLowerCase();
+      const hit = f.languages.some(lang => {
+        const key = lang.toLowerCase();
+        return srcLow.includes(key) || tgtLow.includes(key);
+      });
+      if (!hit) return false;
+    }
+
+    // ── Mức giá ───────────────────────────────────────────────
+    if (f.priceRange) {
+      const r = PRICE_RANGES.find(p => p.value === f.priceRange);
+      if (r && job.budget_min !== null) {
+        if (job.budget_min < r.min || job.budget_min > r.max) return false;
+      }
+    }
+
+    // ── Ngày đăng ─────────────────────────────────────────────
+    if (f.postedWithin && f.postedWithin !== 'all') {
+      const d = DATE_RANGES.find(x => x.value === f.postedWithin);
+      if (d && d.days && job.created_at) {
+        const diffDays = (now - new Date(job.created_at).getTime()) / 86400000;
+        if (diffDays > d.days) return false;
+      }
+    }
+
+    return true;
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+//  sortJobs
+// ════════════════════════════════════════════════════════════════
+function sortJobs(jobs, by) {
+  const c = [...jobs];
+  if (by === 'budget_desc')   return c.sort((a, b) => (b.budget_min || 0) - (a.budget_min || 0));
+  if (by === 'budget_asc')    return c.sort((a, b) => (a.budget_min || 0) - (b.budget_min || 0));
+  if (by === 'proposals_asc') return c.sort((a, b) => a.proposal_count - b.proposal_count);
+  return c.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // newest
+}
+
+// ════════════════════════════════════════════════════════════════
+//  Render helpers
+// ════════════════════════════════════════════════════════════════
+function fmtBudget(job) {
+  const vnd = n => n.toLocaleString('vi-VN') + '\u0111';
+  if (job.budget_type === 'fixed' && job.budget_min !== null)
+    return `<span class="font-bold text-gray-800 text-lg">${vnd(job.budget_min)}</span>
+            <span class="text-xs text-gray-400 block">Gi\u00e1 c\u1ed1 \u0111\u1ecbnh</span>`;
+  if (job.budget_type === 'range' && job.budget_min !== null && job.budget_max !== null)
+    return `<span class="font-bold text-gray-800 text-lg">${vnd(job.budget_min)} \u2013 ${vnd(job.budget_max)}</span>
+            <span class="text-xs text-gray-400 block">Kho\u1ea3ng gi\u00e1</span>`;
+  return `<span class="font-bold text-gray-600 text-lg">Th\u01b0\u01a1ng l\u01b0\u1ee3ng</span>`;
+}
+
+function timeAgo(iso) {
+  if (!iso) return '';
+  const s = (Date.now() - new Date(iso)) / 1000;
+  if (s < 60)     return 'V\u1eeba xong';
+  if (s < 3600)   return `${Math.floor(s / 60)} ph\u00fat tr\u01b0\u1edbc`;
+  if (s < 86400)  return `${Math.floor(s / 3600)} gi\u1edd tr\u01b0\u1edbc`;
+  if (s < 2592000)return `${Math.floor(s / 86400)} ng\u00e0y tr\u01b0\u1edbc`;
+  return new Date(iso).toLocaleDateString('vi-VN');
+}
+
+function renderCard(job) {
+  const propBadge = job.proposal_count > 0
+    ? `<span class="text-xs text-gray-500"><strong>${job.proposal_count}</strong> \u0111\u1ec1 xu\u1ea5t \u0111\u00e3 g\u1eedi</span>`
+    : `<span class="text-xs font-medium text-green-600">Ch\u01b0a c\u00f3 \u0111\u1ec1 xu\u1ea5t</span>`;
+
+  return `
+<div class="jf-card bg-white rounded-xl border border-gray-200 p-6">
+  <div class="flex flex-col md:flex-row justify-between gap-4 mb-3">
+    <h2 class="text-xl font-bold text-gray-800 hover:text-indigo-600 transition leading-snug">
+      <a href="${job.detail_url}">${job.title}</a>
+    </h2>
+    <div class="text-left md:text-right flex-shrink-0">${fmtBudget(job)}</div>
+  </div>
+
+  <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 mb-3">
+    <span class="flex items-center gap-1">
+      <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+      ${job.category || 'Ch\u01b0a ph\u00e2n lo\u1ea1i'}
+    </span>
+    <span class="flex items-center gap-1">
+      <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+      </svg>
+      ${job.source_lang} &#10132; ${job.target_lang}
+    </span>
+    <span class="flex items-center gap-1">
+      <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      ${timeAgo(job.created_at)}
+    </span>
+  </div>
+
+  <p class="text-gray-600 text-sm line-clamp-2 mb-4">${job.description}</p>
+
+  <div class="flex justify-between items-center border-t border-gray-100 pt-4">
+    ${propBadge}
+    <a href="${job.detail_url}"
+      class="bg-indigo-50 text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-100 transition text-sm">
+      Xem v\u00e0 \u0110\u1ec1 xu\u1ea5t
+    </a>
+  </div>
+</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  Đếm filter đang bật
+// ════════════════════════════════════════════════════════════════
+function countActive() {
+  let n = 0;
+  if (filters.languages.length)                           n++;
+  if (filters.priceRange)                                 n++;
+  if (filters.postedWithin && filters.postedWithin !== 'all') n++;
+  return n;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  Render danh sách (realtime)
+// ════════════════════════════════════════════════════════════════
+function renderList() {
+  const filtered = filterJobs(ALL_JOBS, filters);
+  const sorted   = sortJobs(filtered, sortBy);
+  const grid     = document.getElementById('jf-grid');
+  const empty    = document.getElementById('jf-empty');
+  const countEl  = document.getElementById('jf-count');
+
+  // Result count
+  countEl.textContent = filtered.length;
+
+  // Cards
+  if (sorted.length === 0) {
+    grid.innerHTML    = '';
+    grid.style.display  = 'none';
+    empty.style.display = 'block';
+  } else {
+    grid.style.display  = '';
+    empty.style.display = 'none';
+    grid.innerHTML = sorted.map(renderCard).join('');
+  }
+
+  // Clear-filter button (desktop)
+  const clearBtn   = document.getElementById('jf-clear-desk');
+  const mobileBadge= document.getElementById('jf-mobile-badge');
+  const active     = countActive();
+
+  clearBtn.classList.toggle('show', active > 0);
+  if (active > 0) {
+    mobileBadge.textContent = active;
+    mobileBadge.classList.add('show');
+  } else {
+    mobileBadge.classList.remove('show');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  Sync filter state ↔ DOM
+// ════════════════════════════════════════════════════════════════
+function readFiltersFromDOM(s) {
+  filters.languages  = [...document.querySelectorAll(`.jf-lang-${s}:checked`)].map(e => e.value);
+  const pr = document.querySelector(`.jf-price-${s}:checked`);
+  filters.priceRange = pr ? pr.value : null;
+  const dr = document.querySelector(`.jf-date-${s}:checked`);
+  filters.postedWithin = dr ? dr.value : null;
+}
+
+function writeFiltersToDOM(s) {
+  document.querySelectorAll(`.jf-lang-${s}`) .forEach(e => { e.checked = filters.languages.includes(e.value); });
+  document.querySelectorAll(`.jf-price-${s}`).forEach(e => { e.checked = e.value === filters.priceRange; });
+  document.querySelectorAll(`.jf-date-${s}`) .forEach(e => { e.checked = e.value === filters.postedWithin; });
+}
+
+// ════════════════════════════════════════════════════════════════
+//  Xoá bộ lọc
+// ════════════════════════════════════════════════════════════════
+function clearAllFilters() {
+  filters = { languages: [], priceRange: null, postedWithin: null };
+  writeFiltersToDOM('d');
+  writeFiltersToDOM('m');
+  renderList();
+}
+
+// ════════════════════════════════════════════════════════════════
+//  Mobile Drawer
+// ════════════════════════════════════════════════════════════════
+function openDrawer() {
+  writeFiltersToDOM('m');   // đồng bộ state → drawer
+  document.getElementById('jf-drawer').classList.add('open');
+  document.getElementById('jf-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('jf-drawer').classList.remove('open');
+  document.getElementById('jf-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('jf-mobile-btn')?.focus();
+}
+
+// ════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Render form bộ lọc
+  document.getElementById('jf-form-desk').innerHTML = buildForm('d');
+  document.getElementById('jf-form-mob').innerHTML  = buildForm('m');
+
+  // Render danh sách lần đầu
+  renderList();
+
+  // Desktop: filter realtime khi tick
+  document.getElementById('jf-form-desk').addEventListener('change', () => {
+    readFiltersFromDOM('d');
+    renderList();
+  });
+
+  // Mobile: filter realtime khi tick (áp dụng ngay, không cần nút Apply)
+  document.getElementById('jf-form-mob').addEventListener('change', () => {
+    readFiltersFromDOM('m');
+    renderList();
+  });
+
+  // Sort
+  document.getElementById('jf-sort').addEventListener('change', e => {
+    sortBy = e.target.value;
+    renderList();
+  });
+
+  // Mobile drawer controls
+  document.getElementById('jf-mobile-btn').addEventListener('click', openDrawer);
+  document.getElementById('jf-close').addEventListener('click', closeDrawer);
+
+  // Escape key closes drawer
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+});
+</script>
 {% endblock %}
