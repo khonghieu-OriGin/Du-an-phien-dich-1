@@ -75,7 +75,13 @@
             {% for item in LANGUAGES %}
             <a href="{{ url_for('translator_list', lang=item.name) }}"
                class="card-hover bg-white rounded-xl p-4 text-center border border-gray-200 hover:border-primary group flex flex-col items-center justify-center">
-                <span class="text-3xl leading-none select-none mb-2.5" aria-hidden="true">{{ item.flag }}</span>
+                <div class="h-8 flex items-center justify-center mb-2.5">
+                    <img src="{{ item.flag_svg }}"
+                         alt="{{ item.flag_alt }}"
+                         width="32"
+                         height="24"
+                         class="w-8 h-6 object-cover rounded-sm shadow-xs border border-gray-200/80 group-hover:scale-105 transition-transform duration-200">
+                </div>
                 <span class="text-xs font-bold text-gray-900 group-hover:text-primary transition-colors tracking-wide uppercase mb-1">{{ item.code }}</span>
                 <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900 transition-colors">{{ item.short_name }}</span>
             </a>

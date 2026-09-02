@@ -6,7 +6,19 @@ db = SQLAlchemy()
 class LanguageItem(dict):
     def __init__(self, name, flag, cert, code, short_name=None):
         short = short_name or name.replace('Tiếng ', '')
-        super().__init__(name=name, flag=flag, cert=cert, code=code, short_name=short)
+        code_lower = code.lower()
+        flag_svg = f"/static/flags/{code_lower}.svg"
+        flag_alt = f"Quốc kỳ {short}"
+        super().__init__(
+            name=name,
+            flag=flag,
+            cert=cert,
+            code=code,
+            short_name=short,
+            code_lower=code_lower,
+            flag_svg=flag_svg,
+            flag_alt=flag_alt,
+        )
         self.__dict__ = self
 
     def __iter__(self):
