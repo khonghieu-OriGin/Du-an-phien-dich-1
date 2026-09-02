@@ -1,13 +1,21 @@
 {% extends "base.html" %}
-{% block content %}
 
-<div class="bg-gray-50 py-8 border-b border-gray-200">
-    <div class="container mx-auto px-4 max-w-5xl">
+{% block title %}Hợp đồng & Phòng làm việc | VietTranslate{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50/60 py-8 md:py-12 border-b border-slate-200/70 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="mb-6 flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+        <!-- Contract Header -->
+        <div class="mb-8 flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">
-                    Hợp đồng: 
+                <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-2">
+                    <a href="{{ url_for('account_history') }}" class="hover:text-brand-600">Lịch sử giao dịch</a>
+                    <span>/</span>
+                    <span class="text-slate-700">Chi tiết hợp đồng #{{ contract.id }}</span>
+                </nav>
+
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
                     {% if contract.job %}
                         {{ contract.job.title }}
                     {% else %}
@@ -15,36 +23,41 @@
                     {% endif %}
                 </h1>
                 
-                <!-- Hiển thị lịch hẹn rõ ràng cho cả hai bên -->
                 {% if contract.scheduled_date %}
-                <div class="mt-3 flex flex-wrap gap-4 text-sm bg-blue-50 text-blue-800 p-3 rounded-lg border border-blue-100 inline-flex items-center">
-                    <div class="flex items-center gap-1 font-medium">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        Ngày hẹn: {{ contract.scheduled_date.strftime('%d/%m/%Y') }}
+                <div class="mt-3 flex flex-wrap gap-3 text-xs bg-brand-50/80 text-brand-900 px-3.5 py-2 rounded-xl border border-brand-200/60 inline-flex items-center">
+                    <div class="flex items-center gap-1.5 font-bold">
+                        <span>📅</span>
+                        <span>Ngày hẹn: {{ contract.scheduled_date.strftime('%d/%m/%Y') }}</span>
                     </div>
                     {% if contract.scheduled_time_start %}
-                    <div class="flex items-center gap-1 font-medium">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Từ {{ contract.scheduled_time_start }} đến {{ contract.scheduled_time_end }}
+                    <div class="flex items-center gap-1.5 font-medium">
+                        <span>⏰</span>
+                        <span>{{ contract.scheduled_time_start }} – {{ contract.scheduled_time_end }}</span>
                     </div>
                     {% endif %}
                     {% if contract.location %}
-                    <div class="flex items-center gap-1 font-medium">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Tại: {{ contract.location }}
+                    <div class="flex items-center gap-1.5 font-medium">
+                        <span>📍</span>
+                        <span>{{ contract.location }}</span>
                     </div>
                     {% endif %}
                 </div>
                 {% endif %}
             </div>
             
-            <div class="flex-shrink-0 mt-2 md:mt-0">
+            <div class="shrink-0">
                 {% if contract.status == 'escrow_pending' %}
-                    <span class="bg-yellow-100 text-yellow-800 font-bold px-4 py-1.5 rounded-full text-sm inline-block">Chờ thanh toán Escrow</span>
+                    <span class="bg-amber-50 text-amber-800 border border-amber-200/80 font-bold px-4 py-1.5 rounded-full text-xs inline-block">
+                        ⏳ Chờ thanh toán Escrow
+                    </span>
                 {% elif contract.status == 'in_progress' %}
-                    <span class="bg-blue-100 text-blue-800 font-bold px-4 py-1.5 rounded-full text-sm inline-block">Đang thực hiện</span>
+                    <span class="bg-brand-50 text-brand-800 border border-brand-200/80 font-bold px-4 py-1.5 rounded-full text-xs inline-block">
+                        ⚡ Đang thực hiện
+                    </span>
                 {% elif contract.status == 'completed' %}
-                    <span class="bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full text-sm inline-block">Đã nghiệm thu</span>
+                    <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-bold px-4 py-1.5 rounded-full text-xs inline-block">
+                        ✓ Đã nghiệm thu & Giải ngân
+                    </span>
                 {% endif %}
             </div>
         </div>
@@ -53,109 +66,119 @@
             
             <!-- Left Column: Business Process Stepper -->
             <div class="w-full lg:w-7/12 space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h2 class="text-lg font-bold mb-6 text-gray-800">Tiến trình Hợp đồng</h2>
+                <div class="bg-white rounded-2xl shadow-soft border border-slate-200/90 p-6 sm:p-8">
+                    <h2 class="text-base font-bold mb-6 text-slate-900 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-brand-600"></span>
+                        Tiến trình Hợp đồng Escrow
+                    </h2>
+                    
                     <div class="relative">
-                        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200"></div>
                         
                         <div class="space-y-6">
-                            <!-- Steps 1-3 -->
-                            <div class="relative pl-12">
-                                <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
-                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <!-- Step 1: Chốt Deal -->
+                            <div class="relative pl-11">
+                                <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-sm">
+                                    <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 </div>
-                                <h4 class="font-bold text-gray-800">Thương lượng & Chốt Deal</h4>
-                                <p class="text-sm text-gray-500">Đã chốt giá: {{ "{:,.0f}".format(contract.agreed_price) }}đ</p>
+                                <h3 class="font-bold text-slate-900 text-sm">Thương lượng & Chốt thỏa thuận</h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Giá thống nhất: <strong class="text-brand-700 font-extrabold">{{ "{:,.0f}".format(contract.agreed_price) }}đ</strong></p>
                             </div>
                             
-                            <!-- Step 4: Escrow -->
-                            <div class="relative pl-12">
+                            <!-- Step 2: Escrow -->
+                            <div class="relative pl-11">
                                 {% if contract.status == 'escrow_pending' %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
-                                    <h4 class="font-bold text-blue-600">Thanh toán tạm giữ (Escrow)</h4>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-brand-600 border-2 border-white shadow-sm animate-pulse"></div>
+                                    <h3 class="font-bold text-brand-600 text-sm">Thanh toán tạm giữ (Escrow)</h3>
                                     {% if current_user.role == 'hirer' %}
-                                    <a href="{{ url_for('payment_mockup', contract_id=contract.id) }}" class="mt-2 inline-block bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">Thanh toán ngay</a>
+                                    <div class="mt-2">
+                                        <a href="{{ url_for('payment_mockup', contract_id=contract.id) }}" class="inline-block bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                                            Thanh toán ký quỹ ngay
+                                        </a>
+                                    </div>
                                     {% else %}
-                                    <p class="text-sm text-gray-500 mt-1">Đang chờ khách hàng thanh toán để bắt đầu công việc.</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">Đang chờ khách hàng thanh toán vào quỹ Escrow để bắt đầu.</p>
                                     {% endif %}
                                 {% else %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
-                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-sm">
+                                        <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                     </div>
-                                    <h4 class="font-bold text-gray-800">Thanh toán tạm giữ (Escrow)</h4>
-                                    <p class="text-sm text-gray-500 mt-1">Đã thanh toán an toàn.</p>
+                                    <h3 class="font-bold text-slate-900 text-sm">Thanh toán tạm giữ (Escrow)</h3>
+                                    <p class="text-xs text-emerald-600 font-semibold mt-0.5">✓ Tiền đã được bảo chứng an toàn trong quỹ.</p>
                                 {% endif %}
                             </div>
                             
-                            <!-- Step 5: Execution -->
-                            <div class="relative pl-12">
+                            <!-- Step 3: Execution -->
+                            <div class="relative pl-11">
                                 {% if contract.status in ['escrow_pending'] %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-gray-300 border-4 border-white"></div>
-                                    <h4 class="font-bold text-gray-400">Thực hiện công việc</h4>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                                    <h3 class="font-bold text-slate-400 text-sm">Thực hiện công việc</h3>
                                 {% elif contract.status == 'in_progress' %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
-                                    <h4 class="font-bold text-blue-600">Thực hiện công việc</h4>
-                                    <p class="text-sm text-gray-700 mt-1">Trao đổi tiến độ hoặc giao nhận file tài liệu kết quả.</p>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-brand-600 border-2 border-white shadow-sm"></div>
+                                    <h3 class="font-bold text-brand-600 text-sm">Thực hiện công việc</h3>
+                                    <p class="text-xs text-slate-600 mt-0.5">Trao đổi tiến độ qua phòng chat bên phải hoặc tải lên bản dịch/biên bản.</p>
                                     
                                     {% if current_user.role == 'translator' %}
-                                    <div class="mt-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                        <p class="text-sm font-medium mb-2">Tải lên file kết quả (nếu có):</p>
+                                    <div class="mt-3 p-4 bg-slate-50 rounded-xl border border-slate-200/80">
+                                        <p class="text-xs font-bold text-slate-700 mb-2">Tải lên tài liệu kết quả / File dịch:</p>
                                         <form method="POST" enctype="multipart/form-data" action="{{ url_for('transaction_detail', contract_id=contract.id) }}" class="flex flex-col sm:flex-row gap-2">
-                                            <input type="file" name="file" required class="text-sm w-full bg-white border border-gray-300 rounded p-1.5 focus:outline-none focus:border-blue-500">
-                                            <button type="submit" class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 whitespace-nowrap">Gửi file</button>
+                                            <input type="file" name="file" required class="text-xs w-full bg-white border border-slate-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                            <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm whitespace-nowrap">Gửi file</button>
                                         </form>
                                     </div>
                                     {% endif %}
                                 {% else %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
-                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-sm">
+                                        <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                     </div>
-                                    <h4 class="font-bold text-gray-800">Thực hiện công việc</h4>
+                                    <h3 class="font-bold text-slate-900 text-sm">Thực hiện công việc</h3>
                                 {% endif %}
                                 
                                 <!-- List files -->
                                 {% if contract.deliverables %}
                                 <div class="mt-3 space-y-2">
                                     {% for doc in contract.deliverables %}
-                                    <div class="flex items-center gap-2 p-2 bg-blue-50/50 text-blue-800 rounded text-sm border border-blue-100">
-                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                                        <a href="/static/uploads/{{ doc.filepath }}" target="_blank" class="hover:underline font-medium">{{ doc.filename }}</a>
-                                        <span class="text-xs text-gray-500 ml-auto">{{ doc.created_at.strftime('%d/%m %H:%M') }}</span>
+                                    <div class="flex items-center gap-2 p-2.5 bg-slate-50 text-slate-800 rounded-xl text-xs border border-slate-200/70">
+                                        <svg class="w-4 h-4 text-brand-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                                        <a href="/static/uploads/{{ doc.filepath }}" target="_blank" class="hover:text-brand-600 font-bold truncate">{{ doc.filename }}</a>
+                                        <span class="text-[11px] text-slate-400 ml-auto shrink-0">{{ doc.created_at.strftime('%d/%m %H:%M') }}</span>
                                     </div>
                                     {% endfor %}
                                 </div>
                                 {% endif %}
                             </div>
                             
-                            <!-- Step 6: Approval -->
-                            <div class="relative pl-12">
+                            <!-- Step 4: Approval -->
+                            <div class="relative pl-11">
                                 {% if contract.status == 'completed' %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-green-500 border-4 border-white flex items-center justify-center">
-                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-sm">
+                                        <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                     </div>
-                                    <h4 class="font-bold text-gray-800">Nghiệm thu & Giải ngân</h4>
-                                    <p class="text-sm text-green-600 font-medium mt-1">Đã nghiệm thu và giải ngân thành công.</p>
+                                    <h3 class="font-bold text-slate-900 text-sm">Nghiệm thu & Giải ngân</h3>
+                                    <p class="text-xs text-emerald-600 font-medium mt-0.5">✓ Đã nghiệm thu và giải ngân thành công cho phiên dịch viên.</p>
                                 {% elif contract.status == 'in_progress' %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
-                                    <h4 class="font-bold text-blue-600">Nghiệm thu & Giải ngân</h4>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-brand-600 border-2 border-white shadow-sm"></div>
+                                    <h3 class="font-bold text-brand-600 text-sm">Nghiệm thu & Giải ngân</h3>
                                     {% if current_user.role == 'hirer' %}
-                                    <div class="bg-yellow-50 border border-yellow-200 p-3 mt-2 rounded text-sm text-yellow-800 mb-2">
-                                        Chỉ bấm phê duyệt khi công việc/sự kiện đã diễn ra và bạn đã hoàn toàn hài lòng với kết quả. Tiền sẽ được chuyển cho Phiên dịch viên.
+                                    <div class="bg-amber-50 border border-amber-200/80 p-3 mt-2 rounded-xl text-xs text-amber-900 mb-2 leading-relaxed">
+                                        Chỉ bấm phê duyệt khi công việc/sự kiện đã diễn ra và bạn hoàn toàn hài lòng với kết quả. Tiền sẽ ngay lập tức được giải ngân cho Phiên dịch viên.
                                     </div>
                                     <form method="POST" action="{{ url_for('approve_contract', contract_id=contract.id) }}" class="mt-2" onsubmit="return confirm('Bạn chắc chắn muốn nghiệm thu và giải ngân?');">
-                                        <button type="submit" class="bg-green-600 text-white px-5 py-2 rounded-lg font-medium text-sm hover:bg-green-700 shadow">Phê duyệt & Giải ngân</button>
+                                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition shadow-sm">
+                                            Phê duyệt nghiệm thu & Giải ngân
+                                        </button>
                                     </form>
                                     {% else %}
-                                    <p class="text-sm text-gray-500 mt-1">Chờ khách hàng phê duyệt để nhận tiền.</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">Chờ khách hàng nghiệm thu để nhận tiền về ví.</p>
                                     {% endif %}
                                 {% else %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-gray-300 border-4 border-white"></div>
-                                    <h4 class="font-bold text-gray-400">Nghiệm thu & Giải ngân</h4>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                                    <h3 class="font-bold text-slate-400 text-sm">Nghiệm thu & Giải ngân</h3>
                                 {% endif %}
                             </div>
                             
-                            <!-- Step 7: Review -->
-                            <div class="relative pl-12">
+                            <!-- Step 5: Review -->
+                            <div class="relative pl-11">
                                 {% if contract.status == 'completed' %}
                                     {% set has_reviewed = namespace(value=false) %}
                                     {% for r in contract.reviews %}
@@ -164,17 +187,15 @@
                                         {% endif %}
                                     {% endfor %}
                                     
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
-                                    <h4 class="font-bold text-blue-600">Đánh giá đối tác</h4>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-brand-600 border-2 border-white shadow-sm"></div>
+                                    <h3 class="font-bold text-brand-600 text-sm">Đánh giá chất lượng</h3>
                                     
                                     {% if has_reviewed.value %}
-                                        <p class="text-sm text-gray-600 mt-1">Bạn đã gửi đánh giá cho giao dịch này. Cảm ơn bạn!</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">Bạn đã gửi đánh giá cho hợp đồng này. Cảm ơn sự đóng góp của bạn!</p>
                                     {% else %}
-                                        <form method="POST" action="{{ url_for('submit_review', contract_id=contract.id) }}" class="mt-3 p-4 border border-blue-100 rounded-lg bg-blue-50/30">
-                                            
-                                            <!-- Star Rating UI -->
+                                        <form method="POST" action="{{ url_for('submit_review', contract_id=contract.id) }}" class="mt-3 p-4 border border-slate-200/80 rounded-xl bg-slate-50/50">
                                             <div class="mb-3 text-center">
-                                                <p class="text-sm font-medium mb-2">Chất lượng công việc</p>
+                                                <p class="text-xs font-bold text-slate-700 mb-2">Đánh giá số sao</p>
                                                 <div class="star-rating-input inline-flex">
                                                     <input type="radio" id="star5" name="rating" value="5" required />
                                                     <label for="star5" title="5 sao">★</label>
@@ -189,13 +210,13 @@
                                                 </div>
                                             </div>
 
-                                            <textarea name="comment" rows="3" class="w-full p-3 border border-gray-300 rounded-lg text-sm mb-3 focus:ring-blue-500 focus:border-blue-500" placeholder="Viết nhận xét của bạn để giúp đối tác xây dựng uy tín..."></textarea>
-                                            <button type="submit" class="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full transition">Gửi đánh giá</button>
+                                            <textarea name="comment" rows="3" class="w-full p-3 border border-slate-200 rounded-xl text-xs sm:text-sm mb-3 focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white" placeholder="Viết nhận xét trải nghiệm làm việc..."></textarea>
+                                            <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-sm w-full">Gửi đánh giá</button>
                                         </form>
                                     {% endif %}
                                 {% else %}
-                                    <div class="absolute left-2 top-1 w-5 h-5 rounded-full bg-gray-300 border-4 border-white"></div>
-                                    <h4 class="font-bold text-gray-400">Đánh giá</h4>
+                                    <div class="absolute left-2 top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                                    <h3 class="font-bold text-slate-400 text-sm">Đánh giá</h3>
                                 {% endif %}
                             </div>
                         </div>
@@ -203,27 +224,29 @@
                 </div>
             </div>
             
-            <!-- Right Column: Chat System -->
-            <div class="w-full lg:w-5/12 flex flex-col h-[650px] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
-                <div class="bg-white text-gray-800 p-4 font-bold border-b border-gray-200 flex items-center justify-between">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                        Phòng làm việc
+            <!-- Right Column: Chat Room -->
+            <div class="w-full lg:w-5/12 flex flex-col h-[650px] bg-white rounded-2xl shadow-soft border border-slate-200/90 overflow-hidden sticky top-24">
+                <div class="bg-white p-4 font-bold border-b border-slate-100 flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-sm text-slate-900">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        Phòng làm việc trực tiếp
                     </span>
-                    <span class="text-xs font-normal bg-gray-100 text-gray-500 px-2 py-1 rounded">Đối tác: {{ contract.translator.name if current_user.role == 'hirer' else contract.hirer.name }}</span>
+                    <span class="text-[11px] font-normal bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg">
+                        {{ contract.translator.name if current_user.role == 'hirer' else contract.hirer.name }}
+                    </span>
                 </div>
                 
                 <!-- Messages Box -->
-                <div id="chat-box" class="flex-grow p-4 overflow-y-auto bg-gray-50/50 space-y-4">
+                <div id="chat-box" class="flex-grow p-4 overflow-y-auto bg-slate-50/40 space-y-3">
                     <!-- Loaded via JS -->
                 </div>
                 
                 <!-- Input -->
-                <div class="p-3 border-t border-gray-200 bg-white">
+                <div class="p-3 border-t border-slate-100 bg-white">
                     <div class="flex gap-2">
-                        <input type="text" id="chat-input" class="flex-grow px-4 py-2.5 bg-gray-100 border-transparent rounded-xl focus:bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-sm transition" placeholder="Nhập tin nhắn...">
-                        <button id="send-btn" class="bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        <input type="text" id="chat-input" class="flex-grow px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-xs sm:text-sm transition" placeholder="Nhập tin nhắn trao đổi...">
+                        <button id="send-btn" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 rounded-xl transition shadow-sm shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                         </button>
                     </div>
                 </div>
@@ -232,8 +255,8 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
+
 {% block scripts %}
 <script>
     const contractId = {{ contract.id }};
@@ -254,8 +277,8 @@
                     div.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'}`;
                     
                     div.innerHTML = `
-                        <span class="text-[11px] text-gray-400 mb-1 px-1">${msg.sender_name} - ${msg.time}</span>
-                        <div class="px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm ${isMe ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'}">
+                        <span class="text-[10px] text-slate-400 mb-0.5 px-1">${msg.sender_name} • ${msg.time}</span>
+                        <div class="px-3.5 py-2 rounded-2xl max-w-[85%] text-xs sm:text-sm shadow-xs ${isMe ? 'bg-brand-600 text-white rounded-br-xs' : 'bg-white border border-slate-200/80 text-slate-800 rounded-bl-xs'}">
                             ${msg.content}
                         </div>
                     `;

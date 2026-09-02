@@ -462,7 +462,10 @@ def inject_globals():
 def index():
     top_translators = TranslatorProfile.query.filter_by(is_verified=True).order_by(
         TranslatorProfile.rating.desc()).limit(4).all()
-    return render_template('index.html', top_translators=top_translators)
+    if not top_translators:
+        top_translators = TranslatorProfile.query.order_by(TranslatorProfile.rating.desc()).limit(4).all()
+    latest_jobs = Job.query.filter_by(status='open', is_flagged=False).order_by(Job.created_at.desc()).limit(4).all()
+    return render_template('index.html', top_translators=top_translators, latest_jobs=latest_jobs)
 
 @app.route('/about')
 def about():

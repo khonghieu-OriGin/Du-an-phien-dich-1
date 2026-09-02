@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %}{{ lang.title }} Chuyên Nghiệp | VietTranslate{% endblock %}
 
@@ -45,23 +45,23 @@
   .filter-cb, .filter-rb { display: none; }
   .filter-label {
     display: flex; align-items: center; gap: 8px;
-    padding: 6px 8px; border-radius: 6px; cursor: pointer;
-    font-size: 0.875rem; color: #374151; transition: background .15s;
+    padding: 6px 8px; border-radius: 8px; cursor: pointer;
+    font-size: 0.8125rem; color: #475569; transition: all .15s ease;
     user-select: none;
   }
   .filter-label:hover { background: #eff6ff; color: #2563eb; }
   .filter-cb:checked + .filter-label,
   .filter-rb:checked + .filter-label {
-    background: #eff6ff; color: #2563eb; font-weight: 500;
+    background: #eff6ff; color: #1d4ed8; font-weight: 600;
   }
   .filter-indicator {
-    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
-    border-radius: 3px; flex-shrink: 0; display: flex;
+    width: 16px; height: 16px; border: 1.5px solid #cbd5e1;
+    border-radius: 4px; flex-shrink: 0; display: flex;
     align-items: center; justify-content: center; transition: all .15s;
     background: white;
   }
   .filter-rb-indicator {
-    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
+    width: 16px; height: 16px; border: 1.5px solid #cbd5e1;
     border-radius: 50%; flex-shrink: 0; display: flex;
     align-items: center; justify-content: center; transition: all .15s;
     background: white;
@@ -70,7 +70,7 @@
     background: #2563eb; border-color: #2563eb;
   }
   .filter-cb:checked + .filter-label .filter-indicator::after {
-    content: ''; display: block; width: 9px; height: 5px;
+    content: ''; display: block; width: 8px; height: 4.5px;
     border-left: 2px solid white; border-bottom: 2px solid white;
     transform: rotate(-45deg) translateY(-1px);
   }
@@ -78,39 +78,41 @@
     border-color: #2563eb; border-width: 4px; background: white;
   }
   .star-filled { color: #f59e0b; }
-  .star-empty  { color: #d1d5db; }
+  .star-empty  { color: #e2e8f0; }
   .badge-rising  { background:#fef3c7; color:#92400e; border:1px solid #fde68a; }
-  .badge-local   { background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
-  .badge-rehire  { background:#d1fae5; color:#065f46; border:1px solid #a7f3d0; }
-  .badge-default { background:#f3f4f6; color:#374151; border:1px solid #e5e7eb; }
+  .badge-local   { background:#eff6ff; color:#1e40af; border:1px solid #dbeafe; }
+  .badge-rehire  { background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+  .badge-default { background:#f8fafc; color:#475569; border:1px solid #e2e8f0; }
+  
   #drawer-overlay {
     display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.45); z-index: 40; backdrop-filter: blur(2px);
+    background: rgba(15,23,42,.45); z-index: 40; backdrop-filter: blur(4px);
   }
   #filter-drawer {
     position: fixed; bottom: 0; left: 0; right: 0;
-    max-height: 92vh; overflow-y: auto; background: white;
-    border-radius: 20px 20px 0 0; z-index: 50; padding: 0;
+    max-height: 90vh; overflow-y: auto; background: white;
+    border-radius: 24px 24px 0 0; z-index: 50; padding: 0;
     transform: translateY(100%); transition: transform .28s ease;
   }
   #filter-drawer.open { transform: translateY(0); }
   #drawer-overlay.open { display: block; }
+  
   #result-count-badge {
     display: inline-flex; align-items: center;
-    background: #eff6ff; color: #1d4ed8; font-weight: 600;
-    border-radius: 9999px; padding: 2px 10px; font-size: 0.875rem;
+    background: #eff6ff; color: #1d4ed8; font-weight: 700;
+    border-radius: 9999px; padding: 2px 10px; font-size: 0.8125rem;
   }
   #empty-state { display: none; }
   #mobile-filter-count {
     display: none;
-    background: #ef4444; color: white;
+    background: #2563eb; color: white;
     font-size: 0.65rem; font-weight: 700;
     width: 18px; height: 18px; border-radius: 50%;
     align-items: center; justify-content: center;
     position: absolute; top: -6px; right: -6px;
   }
   #mobile-filter-count.show { display: flex; }
-  .filter-section + .filter-section { border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: 0.25rem; }
+  .filter-section + .filter-section { border-top: 1px solid #f1f5f9; padding-top: 1rem; margin-top: 0.5rem; }
   .seo-content { line-height: 1.8; }
   .seo-content p { margin-bottom: 1rem; }
 </style>
@@ -119,24 +121,24 @@
 {% block content %}
 
 {# ── BREADCRUMB ── #}
-<nav aria-label="Breadcrumb" class="bg-white border-b border-gray-100">
-  <div class="container mx-auto px-4 py-2.5">
-    <ol class="flex items-center gap-1.5 text-sm text-gray-500" itemscope itemtype="https://schema.org/BreadcrumbList">
+<nav aria-label="Breadcrumb" class="bg-white border-b border-slate-200/70 py-3">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ol class="flex items-center gap-2 text-xs font-medium text-slate-500" itemscope itemtype="https://schema.org/BreadcrumbList">
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a href="{{ url_for('index') }}" itemprop="item" class="hover:text-blue-600 transition">
+        <a href="{{ url_for('index') }}" itemprop="item" class="hover:text-brand-600 transition">
           <span itemprop="name">Trang chủ</span>
         </a>
         <meta itemprop="position" content="1">
       </li>
-      <li class="text-gray-300">/</li>
+      <li class="text-slate-300">/</li>
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a href="{{ url_for('translator_list') }}" itemprop="item" class="hover:text-blue-600 transition">
+        <a href="{{ url_for('translator_list') }}" itemprop="item" class="hover:text-brand-600 transition">
           <span itemprop="name">Phiên dịch viên</span>
         </a>
         <meta itemprop="position" content="2">
       </li>
-      <li class="text-gray-300">/</li>
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="text-blue-600 font-medium">
+      <li class="text-slate-300">/</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="text-slate-900 font-semibold">
         <span itemprop="name">{{ lang.title }}</span>
         <meta itemprop="position" content="3">
       </li>
@@ -145,37 +147,40 @@
 </nav>
 
 {# ── HERO ── #}
-<div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-12">
-  <div class="container mx-auto px-4 text-center">
-    <div class="text-4xl mb-3" aria-hidden="true">{{ lang.flag }}</div>
-    <h1 class="text-3xl md:text-4xl font-bold mb-3">{{ lang.title }}</h1>
-    <p class="text-blue-100 max-w-2xl mx-auto text-sm md:text-base mb-6">{{ lang.subtitle }}</p>
+<div class="mesh-hero-bg border-b border-slate-200/70 py-12 md:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="inline-flex items-center justify-center text-4xl mb-3" aria-hidden="true">{{ lang.flag }}</div>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">{{ lang.title }}</h1>
+    <p class="text-slate-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-6">{{ lang.subtitle }}</p>
     <div class="flex flex-wrap justify-center gap-2">
       {% for uc in lang.use_cases %}
-      <span class="bg-white/15 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full border border-white/20">{{ uc }}</span>
+      <span class="bg-white/90 border border-slate-200/80 text-slate-700 text-xs px-3 py-1 rounded-full font-medium shadow-xs">{{ uc }}</span>
       {% endfor %}
     </div>
   </div>
 </div>
 
 {# ── MAIN CONTENT ── #}
-<div class="container mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
   <div class="flex flex-col lg:flex-row gap-8">
 
     {# ── FILTER SIDEBAR (Desktop) ── #}
     <aside class="hidden lg:block w-64 xl:w-72 shrink-0">
-      <div class="filter-sidebar bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="font-bold text-gray-800 text-base">Bộ lọc</h3>
-          <button id="clear-filters-desktop" class="text-xs text-blue-600 hover:text-blue-800 font-medium hidden transition">
-            Xóa bộ lọc
+      <div class="filter-sidebar bg-white rounded-2xl shadow-soft border border-slate-200/90 p-5">
+        <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+          <h3 class="font-bold text-slate-900 text-sm tracking-tight flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+            Bộ lọc
+          </h3>
+          <button id="clear-filters-desktop" class="text-xs text-brand-600 hover:text-brand-800 font-semibold hidden transition">
+            Xóa lọc
           </button>
         </div>
 
-        {# Language context badge – always visible, not removable #}
-        <div class="mb-4 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
-          <span class="text-xs text-blue-700 font-medium">Đang xem: <strong>{{ lang.name }}</strong></span>
-          <span class="text-blue-400 text-lg">{{ lang.flag }}</span>
+        {# Language context badge – locked #}
+        <div class="mb-4 px-3.5 py-2.5 bg-brand-50 border border-brand-200/70 rounded-xl flex items-center justify-between">
+          <span class="text-xs text-brand-800 font-medium">Đang chọn: <strong>{{ lang.name }}</strong></span>
+          <span class="text-lg">{{ lang.flag }}</span>
         </div>
 
         <div id="filter-form-desktop"></div>
@@ -185,38 +190,46 @@
     {# ── FREELANCER LIST ── #}
     <div class="flex-1 min-w-0">
       {# Top bar #}
-      <div class="flex justify-between items-center mb-6 gap-3">
+      <div class="flex flex-wrap justify-between items-center mb-6 gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-soft">
         <div class="flex items-center gap-2">
-          <h2 class="text-lg font-bold text-gray-800 sr-only">Phiên dịch viên {{ lang.name }} nổi bật</h2>
-          <p class="text-gray-600 text-sm">Hiển thị <span id="result-count-badge">...</span> kết quả</p>
+          <p class="text-slate-600 text-xs sm:text-sm font-medium">
+            Tìm thấy <span id="result-count-badge">...</span> phiên dịch viên {{ lang.name }}
+          </p>
         </div>
-        <div class="flex items-center gap-2">
+        
+        <div class="flex items-center gap-2.5">
           {# Mobile filter button #}
           <div class="relative lg:hidden">
-            <button id="mobile-filter-btn" class="flex items-center gap-1.5 text-sm font-medium border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-50 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
-              </svg>
+            <button id="mobile-filter-btn" class="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 hover:bg-slate-100 transition">
+              <svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
               Bộ lọc
             </button>
             <span id="mobile-filter-count"></span>
           </div>
-          <select id="sort-select" class="text-sm border-gray-300 rounded-lg p-2 border text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            <option value="rating">Xếp hạng cao nhất</option>
-            <option value="reviews">Nhiều đánh giá nhất</option>
-            <option value="price_asc">Giá thấp nhất</option>
-            <option value="price_desc">Giá cao nhất</option>
-          </select>
+
+          <div class="flex items-center gap-1.5">
+            <label for="sort-select" class="text-xs text-slate-400 font-medium hidden sm:inline">Sắp xếp:</label>
+            <select id="sort-select" class="text-xs font-semibold border-slate-200 rounded-xl px-3 py-2 border text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50/80 cursor-pointer">
+              <option value="rating">Đánh giá cao nhất</option>
+              <option value="reviews">Nhiều đánh giá nhất</option>
+              <option value="price_asc">Mức giá: Thấp → Cao</option>
+              <option value="price_desc">Mức giá: Cao → Thấp</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div id="fl-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+      <div id="fl-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
 
-      <div id="empty-state" class="text-center py-20 bg-white rounded-xl border border-gray-200">
-        <div class="text-5xl mb-4">🔍</div>
-        <h3 class="text-lg font-bold text-gray-800 mb-2">Không tìm thấy phiên dịch viên phù hợp</h3>
-        <p class="text-gray-500 text-sm max-w-sm mx-auto">Hãy thử thay đổi hoặc xóa một số bộ lọc để mở rộng kết quả.</p>
-        <button onclick="clearAllFilters()" class="mt-4 text-sm text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
+      <div id="empty-state" class="text-center py-16 px-4 bg-white rounded-2xl border border-slate-200/90 shadow-soft">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-2xl">
+          🔍
+        </div>
+        <h3 class="text-base font-bold text-slate-900 mb-1.5">Không tìm thấy phiên dịch viên {{ lang.name }} phù hợp</h3>
+        <p class="text-slate-500 text-xs sm:text-sm max-w-sm mx-auto mb-5 leading-relaxed">
+          Hãy thử xóa hoặc nới lỏng các điều kiện lọc để mở rộng kết quả tìm kiếm.
+        </p>
+        <button onclick="clearAllFilters()" class="text-xs font-bold text-white bg-brand-600 px-5 py-2.5 rounded-xl hover:bg-brand-700 transition shadow-sm">
           Xóa tất cả bộ lọc
         </button>
       </div>
@@ -224,40 +237,43 @@
   </div>
 
   {# ── PRICING SECTION ── #}
-  <section class="mt-16 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-2">Bảng giá phiên dịch {{ lang.name }}</h2>
-    <p class="text-gray-500 text-sm mb-6">Giá tham khảo, mức giá thực tế do phiên dịch viên quyết định dựa trên yêu cầu cụ thể.</p>
+  <section class="mt-14 bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-soft">
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Bảng giá phiên dịch {{ lang.name }}</h2>
+      <span class="text-xs text-brand-600 font-semibold bg-brand-50 px-3 py-1 rounded-full">Minh bạch 100%</span>
+    </div>
+    <p class="text-slate-500 text-xs sm:text-sm mb-6">Mức giá tham khảo thị trường, chi phí thực tế tùy theo thỏa thuận chi tiết giữa các bên.</p>
+    
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
-        <p class="text-xs text-gray-500 mb-1">Tham khảo từ</p>
-        <p class="text-2xl font-bold text-blue-600">{{ '{:,}'.format(lang.starting_price) }}đ</p>
-        <p class="text-xs text-gray-400 mt-1">/ trang / giờ</p>
+      <div class="bg-brand-50/70 border border-brand-100 rounded-2xl p-5 text-center flex flex-col justify-center">
+        <p class="text-xs text-brand-700 font-medium mb-1">Mức giá khởi điểm</p>
+        <p class="text-2xl font-extrabold text-brand-700">{{ '{:,}'.format(lang.starting_price) }}đ</p>
+        <p class="text-[11px] text-slate-400 mt-1">/ trang hoặc giờ</p>
       </div>
-      <div class="bg-gray-50 rounded-xl p-4">
-        <p class="text-xs font-semibold text-gray-600 mb-2">📄 Phiên dịch tài liệu</p>
-        <p class="text-sm text-gray-700">Tính theo trang, từ {{ '{:,}'.format(lang.starting_price) }}đ/trang</p>
+      <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+        <p class="text-xs font-bold text-slate-700 mb-2">📄 Phiên dịch tài liệu</p>
+        <p class="text-xs text-slate-500 leading-relaxed">Tính theo khối lượng trang hoặc từ vựng, từ {{ '{:,}'.format(lang.starting_price) }}đ/trang</p>
       </div>
-      <div class="bg-gray-50 rounded-xl p-4">
-        <p class="text-xs font-semibold text-gray-600 mb-2">🎙️ Phiên dịch liên tục</p>
-        <p class="text-sm text-gray-700">Tính theo giờ, từ {{ '{:,}'.format(lang.starting_price * 10) }}đ/giờ</p>
+      <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+        <p class="text-xs font-bold text-slate-700 mb-2">🎙️ Phiên dịch đuổi / tháp tùng</p>
+        <p class="text-xs text-slate-500 leading-relaxed">Tính theo ca làm việc / ngày, từ {{ '{:,}'.format(lang.starting_price * 10) }}đ/buổi</p>
       </div>
-      <div class="bg-gray-50 rounded-xl p-4">
-        <p class="text-xs font-semibold text-gray-600 mb-2">🎤 Phiên dịch cabin</p>
-        <p class="text-sm text-gray-700">Liên hệ trực tiếp phiên dịch viên</p>
+      <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+        <p class="text-xs font-bold text-slate-700 mb-2">🎤 Phiên dịch song song (Cabin)</p>
+        <p class="text-xs text-slate-500 leading-relaxed">Hội nghị quốc tế cấp cao, thỏa thuận trực tiếp theo yêu cầu chuyên ngành</p>
       </div>
     </div>
-    <p class="text-xs text-gray-400 mt-4">* Mức giá mang tính tham khảo. Giá thực tế có thể thay đổi tùy độ phức tạp, chuyên ngành và thời lượng.</p>
   </section>
 
   {# ── CERTIFICATES SECTION ── #}
-  <section class="mt-8 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-2">Yêu cầu và chứng chỉ phiên dịch {{ lang.name }}</h2>
+  <section class="mt-8 bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-soft">
+    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">Yêu cầu & Chứng chỉ phiên dịch {{ lang.name }}</h2>
     {% if lang.certificates %}
-    <p class="text-gray-600 text-sm mb-4">Phiên dịch viên {{ lang.name }} chuyên nghiệp trên VietTranslate thường sở hữu các chứng chỉ sau:</p>
-    <div class="flex flex-wrap gap-3">
+    <p class="text-slate-600 text-xs sm:text-sm mb-4">Các chuyên gia {{ lang.name }} uy tín trên nền tảng VietTranslate thường sở hữu các chứng chỉ sau:</p>
+    <div class="flex flex-wrap gap-2.5">
       {% for cert in lang.certificates %}
-      <span class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-2 rounded-full font-medium">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <span class="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs px-3.5 py-2 rounded-xl font-semibold">
+        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
         </svg>
         {{ cert }}
@@ -265,31 +281,31 @@
       {% endfor %}
     </div>
     {% else %}
-    <p class="text-gray-500 text-sm">Yêu cầu chuyên môn tùy theo từng công việc cụ thể. Liên hệ trực tiếp với phiên dịch viên để thảo luận về yêu cầu của bạn.</p>
+    <p class="text-slate-500 text-xs sm:text-sm">Yêu cầu chuyên môn tùy theo từng dự án cụ thể. Khách hàng có thể trao đổi trực tiếp trong phần chat.</p>
     {% endif %}
   </section>
 
   {# ── SEO CONTENT ── #}
-  <section class="mt-8 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Tìm phiên dịch viên {{ lang.name }} phù hợp</h2>
-    <div class="seo-content text-gray-600 text-sm max-w-3xl">
+  <section class="mt-8 bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-soft">
+    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-3">Về dịch vụ phiên dịch {{ lang.name }} tại VietTranslate</h2>
+    <div class="seo-content text-slate-600 text-xs sm:text-sm max-w-4xl leading-relaxed">
       <p>{{ lang.seo_content }}</p>
     </div>
   </section>
 
-  {# ── FAQ ── #}
-  <section class="mt-8 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Câu hỏi thường gặp về phiên dịch {{ lang.name }}</h2>
-    <div class="space-y-4 max-w-3xl">
+  {# ── FAQ ACCORDION ── #}
+  <section class="mt-8 bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-soft">
+    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6">Câu hỏi thường gặp về phiên dịch {{ lang.name }}</h2>
+    <div class="space-y-3 max-w-4xl">
       {% for faq in lang.faq %}
-      <details class="group border border-gray-200 rounded-xl overflow-hidden">
-        <summary class="flex justify-between items-center px-5 py-4 cursor-pointer font-semibold text-gray-800 text-sm list-none hover:bg-gray-50 transition">
-          {{ faq.q }}
-          <svg class="w-5 h-5 text-gray-400 shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <details class="group border border-slate-200/90 rounded-2xl overflow-hidden transition-colors">
+        <summary class="flex justify-between items-center px-5 py-4 cursor-pointer font-bold text-slate-900 text-xs sm:text-sm list-none hover:bg-slate-50 transition">
+          <span>{{ faq.q }}</span>
+          <svg class="w-4 h-4 text-slate-400 shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
         </summary>
-        <div class="px-5 pb-4 pt-1 text-sm text-gray-600 border-t border-gray-100">
+        <div class="px-5 pb-4 pt-1 text-xs sm:text-sm text-slate-600 border-t border-slate-100 leading-relaxed bg-slate-50/40">
           {{ faq.a }}
         </div>
       </details>
@@ -297,14 +313,14 @@
     </div>
   </section>
 
-  {# ── INTERNAL LINKING ── #}
-  <section class="mt-8 bg-gray-50 rounded-xl border border-gray-200 p-6 md:p-8">
-    <h2 class="text-xl font-bold text-gray-800 mb-4">Khám phá các ngôn ngữ khác</h2>
+  {# ── OTHER LANGUAGES ── #}
+  <section class="mt-8 bg-slate-50 rounded-2xl border border-slate-200/90 p-6 md:p-8">
+    <h2 class="text-base font-bold text-slate-900 mb-4">Khám phá các ngôn ngữ khác</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
       {% for slug, other in other_languages.items() %}
       <a href="{{ url_for('translator_language', lang_slug=slug) }}"
-         class="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition">
-        <span>{{ other.flag }}</span>
+         class="flex items-center gap-2 bg-white border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-700 hover:border-brand-300 hover:text-brand-600 hover:bg-white shadow-xs transition">
+        <span class="text-base">{{ other.flag }}</span>
         <span>{{ other.name }}</span>
       </a>
       {% endfor %}
@@ -317,25 +333,23 @@
 <div id="drawer-overlay"></div>
 <div id="filter-drawer" role="dialog" aria-modal="true" aria-label="Bộ lọc">
   <div class="flex justify-center pt-3 pb-1">
-    <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+    <div class="w-12 h-1 bg-slate-200 rounded-full"></div>
   </div>
-  <div class="flex justify-between items-center px-5 py-3 border-b border-gray-100 sticky top-0 bg-white z-10">
+  <div class="flex justify-between items-center px-5 py-3 border-b border-slate-100 sticky top-0 bg-white z-10">
     <div>
-      <h3 class="font-bold text-gray-800 text-base">Bộ lọc</h3>
-      <p class="text-xs text-blue-600 font-medium">Đang xem: {{ lang.flag }} {{ lang.name }}</p>
+      <h3 class="font-bold text-slate-900 text-base">Bộ lọc</h3>
+      <p class="text-xs text-brand-600 font-semibold">Đang xem: {{ lang.flag }} {{ lang.name }}</p>
     </div>
-    <button id="close-drawer" aria-label="Đóng bộ lọc" class="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-      </svg>
+    <button id="close-drawer" aria-label="Đóng bộ lọc" class="p-2 rounded-xl hover:bg-slate-100 transition text-slate-400 hover:text-slate-600">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
   </div>
-  <div id="filter-form-mobile" class="px-5 py-4 pb-36"></div>
-  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-5 py-3 flex gap-3 z-10">
-    <button onclick="clearAllFilters()" class="flex-1 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg py-2.5 hover:bg-gray-50 transition">
+  <div id="filter-form-mobile" class="px-5 py-4 pb-32"></div>
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-5 py-3.5 flex gap-3 z-10 shadow-lg">
+    <button onclick="clearAllFilters()" class="flex-1 text-xs font-bold border border-slate-200 text-slate-700 rounded-xl py-3 hover:bg-slate-50 transition">
       Xóa bộ lọc
     </button>
-    <button id="apply-drawer" class="flex-1 text-sm font-medium bg-blue-600 text-white rounded-lg py-2.5 hover:bg-blue-700 transition">
+    <button id="apply-drawer" class="flex-1 text-xs font-bold bg-brand-600 text-white rounded-xl py-3 hover:bg-brand-700 transition shadow-sm">
       Áp dụng
     </button>
   </div>
@@ -344,10 +358,10 @@
 
 {% block scripts %}
 <script>
-// ── LOCKED LANGUAGE (injected from server) ──
+// Locked Language
 const LOCKED_LANGUAGE = {{ lang.name | tojson }};
 
-let filters = { languages: [LOCKED_LANGUAGE], priceRange: null, minRating: null, completionTime: null, badges: [] };
+let filters = { languages: [LOCKED_LANGUAGE], priceRange: null, minRating: null, badges: [] };
 let allFreelancers = [];
 let sortBy = 'rating';
 
@@ -359,67 +373,52 @@ const PRICE_RANGES = [
   { label: 'Trên 5.000.000đ', value: 'over5m', min: 5000001, max: Infinity },
 ];
 const RATINGS = [
-  { label: '5 sao', value: 5 },
-  { label: '4 sao trở lên', value: 4 },
-  { label: '3 sao trở lên', value: 3 },
-  { label: '2 sao trở lên', value: 2 },
-  { label: '1 sao trở lên', value: 1 },
-];
-const COMPLETION_TIMES = [
-  { label: 'Trong ngày', value: 'day', maxDays: 1 },
-  { label: '1 – 3 ngày', value: '1-3', minDays: 2, maxDays: 3 },
-  { label: '3 – 7 ngày', value: '3-7', minDays: 4, maxDays: 7 },
-  { label: 'Trên 7 ngày', value: 'over7', minDays: 8 },
+  { label: '5.0 tuyệt đối', value: 5 },
+  { label: 'Từ 4.0 sao trở lên', value: 4 },
+  { label: 'Từ 3.0 sao trở lên', value: 3 },
 ];
 const BADGES = [
-  { name: 'Rising Star', desc: 'Freelancer mới, được đánh giá cao nhanh', key: 'rising', cls: 'badge-rising' },
-  { name: 'Local Champion', desc: 'Nhiều đơn thành công trong khu vực', key: 'local', cls: 'badge-local' },
-  { name: 'Rehire Badge', desc: 'Được khách cũ thuê lại nhiều lần', key: 'rehire', cls: 'badge-rehire' },
+  { name: 'Rising Star', desc: 'Chuyên gia mới xuất sắc', key: 'rising', cls: 'badge-rising' },
+  { name: 'Local Champion', desc: 'Nhiều dự án thành công', key: 'local', cls: 'badge-local' },
+  { name: 'Rehire Badge', desc: 'Khách hàng thuê lại nhiều', key: 'rehire', cls: 'badge-rehire' },
 ];
 
 function renderStarsSmall(count) {
   return Array.from({length:5},(_,i)=>
-    `<span class="${i<count?'star-filled':'star-empty'}" style="font-size:13px">&#9733;</span>`
+    `<span class="${i<count?'star-filled':'star-empty'}" style="font-size:12px">★</span>`
   ).join('');
 }
 
-// Build filter form WITHOUT language section (language is locked)
 function buildFilterForm(s) {
   let html = '';
   // Price
-  html += `<div class="filter-section"><h4 class="text-sm font-semibold text-gray-800 mb-2">Mức giá</h4><div class="space-y-0.5">`;
+  html += `<div class="filter-section"><h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Mức giá tham khảo</h4><div class="space-y-1">`;
   PRICE_RANGES.forEach(p => {
     const id = `price-${p.value}-${s}`;
     html += `<div><input type="radio" class="filter-rb price-rb-${s}" id="${id}" name="price-${s}" value="${p.value}">
-    <label for="${id}" class="filter-label"><span class="filter-rb-indicator"></span>${p.label}</label></div>`;
+    <label for="${id}" class="filter-label"><span class="filter-rb-indicator"></span><span class="text-xs">${p.label}</span></label></div>`;
   });
   html += `</div></div>`;
+
   // Rating
-  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Đánh giá</h4><div class="space-y-0.5">`;
+  html += `<div class="filter-section mt-4"><h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Đánh giá tối thiểu</h4><div class="space-y-1">`;
   RATINGS.forEach(r => {
     const id = `rating-${r.value}-${s}`;
     html += `<div><input type="radio" class="filter-rb rating-rb-${s}" id="${id}" name="rating-${s}" value="${r.value}">
     <label for="${id}" class="filter-label"><span class="filter-rb-indicator"></span>
-    <span class="flex items-center gap-1">${renderStarsSmall(r.value)} <span class="text-gray-500 text-xs">${r.label}</span></span></label></div>`;
+    <span class="flex items-center gap-1.5">${renderStarsSmall(r.value)} <span class="text-slate-500 text-xs">${r.label}</span></span></label></div>`;
   });
   html += `</div></div>`;
-  // Time
-  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Thời gian hoàn thành</h4><div class="space-y-0.5">`;
-  COMPLETION_TIMES.forEach(t => {
-    const id = `time-${t.value}-${s}`;
-    html += `<div><input type="radio" class="filter-rb time-rb-${s}" id="${id}" name="time-${s}" value="${t.value}">
-    <label for="${id}" class="filter-label"><span class="filter-rb-indicator"></span>${t.label}</label></div>`;
-  });
-  html += `</div></div>`;
+
   // Badges
-  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Huy hiệu</h4><div class="space-y-1">`;
+  html += `<div class="filter-section mt-4"><h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Huy hiệu năng lực</h4><div class="space-y-1">`;
   BADGES.forEach(b => {
     const id = `badge-${b.key}-${s}`;
     html += `<div><input type="checkbox" class="filter-cb badge-cb-${s}" id="${id}" value="${b.name}">
-    <label for="${id}" class="filter-label flex-col items-start gap-0">
-    <div class="flex items-center gap-2 w-full"><span class="filter-indicator flex-shrink-0"></span>
-    <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${b.cls}">${b.name}</span></div>
-    <p class="text-xs text-gray-400 mt-0.5 pl-6">${b.desc}</p></label></div>`;
+    <label for="${id}" class="filter-label flex-col items-start gap-0.5">
+    <div class="flex items-center gap-2 w-full"><span class="filter-indicator shrink-0"></span>
+    <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md ${b.cls}">${b.name}</span></div>
+    <p class="text-[10px] text-slate-400 pl-6">${b.desc}</p></label></div>`;
   });
   html += `</div></div>`;
   return html;
@@ -427,20 +426,12 @@ function buildFilterForm(s) {
 
 function filterFreelancers(list, f) {
   return list.filter(fl => {
-    // Language is always locked to LOCKED_LANGUAGE
     if (!fl.languages.some(l => l.toLowerCase().includes(LOCKED_LANGUAGE.toLowerCase()))) return false;
     if (f.priceRange) {
       const r = PRICE_RANGES.find(p => p.value === f.priceRange);
       if (r && fl.min_price != null) { if (fl.min_price < r.min || fl.min_price > r.max) return false; }
     }
     if (f.minRating !== null) { if (fl.rating < f.minRating) return false; }
-    if (f.completionTime) {
-      const t = COMPLETION_TIMES.find(ct => ct.value === f.completionTime);
-      if (t && fl.completion_days != null) {
-        if (t.maxDays && fl.completion_days > t.maxDays) return false;
-        if (t.minDays && fl.completion_days < t.minDays) return false;
-      }
-    }
     if (f.badges.length > 0) {
       if (!f.badges.some(b => fl.badges.some(fb => fb.toLowerCase().includes(b.toLowerCase())))) return false;
     }
@@ -457,11 +448,10 @@ function sortFreelancers(list, by) {
 }
 
 function renderStars(rating) {
-  const full = Math.floor(rating), half = rating - full >= 0.5;
+  const full = Math.floor(rating);
   return Array.from({length:5},(_,i) => {
-    if (i < full) return '<span class="star-filled">&#9733;</span>';
-    if (i === full && half) return '<span class="star-filled" style="opacity:.6">&#9733;</span>';
-    return '<span class="star-empty">&#9733;</span>';
+    if (i < full) return '<span class="star-filled">★</span>';
+    return '<span class="star-empty">★</span>';
   }).join('');
 }
 
@@ -473,36 +463,43 @@ function badgeClass(name) {
 }
 
 function renderCard(fl) {
-  const priceStr = fl.min_price != null ? `Từ ${fl.min_price.toLocaleString('vi-VN')}đ` : 'Liên hệ';
-  const timeStr = fl.completion_days != null ? (fl.completion_days <= 1 ? 'Trong ngày' : `${fl.completion_days} ngày`) : '';
-  const badgesHtml = fl.badges.length ? fl.badges.map(b => `<span class="text-xs px-2 py-0.5 rounded-full font-medium ${badgeClass(b)}">${b}</span>`).join('') : '';
-  const verifiedHtml = fl.is_verified ? `<span class="bg-green-50 border border-green-200 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">&#10003; Verified</span>` : '';
-  return `<div class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col">
-    <div class="p-5 flex-grow">
-      <div class="flex justify-between items-start mb-3">
-        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-lg font-bold shrink-0">${fl.initial}</div>
+  const priceStr = fl.min_price != null ? `Từ ${fl.min_price.toLocaleString('vi-VN')}đ` : 'Thỏa thuận';
+  const badgesHtml = fl.badges.length ? fl.badges.map(b => `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${badgeClass(b)}">${b}</span>`).join('') : '';
+  const verifiedHtml = fl.is_verified ? `<span class="bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-[11px] px-2 py-0.5 rounded-md font-semibold flex items-center gap-1"><svg class="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Xác minh</span>` : '';
+  
+  return `<div class="card-interactive bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between shadow-soft">
+    <div class="p-5 sm:p-6 flex-grow">
+      <div class="flex justify-between items-start mb-4">
+        <div class="w-13 h-13 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-600 flex items-center justify-center text-white text-lg font-extrabold shadow-sm">${fl.initial}</div>
         <div>${verifiedHtml}</div>
       </div>
-      <h3 class="font-bold text-gray-800 text-sm mb-1 line-clamp-1">${fl.name}</h3>
-      <p class="text-xs text-gray-500 mb-3 line-clamp-2 min-h-[2rem]">${fl.title || ''}</p>
-      <div class="flex items-center gap-1 text-sm mb-2">
-        <div class="flex">${renderStars(fl.rating)}</div>
-        <span class="font-bold text-gray-800 text-xs">${fl.rating.toFixed(1)}</span>
-        <span class="text-gray-400 text-xs">(${fl.total_reviews} đánh giá)</span>
+      <h3 class="font-bold text-slate-900 text-base mb-1">
+        <a href="${fl.profile_url}" class="hover:text-brand-600 transition-colors">${fl.name}</a>
+      </h3>
+      <p class="text-xs text-slate-500 mb-3 line-clamp-2 min-h-[2rem] leading-relaxed">${fl.title || 'Phiên dịch viên chuyên nghiệp'}</p>
+      
+      <div class="flex items-center gap-1.5 text-xs mb-3">
+        <div class="flex text-amber-500">${renderStars(fl.rating)}</div>
+        <span class="font-bold text-slate-800 text-xs">${fl.rating.toFixed(1)}</span>
+        <span class="text-slate-400 text-xs font-normal">(${fl.total_reviews} đánh giá)</span>
       </div>
-      <div class="text-xs text-gray-600 mb-3 flex items-start gap-1">
-        <svg class="w-4 h-4 text-gray-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
-        <span class="line-clamp-1">${fl.languages.join(', ') || 'Chưa cập nhật'}</span>
+
+      <div class="flex flex-wrap gap-1.5 mb-3">
+        ${fl.languages.map(l => `<span class="text-[11px] font-medium text-slate-700 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded-md">${l}</span>`).join('')}
       </div>
-      <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
-        <span class="font-semibold text-blue-700 text-sm">${priceStr}</span>
-        ${timeStr ? `<span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${timeStr}</span>` : ''}
-      </div>
-      ${badgesHtml ? `<div class="flex flex-wrap gap-1">${badgesHtml}</div>` : ''}
+
+      ${badgesHtml ? `<div class="flex flex-wrap gap-1 mt-2">${badgesHtml}</div>` : ''}
     </div>
-    <div class="border-t border-gray-100 p-3 bg-gray-50 flex gap-2">
-      <a href="${fl.profile_url}" class="flex-1 text-center text-xs font-medium text-blue-600 border border-blue-600 bg-white rounded-lg py-2 hover:bg-blue-50 transition">Xem hồ sơ</a>
-      <a href="${fl.chat_url}" class="flex-1 text-center text-xs font-medium text-white bg-blue-600 rounded-lg py-2 hover:bg-blue-700 transition">Chat ngay</a>
+
+    <div class="bg-slate-50/70 border-t border-slate-100 px-5 py-3.5 flex items-center justify-between gap-3">
+      <div>
+        <span class="text-[10px] text-slate-400 uppercase font-semibold block">Mức giá</span>
+        <span class="text-xs font-bold text-slate-800">${priceStr}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="${fl.profile_url}" class="text-xs font-semibold text-brand-600 hover:text-brand-700 bg-white border border-slate-200 hover:border-brand-200 px-3 py-1.5 rounded-lg transition">Xem hồ sơ</a>
+        <a href="${fl.chat_url}" class="text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 px-3 py-1.5 rounded-lg transition">Chat</a>
+      </div>
     </div>
   </div>`;
 }
@@ -511,7 +508,6 @@ function countActiveFilters() {
   let c = 0;
   if (filters.priceRange) c++;
   if (filters.minRating !== null) c++;
-  if (filters.completionTime) c++;
   if (filters.badges.length) c++;
   return c;
 }
@@ -534,24 +530,19 @@ function renderList() {
 function syncFiltersFromDOM(s) {
   const pe = document.querySelector(`.price-rb-${s}:checked`); filters.priceRange = pe?pe.value:null;
   const re = document.querySelector(`.rating-rb-${s}:checked`); filters.minRating = re?parseFloat(re.value):null;
-  const te = document.querySelector(`.time-rb-${s}:checked`); filters.completionTime = te?te.value:null;
   filters.badges = [...document.querySelectorAll(`.badge-cb-${s}:checked`)].map(e=>e.value);
 }
 
 function syncDOMFromFilters(s) {
   document.querySelectorAll(`.price-rb-${s}`).forEach(e=>{ e.checked=e.value===filters.priceRange; });
   document.querySelectorAll(`.rating-rb-${s}`).forEach(e=>{ e.checked=parseFloat(e.value)===filters.minRating; });
-  document.querySelectorAll(`.time-rb-${s}`).forEach(e=>{ e.checked=e.value===filters.completionTime; });
   document.querySelectorAll(`.badge-cb-${s}`).forEach(e=>{ e.checked=filters.badges.includes(e.value); });
 }
 
-// Override: clear only secondary filters, KEEP language context
 function clearAllFilters() {
   filters.priceRange = null;
   filters.minRating = null;
-  filters.completionTime = null;
   filters.badges = [];
-  // language stays locked at LOCKED_LANGUAGE
   syncDOMFromFilters('d');
   syncDOMFromFilters('m');
   renderList();

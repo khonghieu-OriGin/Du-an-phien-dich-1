@@ -1,84 +1,76 @@
 {% extends "base.html" %}
 
+{% block title %}Bảng Tin Việc Làm Dịch Thuật | VietTranslate{% endblock %}
+
 {% block head %}
 <style>
-  /* Sidebar sticky */
   .jf-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
   .jf-sidebar::-webkit-scrollbar { width: 4px; }
   .jf-sidebar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
 
-  /* Ẩn native input, dùng custom indicator */
   .jf-cb, .jf-rb { display: none; }
 
   .jf-label {
     display: flex; align-items: center; gap: 8px;
-    padding: 6px 8px; border-radius: 6px; cursor: pointer;
-    font-size: 0.875rem; color: #374151;
-    transition: background .15s; user-select: none;
+    padding: 6px 8px; border-radius: 8px; cursor: pointer;
+    font-size: 0.8125rem; color: #475569;
+    transition: all .15s ease; user-select: none;
   }
-  .jf-label:hover { background: #eff6ff; color: #4f46e5; }
+  .jf-label:hover { background: #eff6ff; color: #2563eb; }
   .jf-cb:checked + .jf-label,
-  .jf-rb:checked + .jf-label { background: #eff6ff; color: #4f46e5; font-weight: 500; }
+  .jf-rb:checked + .jf-label { background: #eff6ff; color: #1d4ed8; font-weight: 600; }
 
-  /* Checkbox indicator */
   .jf-box {
-    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
-    border-radius: 3px; flex-shrink: 0; display: flex;
+    width: 16px; height: 16px; border: 1.5px solid #cbd5e1;
+    border-radius: 4px; flex-shrink: 0; display: flex;
     align-items: center; justify-content: center;
     transition: all .15s; background: white;
   }
-  .jf-cb:checked + .jf-label .jf-box { background: #4f46e5; border-color: #4f46e5; }
+  .jf-cb:checked + .jf-label .jf-box { background: #2563eb; border-color: #2563eb; }
   .jf-cb:checked + .jf-label .jf-box::after {
-    content: ''; display: block; width: 9px; height: 5px;
+    content: ''; display: block; width: 8px; height: 4.5px;
     border-left: 2px solid white; border-bottom: 2px solid white;
     transform: rotate(-45deg) translateY(-1px);
   }
 
-  /* Radio indicator */
   .jf-dot {
-    width: 16px; height: 16px; border: 1.5px solid #d1d5db;
-    border-radius: 50%; flex-shrink: 0;
+    width: 16px; height: 16px; border: 1.5px solid #cbd5e1;
+    border-radius: 50%; flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center;
     transition: all .15s; background: white;
   }
-  .jf-rb:checked + .jf-label .jf-dot { border-color: #4f46e5; border-width: 4px; }
+  .jf-rb:checked + .jf-label .jf-dot { border-color: #2563eb; border-width: 4px; background: white; }
 
-  /* Section divider */
-  .jf-sec + .jf-sec { border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: 0.25rem; }
+  .jf-sec + .jf-sec { border-top: 1px solid #f1f5f9; padding-top: 1rem; margin-top: 0.5rem; }
 
-  /* Result badge */
   #jf-count {
     display: inline-flex; align-items: center;
-    background: #ede9fe; color: #4338ca; font-weight: 600;
-    border-radius: 9999px; padding: 2px 10px; font-size: 0.875rem;
+    background: #eff6ff; color: #1d4ed8; font-weight: 700;
+    border-radius: 9999px; padding: 2px 10px; font-size: 0.8125rem;
   }
 
-  /* Job card */
-  .jf-card { transition: box-shadow .18s, transform .18s; }
-  .jf-card:hover { box-shadow: 0 4px 20px rgba(79,70,229,.10); transform: translateY(-2px); }
+  .jf-card { transition: all .2s ease; }
+  .jf-card:hover { transform: translateY(-2px); border-color: #bfdbfe; }
   .jf-card[hidden] { display: none !important; }
 
-  /* Empty state */
   #jf-empty { display: none; }
 
-  /* Mobile overlay */
   #jf-overlay {
     display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.45); z-index: 40; backdrop-filter: blur(2px);
+    background: rgba(15,23,42,.45); z-index: 40; backdrop-filter: blur(4px);
   }
   #jf-overlay.open { display: block; }
 
-  /* Mobile drawer */
   #jf-drawer {
     position: fixed; bottom: 0; left: 0; right: 0;
-    max-height: 92vh; overflow-y: auto; background: white;
-    border-radius: 20px 20px 0 0; z-index: 50;
+    max-height: 90vh; overflow-y: auto; background: white;
+    border-radius: 24px 24px 0 0; z-index: 50;
     transform: translateY(100%); transition: transform .28s ease;
   }
   #jf-drawer.open { transform: translateY(0); }
 
-  /* Mobile filter badge */
   #jf-mob-badge {
-    display: none; background: #ef4444; color: white;
+    display: none; background: #2563eb; color: white;
     font-size: 0.65rem; font-weight: 700;
     width: 18px; height: 18px; border-radius: 50%;
     align-items: center; justify-content: center;
@@ -90,41 +82,51 @@
 
 {% block content %}
 
-<!-- Hero -->
-<div class="bg-indigo-900 text-white py-12">
-  <div class="container mx-auto px-4 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold mb-2">Bảng Tin Việc Làm Dịch Thuật</h1>
-    <p class="text-indigo-200 max-w-xl mx-auto text-sm md:text-base">
-      Tìm công việc phù hợp với chuyên môn và kỳ vọng của bạn.
+<!-- Header -->
+<div class="mesh-hero-bg border-b border-slate-200/70 py-12 md:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <span class="inline-block text-xs font-bold uppercase tracking-wider text-brand-600 bg-white/80 border border-brand-200/60 px-3 py-1 rounded-full mb-3">
+      Thị trường việc làm dịch thuật
+    </span>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">Bảng Tin Việc Làm Dịch Thuật</h1>
+    <p class="text-slate-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-6">
+      Tiếp cận các dự án dịch thuật trực tiếp từ doanh nghiệp và cá nhân. Minh bạch ngân sách, an tâm Escrow.
     </p>
+    {% if current_user.is_authenticated and current_user.role == 'hirer' %}
+    <a href="{{ url_for('post_job') }}" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition shadow-sm">
+      <span>+ Đăng tin tuyển dụng mới</span>
+    </a>
+    {% endif %}
   </div>
 </div>
 
-<div class="container mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
   <div class="flex flex-col lg:flex-row gap-8">
 
     <!-- ══ SIDEBAR DESKTOP ══ -->
     <aside class="hidden lg:block w-64 xl:w-72 shrink-0">
-      <div class="jf-sidebar bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+      <div class="jf-sidebar bg-white rounded-2xl shadow-soft border border-slate-200/90 p-5">
 
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wide">Bộ lọc việc làm</h3>
+        <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+          <h3 class="font-bold text-slate-900 text-sm tracking-tight flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+            Bộ lọc việc làm
+          </h3>
           <button id="jf-clear-d"
             onclick="clearFilters()"
-            class="text-xs text-indigo-600 hover:text-indigo-800 font-medium hidden">
-            Xoá bộ lọc
+            class="text-xs text-brand-600 hover:text-brand-800 font-semibold hidden transition">
+            Xóa lọc
           </button>
         </div>
 
         <!-- Ngôn ngữ -->
         <div class="jf-sec">
-          <p class="text-sm font-semibold text-gray-800 mb-1">Ngôn ngữ</p>
-          <p class="text-xs text-gray-400 mb-2">Chọn ngôn ngữ bạn thạo</p>
-          <div class="space-y-0.5" id="lang-desk">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Ngôn ngữ</h4>
+          <div class="space-y-1" id="lang-desk">
             {% set langs = [
               ('Tiếng Anh','🇬🇧'),('Tiếng Nhật','🇯🇵'),('Tiếng Hàn','🇰🇷'),
-              ('Tiếng Trung','🇨🇳'),('Tiếng Nga','🇷🇺'),('Tiếng Thái','🇹🇭'),
-              ('Tiếng Pháp','🇫🇷'),('Tiếng Đức','🇩🇪'),
+              ('Tiếng Trung','🇨🇳'),('Tiếng Pháp','🇫🇷'),('Tiếng Đức','🇩🇪'),
+              ('Tiếng Nga','🇷🇺'),('Tiếng Thái','🇹🇭'),
               ('Tiếng Bồ Đào Nha','🇵🇹'),('Tiếng Tây Ban Nha','🇪🇸')
             ] %}
             {% for name, flag in langs %}
@@ -133,7 +135,7 @@
                 id="ld-{{ loop.index }}" value="{{ name }}">
               <label for="ld-{{ loop.index }}" class="jf-label">
                 <span class="jf-box"></span>
-                <span>{{ flag }} {{ name }}</span>
+                <span class="text-xs">{{ flag }} {{ name }}</span>
               </label>
             </div>
             {% endfor %}
@@ -142,9 +144,8 @@
 
         <!-- Mức giá -->
         <div class="jf-sec mt-3">
-          <p class="text-sm font-semibold text-gray-800 mb-1">Mức giá</p>
-          <p class="text-xs text-gray-400 mb-2">Ngân sách người đăng đặt ra</p>
-          <div class="space-y-0.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Mức ngân sách</h4>
+          <div class="space-y-1">
             {% set prices = [
               ('Dưới 500.000đ','p1'),
               ('500.000 – 1.000.000đ','p2'),
@@ -157,7 +158,7 @@
               <input type="radio" class="jf-rb jf-price"
                 id="pd-{{ loop.index }}" name="price-d" value="{{ val }}">
               <label for="pd-{{ loop.index }}" class="jf-label">
-                <span class="jf-dot"></span>{{ label }}
+                <span class="jf-dot"></span><span class="text-xs">{{ label }}</span>
               </label>
             </div>
             {% endfor %}
@@ -166,9 +167,8 @@
 
         <!-- Ngày đăng -->
         <div class="jf-sec mt-3">
-          <p class="text-sm font-semibold text-gray-800 mb-1">Ngày đăng</p>
-          <p class="text-xs text-gray-400 mb-2">Job cũ thường đã đủ đề xuất</p>
-          <div class="space-y-0.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Thời gian đăng</h4>
+          <div class="space-y-1">
             {% set dates = [
               ('Hôm nay','1'),('3 ngày gần nhất','3'),
               ('7 ngày gần nhất','7'),('30 ngày gần nhất','30'),
@@ -179,7 +179,7 @@
               <input type="radio" class="jf-rb jf-date"
                 id="dd-{{ loop.index }}" name="date-d" value="{{ val }}">
               <label for="dd-{{ loop.index }}" class="jf-label">
-                <span class="jf-dot"></span>{{ label }}
+                <span class="jf-dot"></span><span class="text-xs">{{ label }}</span>
               </label>
             </div>
             {% endfor %}
@@ -193,120 +193,114 @@
     <div class="flex-1 min-w-0">
 
       <!-- Toolbar -->
-      <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
-        <p class="text-gray-600 text-sm">
-          Hiển thị <span id="jf-count">{{ jobs|length }}</span> việc làm
+      <div class="flex flex-wrap justify-between items-center mb-6 gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-soft">
+        <p class="text-slate-600 text-xs sm:text-sm font-medium">
+          Hiển thị <span id="jf-count">{{ jobs|length }}</span> việc làm đang mở
         </p>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2.5">
 
           <!-- Mobile filter button -->
           <div class="relative lg:hidden">
             <button id="jf-mob-btn"
               onclick="openDrawer()"
-              class="flex items-center gap-1.5 text-sm font-medium border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-50 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
-              </svg>
+              class="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 hover:bg-slate-100 transition">
+              <svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
               Bộ lọc
             </button>
             <span id="jf-mob-badge"></span>
           </div>
 
           <!-- Sort -->
-          <select id="jf-sort" onchange="applyFilters()"
-            class="text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="newest">Mới nhất</option>
-            <option value="budget_desc">Ngân sách cao nhất</option>
-            <option value="budget_asc">Ngân sách thấp nhất</option>
-            <option value="proposals_asc">Ít đề xuất nhất</option>
-          </select>
+          <div class="flex items-center gap-1.5">
+            <label for="jf-sort" class="text-xs text-slate-400 font-medium hidden sm:inline">Sắp xếp:</label>
+            <select id="jf-sort" onchange="applyFilters()"
+              class="text-xs font-semibold border-slate-200 rounded-xl px-3 py-2 border text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50/80 cursor-pointer">
+              <option value="newest">Mới nhất</option>
+              <option value="budget_desc">Ngân sách cao nhất</option>
+              <option value="budget_asc">Ngân sách thấp nhất</option>
+              <option value="proposals_asc">Ít đề xuất nhất</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <!-- Job Cards (server-rendered, JS chỉ show/hide) -->
+      <!-- Job Cards -->
       <div id="jf-grid" class="space-y-4">
         {% for job in jobs %}
-        <div class="jf-card bg-white rounded-xl border border-gray-200 p-6"
+        <div class="jf-card bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-soft"
           data-lang="{{ job.source_lang }}|||{{ job.target_lang }}"
           data-budget="{{ job.budget_min if job.budget_min else 0 }}"
           data-created="{{ job.created_at.isoformat() if job.created_at else '' }}"
           data-proposals="{{ job.proposals|length }}">
 
-          <div class="flex flex-col md:flex-row justify-between gap-4 mb-3">
-            <h2 class="text-xl font-bold text-gray-800 hover:text-indigo-600 transition">
-              <a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.title }}</a>
-            </h2>
-            <div class="text-left md:text-right flex-shrink-0">
-              {% if job.budget_type == 'fixed' and job.budget_min %}
-                <span class="text-lg font-bold text-gray-800">{{ "{:,.0f}".format(job.budget_min) }}đ</span>
-                <span class="text-xs text-gray-400 block">Giá cố định</span>
-              {% elif job.budget_type == 'range' and job.budget_min and job.budget_max %}
-                <span class="text-lg font-bold text-gray-800">
-                  {{ "{:,.0f}".format(job.budget_min) }}đ – {{ "{:,.0f}".format(job.budget_max) }}đ
+          <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3 mb-3">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                <span class="text-[11px] font-bold text-brand-700 bg-brand-50 px-2.5 py-0.5 rounded-md">
+                  {{ job.source_lang }} → {{ job.target_lang }}
                 </span>
-                <span class="text-xs text-gray-400 block">Khoảng giá</span>
+                <span class="text-xs text-slate-400">·</span>
+                <span class="text-xs text-slate-500 font-medium">{{ job.category or 'Phiên dịch' }}</span>
+              </div>
+              <h2 class="text-base sm:text-lg font-bold text-slate-900 hover:text-brand-600 transition">
+                <a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.title }}</a>
+              </h2>
+            </div>
+            
+            <div class="text-left sm:text-right shrink-0">
+              {% if job.budget_type == 'fixed' and job.budget_min %}
+                <span class="text-base sm:text-lg font-extrabold text-brand-700">{{ "{:,.0f}".format(job.budget_min) }}đ</span>
+                <span class="text-[10px] text-slate-400 uppercase font-semibold block">Giá cố định</span>
+              {% elif job.budget_type == 'range' and job.budget_min and job.budget_max %}
+                <span class="text-base sm:text-lg font-extrabold text-brand-700">
+                  {{ "{:,.0f}".format(job.budget_min) }} – {{ "{:,.0f}".format(job.budget_max) }}đ
+                </span>
+                <span class="text-[10px] text-slate-400 uppercase font-semibold block">Khoảng ngân sách</span>
               {% else %}
-                <span class="text-lg font-bold text-gray-600">Thương lượng</span>
+                <span class="text-base sm:text-lg font-extrabold text-slate-700">Thương lượng</span>
               {% endif %}
             </div>
           </div>
 
-          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 mb-3">
-            <span class="flex items-center gap-1">
-              <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-              </svg>
-              {{ job.category or 'Chưa phân loại' }}
-            </span>
-            <span class="flex items-center gap-1">
-              <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
-              </svg>
-              {{ job.source_lang }} → {{ job.target_lang }}
-            </span>
-            <span class="flex items-center gap-1">
-              <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              {{ job.created_at.strftime('%d/%m/%Y') if job.created_at else '' }}
-            </span>
-          </div>
+          <p class="text-slate-600 text-xs sm:text-sm line-clamp-2 mb-4 leading-relaxed">{{ job.description }}</p>
 
-          <p class="text-gray-600 text-sm line-clamp-2 mb-4">{{ job.description }}</p>
-
-          <div class="flex justify-between items-center border-t border-gray-100 pt-4">
-            {% if job.proposals|length > 0 %}
-              <span class="text-xs text-gray-500"><strong>{{ job.proposals|length }}</strong> đề xuất đã gửi</span>
-            {% else %}
-              <span class="text-xs text-green-600 font-medium">Chưa có đề xuất</span>
-            {% endif %}
+          <div class="flex items-center justify-between border-t border-slate-100 pt-3.5 mt-2">
+            <div class="flex items-center gap-3 text-xs text-slate-400">
+              <span>Đăng ngày {{ job.created_at.strftime('%d/%m/%Y') if job.created_at else '' }}</span>
+              <span>·</span>
+              {% if job.proposals|length > 0 %}
+                <span class="text-slate-600 font-semibold">{{ job.proposals|length }} đề xuất</span>
+              {% else %}
+                <span class="text-emerald-600 font-semibold">Chưa có đề xuất</span>
+              {% endif %}
+            </div>
+            
             <a href="{{ url_for('job_detail', job_id=job.id) }}"
-              class="bg-indigo-50 text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-100 transition text-sm">
-              Xem và Đề xuất
+              class="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100 px-3.5 py-2 rounded-xl transition">
+              <span>Xem chi tiết</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
         {% else %}
-        <div class="text-center py-12 bg-white rounded-xl border border-gray-200">
-          <p class="text-gray-500">Hiện chưa có công việc nào.</p>
+        <div class="text-center py-16 bg-white rounded-2xl border border-slate-200/90 shadow-soft">
+          <p class="text-slate-500 text-sm">Hiện chưa có việc làm nào đang mở.</p>
         </div>
         {% endfor %}
       </div>
 
       <!-- Empty state khi filter không có kết quả -->
-      <div id="jf-empty" class="text-center py-20 bg-white rounded-xl border border-gray-200">
-        <div class="text-5xl mb-4">🔍</div>
-        <h3 class="text-lg font-bold text-gray-800 mb-2">Không tìm thấy việc làm phù hợp</h3>
-        <p class="text-gray-500 text-sm max-w-sm mx-auto">
-          Hãy thử thay đổi hoặc xoá bộ lọc để xem thêm công việc.
+      <div id="jf-empty" class="text-center py-16 px-4 bg-white rounded-2xl border border-slate-200/90 shadow-soft">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-2xl">
+          🔍
+        </div>
+        <h3 class="text-base font-bold text-slate-900 mb-1.5">Không tìm thấy việc làm phù hợp</h3>
+        <p class="text-slate-500 text-xs sm:text-sm max-w-sm mx-auto mb-5 leading-relaxed">
+          Hãy thử thay đổi hoặc xóa bớt tiêu chí lọc để khám phá thêm nhiều cơ hội mới.
         </p>
         <button onclick="clearFilters()"
-          class="mt-4 text-sm text-indigo-600 border border-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">
-          Xoá tất cả bộ lọc
+          class="text-xs font-bold text-white bg-brand-600 px-5 py-2.5 rounded-xl hover:bg-brand-700 transition shadow-sm">
+          Xóa tất cả bộ lọc
         </button>
       </div>
 
@@ -320,28 +314,25 @@
 <!-- Mobile drawer -->
 <div id="jf-drawer" role="dialog" aria-modal="true" aria-label="Bộ lọc việc làm">
   <div class="flex justify-center pt-3 pb-1">
-    <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+    <div class="w-12 h-1 bg-slate-200 rounded-full"></div>
   </div>
-  <div class="flex justify-between items-center px-5 py-3 border-b border-gray-100 sticky top-0 bg-white z-10">
-    <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wide">Bộ lọc việc làm</h3>
+  <div class="flex justify-between items-center px-5 py-3 border-b border-slate-100 sticky top-0 bg-white z-10">
+    <h3 class="font-bold text-slate-900 text-base">Bộ lọc việc làm</h3>
     <button onclick="closeDrawer()" aria-label="Đóng"
-      class="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-      </svg>
+      class="p-2 rounded-xl hover:bg-slate-100 transition text-slate-400 hover:text-slate-600">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
   </div>
 
-  <div class="px-5 py-4 pb-36">
+  <div class="px-5 py-4 pb-32">
     <!-- Ngôn ngữ mobile -->
     <div class="jf-sec">
-      <p class="text-sm font-semibold text-gray-800 mb-1">Ngôn ngữ</p>
-      <p class="text-xs text-gray-400 mb-2">Chọn ngôn ngữ bạn thạo</p>
-      <div class="space-y-0.5">
+      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Ngôn ngữ</h4>
+      <div class="space-y-1">
         {% set langs = [
           ('Tiếng Anh','🇬🇧'),('Tiếng Nhật','🇯🇵'),('Tiếng Hàn','🇰🇷'),
-          ('Tiếng Trung','🇨🇳'),('Tiếng Nga','🇷🇺'),('Tiếng Thái','🇹🇭'),
-          ('Tiếng Pháp','🇫🇷'),('Tiếng Đức','🇩🇪'),
+          ('Tiếng Trung','🇨🇳'),('Tiếng Pháp','🇫🇷'),('Tiếng Đức','🇩🇪'),
+          ('Tiếng Nga','🇷🇺'),('Tiếng Thái','🇹🇭'),
           ('Tiếng Bồ Đào Nha','🇵🇹'),('Tiếng Tây Ban Nha','🇪🇸')
         ] %}
         {% for name, flag in langs %}
@@ -350,7 +341,7 @@
             id="lm-{{ loop.index }}" value="{{ name }}">
           <label for="lm-{{ loop.index }}" class="jf-label">
             <span class="jf-box"></span>
-            <span>{{ flag }} {{ name }}</span>
+            <span class="text-xs">{{ flag }} {{ name }}</span>
           </label>
         </div>
         {% endfor %}
@@ -359,9 +350,8 @@
 
     <!-- Mức giá mobile -->
     <div class="jf-sec mt-3">
-      <p class="text-sm font-semibold text-gray-800 mb-1">Mức giá</p>
-      <p class="text-xs text-gray-400 mb-2">Ngân sách người đăng đặt ra</p>
-      <div class="space-y-0.5">
+      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Mức ngân sách</h4>
+      <div class="space-y-1">
         {% set prices = [
           ('Dưới 500.000đ','p1'),
           ('500.000 – 1.000.000đ','p2'),
@@ -374,7 +364,7 @@
           <input type="radio" class="jf-rb jf-price-m"
             id="pm-{{ loop.index }}" name="price-m" value="{{ val }}">
           <label for="pm-{{ loop.index }}" class="jf-label">
-            <span class="jf-dot"></span>{{ label }}
+            <span class="jf-dot"></span><span class="text-xs">{{ label }}</span>
           </label>
         </div>
         {% endfor %}
@@ -383,9 +373,8 @@
 
     <!-- Ngày đăng mobile -->
     <div class="jf-sec mt-3">
-      <p class="text-sm font-semibold text-gray-800 mb-1">Ngày đăng</p>
-      <p class="text-xs text-gray-400 mb-2">Job cũ thường đã đủ đề xuất</p>
-      <div class="space-y-0.5">
+      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Thời gian đăng</h4>
+      <div class="space-y-1">
         {% set dates = [
           ('Hôm nay','1'),('3 ngày gần nhất','3'),
           ('7 ngày gần nhất','7'),('30 ngày gần nhất','30'),
@@ -396,7 +385,7 @@
           <input type="radio" class="jf-rb jf-date-m"
             id="dm-{{ loop.index }}" name="date-m" value="{{ val }}">
           <label for="dm-{{ loop.index }}" class="jf-label">
-            <span class="jf-dot"></span>{{ label }}
+            <span class="jf-dot"></span><span class="text-xs">{{ label }}</span>
           </label>
         </div>
         {% endfor %}
@@ -404,13 +393,13 @@
     </div>
   </div>
 
-  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-5 py-3 flex gap-3 z-10">
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-5 py-3.5 flex gap-3 z-10 shadow-lg">
     <button onclick="clearFilters()"
-      class="flex-1 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg py-2.5 hover:bg-gray-50 transition">
-      Xoá bộ lọc
+      class="flex-1 text-xs font-bold border border-slate-200 text-slate-700 rounded-xl py-3 hover:bg-slate-50 transition">
+      Xóa bộ lọc
     </button>
     <button onclick="closeDrawer()"
-      class="flex-1 text-sm font-medium bg-indigo-600 text-white rounded-lg py-2.5 hover:bg-indigo-700 transition">
+      class="flex-1 text-xs font-bold bg-brand-600 text-white rounded-xl py-3 hover:bg-brand-700 transition shadow-sm">
       Áp dụng
     </button>
   </div>
@@ -420,7 +409,6 @@
 
 {% block scripts %}
 <script>
-// ── Cấu hình mức giá ─────────────────────────────────────────────
 var PRICE_CFG = {
   p1: { min: 0,       max: 499999   },
   p2: { min: 500000,  max: 1000000  },
@@ -429,9 +417,7 @@ var PRICE_CFG = {
   p5: { min: 5000001, max: Infinity }
 };
 
-// ── Lấy state filter hiện tại ────────────────────────────────────
 function getFilters() {
-  // Ngôn ngữ: ưu tiên desktop, nếu không có thì lấy mobile
   var langD = Array.from(document.querySelectorAll('.jf-lang:checked')).map(function(e){ return e.value.toLowerCase(); });
   var langM = Array.from(document.querySelectorAll('.jf-lang-m:checked')).map(function(e){ return e.value.toLowerCase(); });
   var langs = langD.length ? langD : langM;
@@ -447,7 +433,6 @@ function getFilters() {
   return { langs: langs, price: price, days: days };
 }
 
-// ── Áp dụng filter + sort ────────────────────────────────────────
 function applyFilters() {
   var f     = getFilters();
   var now   = Date.now();
@@ -456,26 +441,23 @@ function applyFilters() {
   var shown = [];
 
   cards.forEach(function(card) {
-    var langStr = (card.dataset.lang || '').toLowerCase();   // "tiếng anh|||tiếng nhật"
+    var langStr = (card.dataset.lang || '').toLowerCase();
     var budget  = parseInt(card.dataset.budget) || 0;
     var created = card.dataset.created;
     var props   = parseInt(card.dataset.proposals) || 0;
 
     var ok = true;
 
-    // Ngôn ngữ (OR)
     if (f.langs.length > 0) {
       var hit = f.langs.some(function(l) { return langStr.includes(l); });
       if (!hit) ok = false;
     }
 
-    // Mức giá
     if (ok && f.price && PRICE_CFG[f.price]) {
       var r = PRICE_CFG[f.price];
       if (budget < r.min || budget > r.max) ok = false;
     }
 
-    // Ngày đăng (0 = tất cả)
     if (ok && f.days > 0 && created) {
       var diff = (now - new Date(created).getTime()) / 86400000;
       if (diff > f.days) ok = false;
@@ -489,22 +471,19 @@ function applyFilters() {
     }
   });
 
-  // Sắp xếp
   var grid = document.getElementById('jf-grid');
   shown.sort(function(a, b) {
     if (sort === 'budget_desc')   return b.budget - a.budget;
     if (sort === 'budget_asc')    return a.budget - b.budget;
     if (sort === 'proposals_asc') return a.props  - b.props;
-    return new Date(b.created) - new Date(a.created); // newest
+    return new Date(b.created) - new Date(a.created);
   });
   shown.forEach(function(item) { grid.appendChild(item.card); });
 
-  // Cập nhật count & empty state
   document.getElementById('jf-count').textContent = shown.length;
   document.getElementById('jf-empty').style.display = shown.length === 0 ? 'block' : 'none';
   grid.style.display = shown.length === 0 ? 'none' : '';
 
-  // Clear button & mobile badge
   var active = (f.langs.length > 0 ? 1 : 0) + (f.price ? 1 : 0) + (f.days > 0 ? 1 : 0);
   var clearD = document.getElementById('jf-clear-d');
   if (clearD) clearD.style.display = active > 0 ? '' : 'none';
@@ -515,7 +494,6 @@ function applyFilters() {
   }
 }
 
-// ── Xoá bộ lọc ───────────────────────────────────────────────────
 function clearFilters() {
   document.querySelectorAll('.jf-lang, .jf-lang-m').forEach(function(e){ e.checked = false; });
   document.querySelectorAll('.jf-price, .jf-price-m').forEach(function(e){ e.checked = false; });
@@ -523,9 +501,7 @@ function clearFilters() {
   applyFilters();
 }
 
-// ── Mobile drawer ─────────────────────────────────────────────────
 function openDrawer() {
-  // Đồng bộ state desktop → mobile khi mở
   var dLangs  = document.querySelectorAll('.jf-lang:checked');
   var dPrice  = document.querySelector('.jf-price:checked');
   var dDate   = document.querySelector('.jf-date:checked');
@@ -545,7 +521,6 @@ function openDrawer() {
 }
 
 function closeDrawer() {
-  // Đồng bộ state mobile → desktop khi đóng
   var mLangs  = document.querySelectorAll('.jf-lang-m:checked');
   var mPrice  = document.querySelector('.jf-price-m:checked');
   var mDate   = document.querySelector('.jf-date-m:checked');
@@ -565,21 +540,27 @@ function closeDrawer() {
   applyFilters();
 }
 
-// ── Event listeners ───────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-  // Desktop filter: realtime
+  // Check URL query param for lang
+  const urlParams = new URLSearchParams(window.location.search);
+  const langParam = urlParams.get('lang');
+  if (langParam) {
+    document.querySelectorAll('.jf-lang, .jf-lang-m').forEach(function(el) {
+      if (el.value.toLowerCase() === langParam.toLowerCase()) {
+        el.checked = true;
+      }
+    });
+  }
+
   document.querySelectorAll('.jf-lang, .jf-price, .jf-date').forEach(function(el) {
     el.addEventListener('change', applyFilters);
   });
-  // Mobile filter: realtime
   document.querySelectorAll('.jf-lang-m, .jf-price-m, .jf-date-m').forEach(function(el) {
     el.addEventListener('change', applyFilters);
   });
-  // Escape key
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeDrawer();
   });
-  // Khởi tạo count
   applyFilters();
 });
 </script>

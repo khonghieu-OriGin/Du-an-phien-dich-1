@@ -1,238 +1,742 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Hero -->
-<section class="relative bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
-        <div class="absolute bottom-10 right-20 w-64 h-64 bg-indigo-300 rounded-full blur-3xl"></div>
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 1: HERO BANNER (Mesh Gradient, Ambient Native Typography, Floating Glass Search)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="relative mesh-hero-bg overflow-hidden pt-12 pb-20 md:pt-18 md:pb-28 border-b border-slate-200/60">
+    
+    <!-- Ambient Multilingual Floating Typography Layer (Opacity 10-20%, subtle slow drift) -->
+    <div class="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+        <!-- Top Left -->
+        <span class="absolute -top-4 left-6 text-6xl md:text-8xl font-black text-brand-700/[0.07] tracking-tight animate-float-1">
+            Hello
+        </span>
+        <span class="absolute top-24 left-[18%] text-3xl md:text-5xl font-bold text-indigo-800/[0.12] animate-float-2">
+            こんにちは
+        </span>
+        <!-- Top Right -->
+        <span class="absolute top-6 right-8 text-5xl md:text-7xl font-extrabold text-brand-800/[0.08] animate-float-3">
+            Xin chào
+        </span>
+        <span class="absolute top-28 right-[16%] text-3xl md:text-4xl font-bold text-violet-800/[0.11] animate-float-1">
+            Bonjour
+        </span>
+        <!-- Mid Floating -->
+        <span class="absolute top-1/2 -left-8 text-5xl md:text-7xl font-bold text-slate-800/[0.06] -translate-y-1/2 animate-float-2">
+            안녕하세요
+        </span>
+        <span class="absolute top-1/2 -right-6 text-5xl md:text-7xl font-bold text-brand-900/[0.06] -translate-y-1/2 animate-float-3">
+            你好
+        </span>
+        <!-- Bottom Floating -->
+        <span class="absolute bottom-12 left-10 text-4xl md:text-5xl font-semibold text-brand-600/[0.08] animate-float-1">
+            Hallo
+        </span>
+        <span class="absolute bottom-8 left-1/3 text-3xl md:text-4xl font-semibold text-slate-800/[0.07] animate-float-2">
+            Hola
+        </span>
+        <span class="absolute bottom-16 right-1/4 text-3xl md:text-4xl font-medium text-brand-800/[0.08] animate-float-3">
+            Olá
+        </span>
+        <span class="absolute bottom-6 right-12 text-4xl md:text-6xl font-bold text-indigo-700/[0.08] animate-float-2">
+            สวัสดี
+        </span>
     </div>
-    <div class="relative container mx-auto px-4 py-20 md:py-28">
-        <div class="max-w-3xl mx-auto text-center">
-            <div class="inline-block bg-white/20 text-white text-sm font-medium px-4 py-1.5 rounded-full mb-8">
-                🌟 Nền tảng dịch thuật #1 Việt Nam
-            </div>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight mb-5">
-                Kết Nối Ngôn Ngữ.<br>Mở Lối Cơ Hội.
-            </h1>
-            <p class="text-base sm:text-lg text-white/80 font-medium mb-10 max-w-lg mx-auto leading-relaxed">
-                Uy tín trong từng kết nối. Chất lượng trong từng trải nghiệm.
-            </p>
 
-            <!-- Quick Search -->
-            <div class="bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-2 shadow-2xl max-w-2xl mx-auto">
-                <select id="qs-lang" class="flex-1 px-4 py-3 text-gray-800 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50">
-                    <option value="">Chọn ngôn ngữ...</option>
-                    {% for lang, flag, cert in LANGUAGES %}
-                    <option value="{{ lang }}">{{ flag }} {{ lang }}</option>
-                    {% endfor %}
-                </select>
-                <select id="qs-type" class="flex-1 px-4 py-3 text-gray-800 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50">
-                    <option value="">Loại dịch vụ...</option>
-                    <option>Phiên dịch (Dịch nói)</option>
-                    <option>Biên dịch (Dịch viết)</option>
-                    <option>Phiên dịch Cabin</option>
-                    <option>Phiên dịch Tháp tùng</option>
-                </select>
-                <button onclick="quickSearch()" class="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition whitespace-nowrap">
-                    🔍 Tìm ngay
-                </button>
-            </div>
+    <!-- Soft Glow Orbs -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-brand-400/10 blur-[100px] rounded-full pointer-events-none" aria-hidden="true"></div>
+
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        
+        <!-- Subtle Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 border border-brand-200/80 shadow-xs mb-6 text-xs font-semibold text-brand-700">
+            <span class="w-2 h-2 rounded-full bg-brand-600 animate-pulse"></span>
+            <span>Nền tảng kết nối phiên dịch viên toàn cầu</span>
         </div>
-    </div>
-</section>
 
-<!-- Trust Badges -->
-<section class="bg-white border-b border-gray-100">
-    <div class="container mx-auto px-4 py-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div class="py-2">
-                <p class="text-2xl font-bold text-primary">5.000+</p>
-                <p class="text-xs text-gray-500 mt-1">Phiên dịch viên</p>
-            </div>
-            <div class="py-2">
-                <p class="text-2xl font-bold text-primary">12.000+</p>
-                <p class="text-xs text-gray-500 mt-1">Dự án thành công</p>
-            </div>
-            <div class="py-2">
-                <p class="text-2xl font-bold text-primary">4.8 ★</p>
-                <p class="text-xs text-gray-500 mt-1">Đánh giá trung bình</p>
-            </div>
-            <div class="py-2">
-                <p class="text-2xl font-bold text-primary">&lt; 1%</p>
-                <p class="text-xs text-gray-500 mt-1">Tỷ lệ tranh chấp</p>
-            </div>
-        </div>
-    </div>
-</section>
+        <!-- Main Headline -->
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-5">
+            Kết Nối Ngôn Ngữ.<br>
+            <span class="bg-gradient-to-r from-brand-600 via-brand-700 to-indigo-700 bg-clip-text text-transparent">
+                Mở Lối Cơ Hội.
+            </span>
+        </h1>
 
-<!-- Language Quick Links -->
-<section class="py-14 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <h2 class="text-2xl font-bold text-center mb-2">Ngôn ngữ phổ biến</h2>
-        <p class="text-gray-500 text-center text-sm mb-8">Tìm phiên dịch viên theo ngôn ngữ bạn cần</p>
-        <div class="grid grid-cols-3 md:grid-cols-5 gap-3">
-            {% for item in LANGUAGES %}
-            <a href="{{ url_for('translator_list', lang=item.name) }}"
-               class="card-hover bg-white rounded-xl p-4 text-center border border-gray-200 hover:border-primary group flex flex-col items-center justify-center">
-                <div class="h-8 flex items-center justify-center mb-2.5">
-                    <img src="{{ item.flag_svg }}"
-                         alt="{{ item.flag_alt }}"
-                         width="32"
-                         height="24"
-                         class="w-8 h-6 object-cover rounded-sm shadow-xs border border-gray-200/80 group-hover:scale-105 transition-transform duration-200">
+        <!-- Subtitle -->
+        <p class="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
+            Uy tín trong từng kết nối. Chất lượng trong từng trải nghiệm.
+        </p>
+
+        <!-- ════ Floating Glass Search Card ════ -->
+        <div class="glass-search rounded-2xl sm:rounded-3xl p-3 sm:p-4 max-w-4xl mx-auto text-left">
+            <form id="hero-search-form" onsubmit="handleHeroSearch(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 sm:gap-3 items-center">
+                
+                <!-- Filter 1: Tôi cần -->
+                <div class="sm:col-span-4 bg-slate-50/90 hover:bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 transition">
+                    <label for="search-intent" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Tôi cần</label>
+                    <select id="search-intent" class="w-full bg-transparent text-sm font-semibold text-slate-800 focus:outline-none cursor-pointer">
+                        <option value="translator">Tìm phiên dịch viên</option>
+                        <option value="job">Tìm việc phiên dịch</option>
+                    </select>
                 </div>
-                <span class="text-xs font-bold text-gray-900 group-hover:text-primary transition-colors tracking-wide uppercase mb-1">{{ item.code }}</span>
-                <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900 transition-colors">{{ item.short_name }}</span>
+
+                <!-- Filter 2: Ngôn ngữ -->
+                <div class="sm:col-span-4 bg-slate-50/90 hover:bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 transition">
+                    <label for="search-lang" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Ngôn ngữ</label>
+                    <select id="search-lang" class="w-full bg-transparent text-sm font-semibold text-slate-800 focus:outline-none cursor-pointer">
+                        <option value="">Tất cả ngôn ngữ</option>
+                        {% for item in LANGUAGES %}
+                        <option value="{{ item.name }}">{{ item.flag }} {{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Filter 3: Loại dịch vụ -->
+                <div class="sm:col-span-4 sm:col-end-10 bg-slate-50/90 hover:bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 transition">
+                    <label for="search-service" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Loại dịch vụ</label>
+                    <select id="search-service" class="w-full bg-transparent text-sm font-semibold text-slate-800 focus:outline-none cursor-pointer">
+                        <option value="">Tất cả loại hình</option>
+                        <option value="Hội thảo">Phiên dịch hội nghị & sự kiện</option>
+                        <option value="Tháp tùng">Phiên dịch tháp tùng / nhà máy</option>
+                        <option value="Cabin">Phiên dịch cabin đồng thời</option>
+                        <option value="Dịch viết">Dịch thuật tài liệu & hợp đồng</option>
+                        <option value="Online">Phiên dịch online từ xa</option>
+                    </select>
+                </div>
+
+                <!-- Action Button -->
+                <div class="sm:col-span-3 sm:col-start-10">
+                    <button type="submit" class="w-full h-full min-h-[50px] bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl px-5 py-3 transition duration-150 shadow-md shadow-brand-600/20 flex items-center justify-center gap-2 group">
+                        <span>Tìm kiếm</span>
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ════ Editorial Trust Signals ════ -->
+        <div class="mt-12 pt-8 border-t border-slate-200/70 max-w-3xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="px-2">
+                    <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">5.000<span class="text-brand-600">+</span></p>
+                    <p class="text-xs font-medium text-slate-500 mt-1">Phiên dịch viên</p>
+                </div>
+                <div class="px-2 md:border-l border-slate-200/80">
+                    <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">10<span class="text-brand-600">+</span></p>
+                    <p class="text-xs font-medium text-slate-500 mt-1">Ngôn ngữ toàn cầu</p>
+                </div>
+                <div class="px-2 md:border-l border-slate-200/80">
+                    <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">98<span class="text-brand-600">%</span></p>
+                    <p class="text-xs font-medium text-slate-500 mt-1">Đánh giá tích cực</p>
+                </div>
+                <div class="px-2 md:border-l border-slate-200/80">
+                    <p class="text-2xl sm:text-3xl font-extrabold text-emerald-600 tracking-tight">100<span class="text-xs font-bold text-slate-600 ml-0.5">%</span></p>
+                    <p class="text-xs font-medium text-slate-500 mt-1">Thanh toán Escrow an toàn</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 2: GLOBAL LANGUAGE STRIP (Ambient Native Scripts)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="bg-white border-b border-slate-200/70 py-4 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-center justify-between gap-6 overflow-x-auto no-scrollbar py-1 text-xs sm:text-sm font-semibold text-slate-500">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-brand-600 shrink-0">Global Hub:</span>
+            <span class="hover:text-slate-900 transition shrink-0">English</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">日本語</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">한국어</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">中文</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">Français</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">Deutsch</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">Español</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">Português</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">Русский</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">ไทย</span>
+            <span class="text-slate-300">·</span>
+            <span class="hover:text-slate-900 transition shrink-0">Tiếng Việt</span>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 3: LANGUAGE EXPLORER (10 Clean Language Cards)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2.5">
+                Khám Phá Theo Ngôn Ngữ
+            </h2>
+            <p class="text-slate-500 text-sm sm:text-base">
+                Tìm phiên dịch viên phù hợp với ngôn ngữ và chuyên môn bạn cần.
+            </p>
+        </div>
+
+        {% set lang_slugs = {
+            'Tiếng Anh': 'english',
+            'Tiếng Nhật': 'japanese',
+            'Tiếng Hàn': 'korean',
+            'Tiếng Trung': 'chinese',
+            'Tiếng Pháp': 'french',
+            'Tiếng Đức': 'german',
+            'Tiếng Nga': 'russian',
+            'Tiếng Thái': 'thai',
+            'Tiếng Bồ Đào Nha': 'portuguese',
+            'Tiếng Tây Ban Nha': 'spanish'
+        } %}
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4">
+            {% for item in LANGUAGES %}
+            <a href="{{ url_for('translator_language', lang_slug=lang_slugs.get(item.name, 'english')) }}"
+               class="card-interactive bg-white rounded-2xl p-4 sm:p-5 text-center border border-slate-200/90 group flex flex-col items-center justify-between shadow-soft">
+                <div class="w-10 h-7 rounded overflow-hidden shadow-xs border border-slate-200/80 mb-3 group-hover:scale-105 transition-transform duration-200">
+                    <img src="{{ item.flag_svg }}" alt="{{ item.flag_alt }}" class="w-full h-full object-cover">
+                </div>
+                <div class="mb-1">
+                    <span class="inline-block text-[11px] font-extrabold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-md uppercase tracking-wider mb-1">
+                        {{ item.code }}
+                    </span>
+                    <h3 class="font-bold text-slate-800 text-sm group-hover:text-brand-600 transition-colors">
+                        {{ item.name }}
+                    </h3>
+                </div>
+                <span class="text-[11px] text-slate-400 font-medium">
+                    {{ item.cert.split('/')[0] | trim }}
+                </span>
             </a>
             {% endfor %}
         </div>
+
     </div>
 </section>
 
-<!-- Top Translators -->
-{% if top_translators %}
-<section class="py-14 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-between items-end mb-8">
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 4: FEATURED TRANSLATORS (Human & Competence Focus)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-20 bg-white border-y border-slate-200/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-10">
             <div>
-                <h2 class="text-2xl font-bold mb-1">Phiên dịch viên nổi bật</h2>
-                <p class="text-gray-500 text-sm">Được đánh giá cao nhất trên nền tảng</p>
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Đội ngũ chuyên gia</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">
+                    Phiên Dịch Viên Nổi Bật
+                </h2>
+                <p class="text-slate-500 text-sm mt-1">
+                    Khám phá những phiên dịch viên được đánh giá cao trên VietTranslate.
+                </p>
             </div>
-            <a href="{{ url_for('translator_list') }}" class="text-sm text-primary font-medium hover:underline">Xem tất cả →</a>
+            <a href="{{ url_for('translator_list') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 group shrink-0">
+                <span>Xem tất cả chuyên gia</span>
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
         </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {% for profile in top_translators %}
-            <div class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold">
-                            {{ profile.user.name[0]|upper }}
+            <div class="card-interactive bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between shadow-soft">
+                <div class="p-5 sm:p-6">
+                    <!-- Top row: Avatar & Badges -->
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-600 text-white font-extrabold text-xl flex items-center justify-center shadow-sm">
+                            {{ profile.user.name[0] | upper }}
                         </div>
-                        {% if profile.is_verified %}
-                        <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">✓ Verified</span>
-                        {% endif %}
+                        <div class="flex flex-col items-end gap-1">
+                            {% if profile.is_verified %}
+                            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md">
+                                <svg class="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                Xác minh
+                            </span>
+                            {% endif %}
+                            {% if profile.badges %}
+                            <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                                {{ profile.badges.split(',')[0] | trim }}
+                            </span>
+                            {% endif %}
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm mb-0.5">{{ profile.user.name }}</h3>
-                    <p class="text-xs text-gray-500 mb-2 line-clamp-1">{{ profile.title }}</p>
-                    <div class="flex items-center gap-1 text-yellow-500 text-sm mb-3">
-                        <span>★</span>
-                        <span class="font-bold text-gray-800">{{ profile.rating }}</span>
-                        <span class="text-gray-400 text-xs">({{ profile.total_reviews }})</span>
-                    </div>
-                    {% if profile.badges %}
-                    <div class="flex flex-wrap gap-1 mb-3">
-                        {% for b in profile.badges.split(',')[:2] %}
-                        <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{{ b.strip() }}</span>
+
+                    <!-- Name & Title -->
+                    <h3 class="font-bold text-slate-900 text-base mb-1">
+                        <a href="{{ url_for('translator_profile', profile_id=profile.id) }}" class="hover:text-brand-600 transition-colors">
+                            {{ profile.user.name }}
+                        </a>
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-3 line-clamp-2 leading-relaxed">
+                        {{ profile.title or 'Phiên dịch viên chuyên nghiệp' }}
+                    </p>
+
+                    <!-- Languages -->
+                    {% if profile.languages %}
+                    <div class="flex flex-wrap gap-1.5 mb-4">
+                        {% for l in profile.languages.split(',') %}
+                        <span class="text-[11px] font-medium text-slate-700 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded-md">
+                            {{ l.strip() }}
+                        </span>
                         {% endfor %}
                     </div>
                     {% endif %}
+
+                    <!-- Rating & Completed Jobs -->
+                    <div class="flex items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-100">
+                        <div class="flex items-center gap-1 text-amber-500 font-bold">
+                            <span>★</span>
+                            <span class="text-slate-800">{{ profile.rating }}</span>
+                            <span class="text-slate-400 font-normal">({{ profile.total_reviews }})</span>
+                        </div>
+                        <span class="text-slate-400">{{ profile.total_jobs }} dự án</span>
+                    </div>
                 </div>
-                <div class="border-t border-gray-100 px-5 py-3 flex gap-2">
-                    <a href="{{ url_for('translator_profile', profile_id=profile.id) }}" class="flex-1 text-center text-xs font-medium text-primary border border-primary rounded-lg py-1.5 hover:bg-blue-50 transition">Xem hồ sơ</a>
-                    <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="flex-1 text-center text-xs font-medium text-white bg-primary rounded-lg py-1.5 hover:bg-blue-700 transition">Chat ngay</a>
+
+                <!-- Card Footer with Price & CTA -->
+                <div class="bg-slate-50/70 border-t border-slate-100 px-5 py-3.5 flex items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold block">Mức giá</span>
+                        <span class="text-xs font-bold text-slate-800">
+                            {% if profile.services and profile.services[0].basic_price %}
+                            Từ {{ "{:,.0f}".format(profile.services[0].basic_price) }}đ
+                            {% else %}
+                            Thỏa thuận
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ url_for('translator_profile', profile_id=profile.id) }}" class="text-xs font-semibold text-brand-600 hover:text-brand-700 bg-white border border-slate-200 hover:border-brand-200 px-3 py-1.5 rounded-lg transition">
+                            Hồ sơ
+                        </a>
+                        <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 px-3 py-1.5 rounded-lg transition">
+                            Chat
+                        </a>
+                    </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-    </div>
-</section>
-{% endif %}
 
-<!-- How It Works -->
-<section class="py-14 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <h2 class="text-2xl font-bold text-center mb-2">Quy trình đơn giản – Chỉ 3 bước</h2>
-        <p class="text-gray-500 text-center text-sm mb-12">An toàn, minh bạch, bảo vệ cả hai bên</p>
-        <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-4 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">1</div>
-                <h3 class="font-bold text-lg mb-2">Tìm hoặc Đăng</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Tìm kiếm phiên dịch viên phù hợp hoặc đăng yêu cầu để nhận báo giá từ nhiều ứng viên.</p>
-            </div>
-            <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-4 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">2</div>
-                <h3 class="font-bold text-lg mb-2">Thanh toán An toàn</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Tiền được giữ trong Escrow an toàn. Freelancer chỉ nhận tiền khi bạn hài lòng với kết quả.</p>
-            </div>
-            <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-4 bg-green-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">3</div>
-                <h3 class="font-bold text-lg mb-2">Nghiệm thu & Đánh giá</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Nhận kết quả chất lượng, phê duyệt và để lại đánh giá để giúp cộng đồng phát triển.</p>
-            </div>
-        </div>
     </div>
 </section>
 
-<!-- CTA Banner -->
-<section class="py-14 bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl font-bold mb-4">Bạn là Phiên dịch viên?</h2>
-        <p class="text-blue-100 mb-8 text-lg">Đăng ký miễn phí, tạo hồ sơ và bắt đầu nhận job ngay hôm nay.</p>
-        <a href="{{ url_for('register') }}" class="inline-block bg-white text-primary font-bold px-8 py-3 rounded-xl hover:bg-gray-50 transition shadow-lg">
-            Đăng ký ngay – Miễn phí 🚀
-        </a>
-    </div>
-</section>
-
-<!-- ═══ SEO CONTENT HUB ═══ -->
-<section class="bg-slate-50 border-t border-gray-200" aria-label="Thông tin và tài nguyên về phiên dịch">
-    <div class="container mx-auto px-4 pt-16 pb-20">
-
-        <!-- Hub Header -->
-        <div class="text-center mb-14">
-            <p class="text-xs font-semibold tracking-widest text-primary uppercase mb-3">Trung tâm thông tin</p>
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Khám phá dịch vụ phiên dịch</h2>
-            <p class="text-gray-500 text-sm max-w-xl mx-auto">Tham khảo giá, tìm phiên dịch viên phù hợp và khám phá cơ hội việc làm trên VietTranslate.</p>
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 5: JOB MARKETPLACE (Cơ Hội Đang Chờ Bạn)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-10">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Thị trường việc làm</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">
+                    Cơ Hội Đang Chờ Bạn
+                </h2>
+                <p class="text-slate-500 text-sm mt-1">
+                    Khám phá những công việc phù hợp với ngôn ngữ và chuyên môn của bạn.
+                </p>
+            </div>
+            <a href="{{ url_for('job_list') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 group shrink-0">
+                <span>Xem tất cả việc làm</span>
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
         </div>
 
-        <!-- ── SECTION 1: BẢNG GIÁ ── -->
-        <div id="bang-gia-phien-dich" class="mb-16 scroll-mt-20">
-            <div class="flex items-end justify-between mb-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+            {% if latest_jobs %}
+                {% for job in latest_jobs %}
+                <div class="card-interactive bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 flex flex-col justify-between shadow-soft">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg">
+                                <span>{{ job.source_lang }}</span>
+                                <span class="text-brand-400">→</span>
+                                <span>{{ job.target_lang }}</span>
+                            </span>
+                            <span class="text-xs text-slate-400">
+                                {% if job.category %}{{ job.category }} · {% endif %}
+                                {{ job.created_at.strftime('%d/%m/%Y') }}
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">
+                            <a href="{{ url_for('job_detail', job_id=job.id) }}" class="hover:text-brand-600 transition-colors">
+                                {{ job.title }}
+                            </a>
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed mb-4">
+                            {{ job.description }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100 mt-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 uppercase font-semibold block">Ngân sách</span>
+                            <span class="text-sm font-bold text-brand-700">
+                                {% if job.budget_max %}
+                                {{ "{:,.0f}".format(job.budget_min) }} – {{ "{:,.0f}".format(job.budget_max) }}đ
+                                {% elif job.budget_min %}
+                                Từ {{ "{:,.0f}".format(job.budget_min) }}đ
+                                {% else %}
+                                Thỏa thuận
+                                {% endif %}
+                            </span>
+                        </div>
+                        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700 bg-brand-50/70 hover:bg-brand-50 border border-brand-100 px-3.5 py-2 rounded-xl transition">
+                            <span>Xem chi tiết</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback clean demo cards -->
+                <div class="card-interactive bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-soft">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg">🇯🇵 Tiếng Nhật → Tiếng Việt</span>
+                        <span class="text-xs text-slate-400">Hội thảo · 2 giờ trước</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Phiên dịch hội nghị hợp tác công nghệ Nhật – Việt</h3>
+                    <p class="text-xs text-slate-500 mb-4">Cần phiên dịch viên có kinh nghiệm dịch cabin hội thảo IT trong 1 ngày tại Hà Nội.</p>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+                        <span class="text-sm font-bold text-brand-700">2.000.000 – 3.500.000đ</span>
+                        <a href="{{ url_for('job_list') }}" class="text-xs font-semibold text-brand-600">Xem công việc →</a>
+                    </div>
+                </div>
+                <div class="card-interactive bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-soft">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">🇰🇷 Tiếng Hàn → Tiếng Việt</span>
+                        <span class="text-xs text-slate-400">Tháp tùng · 5 giờ trước</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Phiên dịch tháp tùng đoàn đối tác Hàn Quốc khảo sát nhà máy</h3>
+                    <p class="text-xs text-slate-500 mb-4">Hỗ trợ trao đổi kỹ thuật và quy trình sản xuất tại Bình Dương trong 2 ngày.</p>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+                        <span class="text-sm font-bold text-brand-700">4.000.000 – 6.000.000đ</span>
+                        <a href="{{ url_for('job_list') }}" class="text-xs font-semibold text-brand-600">Xem công việc →</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 6: BENTO / WHY VIETTRANSLATE (Editorial 4-Pillar Grid)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-24 bg-white border-y border-slate-200/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Giá trị cốt lõi</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1 mb-3">
+                Vì Sao Chọn VietTranslate?
+            </h2>
+            <p class="text-slate-500 text-sm sm:text-base">
+                Nền tảng kết nối trực tiếp, minh bạch và an tâm cho cả người thuê và phiên dịch viên.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Pillar 01 -->
+            <div class="bg-slate-50/80 rounded-2xl p-6 sm:p-7 border border-slate-200/80 hover:border-brand-200 transition-colors flex flex-col justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900">Bảng giá phiên dịch theo ngôn ngữ</h2>
-                    <p class="text-gray-500 text-sm mt-1">Tham khảo mức giá phổ biến để lựa chọn phiên dịch viên phù hợp với nhu cầu và ngân sách.</p>
+                    <span class="text-3xl sm:text-4xl font-black text-brand-600/30 font-sans tracking-tight block mb-4">01</span>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Hồ sơ rõ ràng</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        Xem chuyên môn, bằng cấp, chứng chỉ ngôn ngữ (JLPT, IELTS, TOPIK), đánh giá và portfolio thực tế trước khi đưa ra quyết định.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-200/60 text-[11px] font-semibold text-brand-700">
+                    Xác minh chứng chỉ & năng lực
                 </div>
             </div>
 
-            <!-- Table wrapper with horizontal scroll on mobile -->
-            <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm mt-5">
-                <table class="w-full text-sm min-w-[560px]" role="table">
+            <!-- Pillar 02 -->
+            <div class="bg-slate-50/80 rounded-2xl p-6 sm:p-7 border border-slate-200/80 hover:border-brand-200 transition-colors flex flex-col justify-between">
+                <div>
+                    <span class="text-3xl sm:text-4xl font-black text-brand-600/30 font-sans tracking-tight block mb-4">02</span>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Kết nối phù hợp</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        Tìm đúng phiên dịch viên theo ngôn ngữ, ngành nghề chuyên sâu (IT, y tế, pháp lý, sản xuất) và loại hình dịch thuật bạn cần.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-200/60 text-[11px] font-semibold text-brand-700">
+                    Đúng người · Đúng việc
+                </div>
+            </div>
+
+            <!-- Pillar 03 -->
+            <div class="bg-slate-50/80 rounded-2xl p-6 sm:p-7 border border-slate-200/80 hover:border-brand-200 transition-colors flex flex-col justify-between">
+                <div>
+                    <span class="text-3xl sm:text-4xl font-black text-brand-600/30 font-sans tracking-tight block mb-4">03</span>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Minh bạch tuyệt đối</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        Thông tin công việc, mức giá niêm yết, thời gian giao hàng và đánh giá hai chiều được thể hiện rõ ràng, không phí ẩn.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-200/60 text-[11px] font-semibold text-brand-700">
+                    Chi phí minh bạch 100%
+                </div>
+            </div>
+
+            <!-- Pillar 04 -->
+            <div class="bg-slate-50/80 rounded-2xl p-6 sm:p-7 border border-slate-200/80 hover:border-brand-200 transition-colors flex flex-col justify-between">
+                <div>
+                    <span class="text-3xl sm:text-4xl font-black text-brand-600/30 font-sans tracking-tight block mb-4">04</span>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">An tâm với Escrow</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        Tiền được giữ an toàn trong hệ thống trung gian. Phiên dịch viên chỉ nhận thanh toán khi khách hàng hài lòng với chất lượng.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-200/60 text-[11px] font-semibold text-emerald-700">
+                    Bảo vệ quyền lợi đôi bên
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 7: CONNECTED PROJECTS / PORTFOLIO (Editorial Showcase)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Thực tiễn hợp tác</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1 mb-2.5">
+                Những Dự Án Đã Được Kết Nối
+            </h2>
+            <p class="text-slate-500 text-sm">
+                Điểm qua các dự án tiêu biểu được kết nối thành công qua nền tảng VietTranslate.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-soft flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-bold text-brand-700 bg-brand-50 px-3 py-1 rounded-full">Hội nghị quốc tế</span>
+                        <span class="text-xs font-semibold text-slate-400">🇯🇵 Tiếng Nhật</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Hội thảo xúc tiến đầu tư FDI Nhật Bản – Việt Nam</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        Phiên dịch song song (Cabin) cho hơn 250 đại diện doanh nghiệp tại Trung tâm Hội nghị Quốc gia.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Lĩnh vực: <strong class="text-slate-700 font-semibold">Công nghiệp & FDI</strong></span>
+                    <span class="text-emerald-600 font-semibold">✓ Hoàn thành</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-soft flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">Pháp lý & Hợp đồng</span>
+                        <span class="text-xs font-semibold text-slate-400">🇬🇧 Tiếng Anh</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Đàm phán & Ký kết hợp đồng xuất khẩu phần mềm</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        Phiên dịch đàm phán thương mại trực tiếp và dịch thuật tài liệu NDA, Master Agreement cho đối tác Mỹ.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Lĩnh vực: <strong class="text-slate-700 font-semibold">Công nghệ thông tin</strong></span>
+                    <span class="text-emerald-600 font-semibold">✓ Hoàn thành</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-soft flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-bold text-violet-700 bg-violet-50 px-3 py-1 rounded-full">Kỹ thuật nhà máy</span>
+                        <span class="text-xs font-semibold text-slate-400">🇰🇷 Tiếng Hàn</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Đào tạo vận hành dây chuyền sản xuất linh kiện</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        Phiên dịch tháp tùng kỹ sư trưởng Hàn Quốc hướng dẫn kỹ thuật viên Việt Nam trong 5 ngày onsite.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Lĩnh vực: <strong class="text-slate-700 font-semibold">Sản xuất tự động</strong></span>
+                    <span class="text-emerald-600 font-semibold">✓ Hoàn thành</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 8: HOW IT WORKS (Clean Typography Flow)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-24 bg-white border-b border-slate-200/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Quy trình đơn giản</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1 mb-2.5">
+                Bắt Đầu Trong Vài Bước
+            </h2>
+            <p class="text-slate-500 text-sm">
+                Quy trình rõ ràng, minh bạch và an toàn từ đầu đến khi hoàn tất công việc.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+            
+            <div class="text-center md:text-left">
+                <span class="text-2xl font-black text-brand-600 block mb-2">01</span>
+                <h3 class="font-bold text-slate-900 text-sm mb-1.5">Tìm nhu cầu</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Chọn ngôn ngữ, chuyên môn, thời gian và hình thức phiên dịch.
+                </p>
+            </div>
+
+            <div class="text-center md:text-left">
+                <span class="text-2xl font-black text-brand-600 block mb-2">02</span>
+                <h3 class="font-bold text-slate-900 text-sm mb-1.5">Chọn phiên dịch</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Xem hồ sơ, đánh giá, portfolio và mức giá để chọn người phù hợp nhất.
+                </p>
+            </div>
+
+            <div class="text-center md:text-left">
+                <span class="text-2xl font-black text-brand-600 block mb-2">03</span>
+                <h3 class="font-bold text-slate-900 text-sm mb-1.5">Trao đổi</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Chat trực tiếp để thống nhất yêu cầu công việc và lịch trình chi tiết.
+                </p>
+            </div>
+
+            <div class="text-center md:text-left">
+                <span class="text-2xl font-black text-brand-600 block mb-2">04</span>
+                <h3 class="font-bold text-slate-900 text-sm mb-1.5">Xác nhận Escrow</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Ký hợp đồng và nạp tiền vào ví Escrow an toàn để bảo vệ giao dịch.
+                </p>
+            </div>
+
+            <div class="text-center md:text-left">
+                <span class="text-2xl font-black text-emerald-600 block mb-2">05</span>
+                <h3 class="font-bold text-slate-900 text-sm mb-1.5">Hoàn thành</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Nghiệm thu chất lượng, giải ngân và để lại đánh giá cho chuyên gia.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 9: TRANSLATOR CTA (Dedicated Freelancer Acquisition)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-20 bg-slate-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="mesh-cta-bg rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
+            <div class="relative z-10 max-w-2xl">
+                <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-md mb-4">
+                    Dành Cho Phiên Dịch Viên
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-4">
+                    Bạn Là Phiên Dịch Viên?
+                </h2>
+                <p class="text-blue-100 text-sm sm:text-base leading-relaxed mb-8">
+                    Xây dựng hồ sơ chuyên nghiệp, tiếp cận hàng ngàn dự án uy tín từ các công ty đa quốc gia và phát triển thu nhập bền vững.
+                </p>
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="{{ url_for('register') }}" class="inline-flex items-center gap-2 bg-white text-brand-700 hover:bg-blue-50 font-bold text-sm px-6 py-3.5 rounded-xl transition shadow-md group">
+                        <span>Tạo hồ sơ ngay</span>
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                    <a href="{{ url_for('job_list') }}" class="inline-flex items-center gap-2 text-white/90 hover:text-white font-semibold text-sm px-4 py-3.5">
+                        Xem danh sách việc làm →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 10: SEO CONTENT HUB (Bảng giá, Cẩm nang & Kiến thức)
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="py-16 md:py-20 bg-white border-t border-slate-200/70" aria-label="Trung tâm thông tin phiên dịch">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Trung tâm tài nguyên</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1 mb-2.5">
+                Bảng Giá & Cẩm Nang Dịch Thuật
+            </h2>
+            <p class="text-slate-500 text-sm">
+                Tham khảo mức giá thị trường theo ngôn ngữ và các tài nguyên hữu ích.
+            </p>
+        </div>
+
+        <!-- Price Benchmark Table -->
+        <div class="bg-slate-50 rounded-2xl border border-slate-200/90 p-5 sm:p-6 mb-12 shadow-xs">
+            <h3 class="font-bold text-slate-900 text-base mb-4 flex items-center justify-between">
+                <span>Bảng giá tham khảo theo ngôn ngữ</span>
+                <span class="text-xs font-normal text-slate-400">* Tính theo buổi / ngày làm việc tiêu chuẩn</span>
+            </h3>
+
+            {% set price_data = {
+                'Tiếng Anh': '400.000 – 1.200.000 đ/buổi',
+                'Tiếng Nhật': '600.000 – 1.800.000 đ/buổi',
+                'Tiếng Hàn': '600.000 – 1.600.000 đ/buổi',
+                'Tiếng Trung': '500.000 – 1.300.000 đ/buổi',
+                'Tiếng Pháp': '600.000 – 1.500.000 đ/buổi',
+                'Tiếng Đức': '700.000 – 1.800.000 đ/buổi',
+                'Tiếng Nga': '700.000 – 1.800.000 đ/buổi',
+                'Tiếng Thái': '500.000 – 1.200.000 đ/buổi',
+                'Tiếng Bồ Đào Nha': '700.000 – 1.800.000 đ/buổi',
+                'Tiếng Tây Ban Nha': '600.000 – 1.500.000 đ/buổi'
+            } %}
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
                     <thead>
-                        <tr class="border-b border-gray-100 bg-gray-50 text-gray-600 text-xs uppercase tracking-wide">
-                            <th scope="col" class="text-left px-5 py-3.5 font-semibold">Ngôn ngữ</th>
-                            <th scope="col" class="text-left px-5 py-3.5 font-semibold">Mức giá tham khảo <span class="text-gray-400 font-normal normal-case">(minh họa *)</span></th>
-                            <th scope="col" class="text-left px-5 py-3.5 font-semibold">Tìm phiên dịch</th>
+                        <tr class="border-b border-slate-200 text-slate-400 font-semibold uppercase text-[11px]">
+                            <th class="py-3 px-3">Ngôn ngữ</th>
+                            <th class="py-3 px-3">Chứng chỉ tiêu chuẩn</th>
+                            <th class="py-3 px-3">Mức giá tham khảo</th>
+                            <th class="py-3 px-3 text-right">Hành động</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        {% set price_data = {
-                            'Tiếng Anh': '300.000 – 800.000 đ/buổi',
-                            'Tiếng Nhật': '500.000 – 1.500.000 đ/buổi',
-                            'Tiếng Hàn': '500.000 – 1.200.000 đ/buổi',
-                            'Tiếng Trung': '400.000 – 1.000.000 đ/buổi',
-                            'Tiếng Pháp': '500.000 – 1.200.000 đ/buổi',
-                            'Tiếng Đức': '500.000 – 1.300.000 đ/buổi',
-                            'Tiếng Nga': '600.000 – 1.500.000 đ/buổi',
-                            'Tiếng Thái': '400.000 – 1.000.000 đ/buổi',
-                            'Tiếng Bồ Đào Nha': '600.000 – 1.500.000 đ/buổi',
-                            'Tiếng Tây Ban Nha': '500.000 – 1.200.000 đ/buổi'
-                        } %}
-                        {% for lang, flag, cert in LANGUAGES %}
-                        <tr class="hover:bg-blue-50/40 transition-colors">
-                            <td class="px-5 py-3.5">
-                                <span class="mr-2 text-base">{{ flag }}</span>
-                                <span class="font-medium text-gray-800">{{ lang }}</span>
+                    <tbody class="divide-y divide-slate-200/60">
+                        {% for item in LANGUAGES %}
+                        <tr class="hover:bg-white/80 transition-colors">
+                            <td class="py-3 px-3 font-semibold text-slate-800 flex items-center gap-2">
+                                <span class="text-base">{{ item.flag }}</span>
+                                <span>{{ item.name }}</span>
                             </td>
-                            <td class="px-5 py-3.5 text-gray-600 tabular-nums">
-                                {{ price_data.get(lang, 'Liên hệ để báo giá') }}
-                            </td>
-                            <td class="px-5 py-3.5">
-                                <a href="{{ url_for('translator_list', lang=lang) }}"
-                                   class="inline-flex items-center gap-1 text-primary font-medium text-xs hover:underline"
-                                   aria-label="Tìm phiên dịch viên {{ lang }}">
-                                    Tìm ngay
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            <td class="py-3 px-3 text-slate-500">{{ item.cert }}</td>
+                            <td class="py-3 px-3 text-slate-700 font-medium">{{ price_data.get(item.name, 'Liên hệ báo giá') }}</td>
+                            <td class="py-3 px-3 text-right">
+                                <a href="{{ url_for('translator_language', lang_slug=lang_slugs.get(item.name, 'english')) }}" class="text-xs font-semibold text-brand-600 hover:text-brand-700 hover:underline">
+                                    Tìm phiên dịch →
                                 </a>
                             </td>
                         </tr>
@@ -240,398 +744,33 @@
                     </tbody>
                 </table>
             </div>
-            <p class="text-xs text-gray-400 mt-3">* Mức giá mang tính tham khảo, có thể thay đổi tùy theo yêu cầu, kinh nghiệm và thỏa thuận với phiên dịch viên.</p>
-        </div>
-
-        <!-- ── SECTION 2: PHIÊN DỊCH VIÊN NỔI BẬT ── -->
-        <div id="phien-dich-vien-noi-bat" class="mb-16 scroll-mt-20">
-            <div class="flex items-end justify-between mb-5">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900">Phiên dịch viên nổi bật</h2>
-                    <p class="text-gray-500 text-sm mt-1">Khám phá những phiên dịch viên được đánh giá cao và phù hợp với nhiều nhu cầu khác nhau.</p>
-                </div>
-                <a href="{{ url_for('translator_list') }}" class="hidden sm:block text-sm text-primary font-medium hover:underline shrink-0 ml-4">
-                    Xem tất cả →
-                </a>
-            </div>
-
-            {% if top_translators %}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                {% for profile in top_translators[:4] %}
-                <article class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold shrink-0" aria-hidden="true">
-                                {{ profile.user.name[0]|upper }}
-                            </div>
-                            {% if profile.is_verified %}
-                            <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">✓ Verified</span>
-                            {% endif %}
-                        </div>
-                        <h3 class="font-bold text-gray-800 text-sm mb-0.5">{{ profile.user.name }}</h3>
-                        <p class="text-xs text-gray-500 mb-2 line-clamp-1">{{ profile.title or 'Phiên dịch viên chuyên nghiệp' }}</p>
-                        <div class="flex items-center gap-1 text-yellow-500 text-sm mb-3" aria-label="Đánh giá {{ profile.rating }} sao">
-                            <span aria-hidden="true">★</span>
-                            <span class="font-bold text-gray-800 text-xs">{{ profile.rating }}</span>
-                            <span class="text-gray-400 text-xs">({{ profile.total_reviews }} đánh giá)</span>
-                        </div>
-                        {% if profile.languages %}
-                        <div class="flex flex-wrap gap-1 mb-3">
-                            {% for lang_item in profile.languages.split(',')[:2] %}
-                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{{ lang_item.strip() }}</span>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% if profile.badges %}
-                        <div class="flex flex-wrap gap-1 mb-3">
-                            {% for b in profile.badges.split(',')[:1] %}
-                            <span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">{{ b.strip() }}</span>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% if profile.services %}
-                        <p class="text-xs text-gray-400">
-                            Từ <span class="font-semibold text-gray-700">{{ '{:,.0f}'.format(profile.services[0].basic_price) }} đ</span>
-                        </p>
-                        {% endif %}
-                    </div>
-                    <div class="border-t border-gray-100 px-5 py-3">
-                        <a href="{{ url_for('translator_profile', profile_id=profile.id) }}"
-                           class="block text-center text-xs font-medium text-primary border border-primary rounded-lg py-2 hover:bg-blue-50 transition"
-                           aria-label="Xem hồ sơ của {{ profile.user.name }}">
-                            Xem hồ sơ
-                        </a>
-                    </div>
-                </article>
-                {% endfor %}
-            </div>
-            {% else %}
-            <!-- Fallback mock khi chưa có data -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {% set mock_translators = [
-                    {'name': 'Nguyễn Minh Anh', 'title': 'Phiên dịch Nhật – Việt · Hội nghị & Doanh nghiệp', 'langs': 'Tiếng Nhật, Tiếng Anh', 'rating': '4.9', 'reviews': '47', 'badge': 'Rising Star', 'price': '700.000'},
-                    {'name': 'Trần Thị Hà', 'title': 'Phiên dịch Hàn – Việt · Thương mại & Sự kiện', 'langs': 'Tiếng Hàn, Tiếng Anh', 'rating': '4.8', 'reviews': '32', 'badge': 'Top Rated', 'price': '600.000'},
-                    {'name': 'Lê Hoàng Nam', 'title': 'Phiên dịch Anh – Việt · Pháp lý & Kỹ thuật', 'langs': 'Tiếng Anh, Tiếng Pháp', 'rating': '4.7', 'reviews': '28', 'badge': 'Verified', 'price': '500.000'}
-                ] %}
-                {% for t in mock_translators %}
-                <article class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold" aria-hidden="true">
-                                {{ t.name[0] }}
-                            </div>
-                            <span class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full font-medium">{{ t.badge }}</span>
-                        </div>
-                        <h3 class="font-bold text-gray-800 text-sm mb-0.5">{{ t.name }}</h3>
-                        <p class="text-xs text-gray-500 mb-2 line-clamp-2">{{ t.title }}</p>
-                        <div class="flex items-center gap-1 text-yellow-500 text-sm mb-3" aria-label="Đánh giá {{ t.rating }} sao">
-                            <span aria-hidden="true">★</span>
-                            <span class="font-bold text-gray-800 text-xs">{{ t.rating }}</span>
-                            <span class="text-gray-400 text-xs">({{ t.reviews }})</span>
-                        </div>
-                        <div class="flex flex-wrap gap-1 mb-3">
-                            {% for l in t.langs.split(', ') %}
-                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{{ l }}</span>
-                            {% endfor %}
-                        </div>
-                        <p class="text-xs text-gray-400">Từ <span class="font-semibold text-gray-700">{{ t.price }} đ</span>/buổi <span class="text-gray-300 text-xs">[Minh họa]</span></p>
-                    </div>
-                    <div class="border-t border-gray-100 px-5 py-3">
-                        <a href="{{ url_for('translator_list') }}" class="block text-center text-xs font-medium text-primary border border-primary rounded-lg py-2 hover:bg-blue-50 transition">
-                            Xem phiên dịch viên
-                        </a>
-                    </div>
-                </article>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <div class="mt-6 text-center sm:hidden">
-                <a href="{{ url_for('translator_list') }}" class="inline-flex items-center gap-1 text-sm text-primary font-medium hover:underline">
-                    Xem tất cả phiên dịch viên →
-                </a>
-            </div>
-        </div>
-
-        <!-- ── SECTION 3: PORTFOLIO MẪU ── -->
-        <div id="mau-portfolio-phien-dich" class="mb-16 scroll-mt-20">
-            <div class="mb-5">
-                <h2 class="text-xl font-bold text-gray-900">Mẫu portfolio phiên dịch thực tế</h2>
-                <p class="text-gray-500 text-sm mt-1">Tham khảo kinh nghiệm, chuyên môn và những dự án mà phiên dịch viên đã thực hiện.</p>
-            </div>
-
-            <!-- Portfolio grid — mock data có nhãn rõ -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {% set portfolios = [
-                    {
-                        'title': 'Phiên dịch hội thảo doanh nghiệp Nhật – Việt',
-                        'langs': 'Tiếng Nhật → Tiếng Việt',
-                        'field': 'Doanh nghiệp · Hội nghị',
-                        'desc': 'Phiên dịch cabin và tháp tùng cho chuỗi hội thảo xúc tiến thương mại với đối tác Nhật Bản, quy mô 200 người tham dự.',
-                        'by': 'Nguyễn Minh Anh',
-                        'emoji': '🇯🇵'
-                    },
-                    {
-                        'title': 'Phiên dịch pháp lý hợp đồng Hàn – Việt',
-                        'langs': 'Tiếng Hàn → Tiếng Việt',
-                        'field': 'Pháp lý · Thương mại',
-                        'desc': 'Hỗ trợ phiên dịch trực tiếp trong buổi đàm phán và ký kết hợp đồng đầu tư giữa doanh nghiệp Hàn Quốc và đối tác Việt.',
-                        'by': 'Trần Thị Hà',
-                        'emoji': '🇰🇷'
-                    },
-                    {
-                        'title': 'Phiên dịch kỹ thuật triển lãm công nghệ',
-                        'langs': 'Tiếng Anh ↔ Tiếng Việt',
-                        'field': 'Kỹ thuật · Công nghệ',
-                        'desc': 'Phiên dịch cabin tại triển lãm công nghệ quốc tế, hỗ trợ thuyết trình sản phẩm và buổi Q&A kỹ thuật.',
-                        'by': 'Lê Hoàng Nam',
-                        'emoji': '🇬🇧'
-                    }
-                ] %}
-
-                {% for p in portfolios %}
-                <article class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col">
-                    <!-- Visual header -->
-                    <div class="bg-gradient-to-br from-slate-100 to-blue-50 px-6 py-8 flex items-center gap-4">
-                        <span class="text-4xl" role="img" aria-label="{{ p.langs }}">{{ p.emoji }}</span>
-                        <div>
-                            <span class="text-xs font-semibold text-primary bg-blue-50 px-2 py-0.5 rounded-full">{{ p.field }}</span>
-                            <p class="text-xs text-gray-500 mt-1.5">{{ p.langs }}</p>
-                        </div>
-                    </div>
-                    <div class="p-5 flex flex-col flex-grow">
-                        <h3 class="font-bold text-gray-800 text-sm mb-2 leading-snug">{{ p.title }}</h3>
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-grow">{{ p.desc }}</p>
-                        <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
-                            <p class="text-xs text-gray-400">
-                                bởi <span class="font-medium text-gray-600">{{ p.by }}</span>
-                            </p>
-                            <span class="text-xs text-gray-300 italic">[Minh họa]</span>
-                        </div>
-                    </div>
-                </article>
-                {% endfor %}
-            </div>
-            <p class="text-xs text-gray-400 mt-3">* Các dự án trên là ví dụ minh họa. Hồ sơ và portfolio thực tế có thể xem trên trang phiên dịch viên.</p>
-            <div class="mt-5 text-center">
-                <a href="{{ url_for('translator_list') }}" class="inline-flex items-center gap-2 text-sm text-primary font-medium border border-primary/30 bg-white px-5 py-2.5 rounded-lg hover:bg-blue-50 transition">
-                    Khám phá hồ sơ phiên dịch viên →
-                </a>
-            </div>
-        </div>
-
-        <!-- ── SECTION 4: VÌ SAO CHỌN VIETTRANSLATE ── -->
-        <div id="vi-sao-chon-viettranslate" class="mb-16 scroll-mt-20">
-            <div class="text-center mb-8">
-                <h2 class="text-xl font-bold text-gray-900">Vì sao chọn VietTranslate?</h2>
-                <p class="text-gray-500 text-sm mt-1">Nền tảng kết nối minh bạch cho cả người thuê và phiên dịch viên.</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {% set reasons = [
-                    {
-                        'num': '01',
-                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>',
-                        'title': 'Phiên dịch viên có hồ sơ rõ ràng',
-                        'desc': 'Kết nối với đội ngũ phiên dịch viên có chuyên môn, kinh nghiệm và đánh giá từ người dùng thực tế.'
-                    },
-                    {
-                        'num': '02',
-                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>',
-                        'title': 'Thông tin minh bạch',
-                        'desc': 'Xem trước kinh nghiệm, chuyên môn, đánh giá và mức giá trước khi đưa ra quyết định.'
-                    },
-                    {
-                        'num': '03',
-                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>',
-                        'title': 'Đa dạng ngôn ngữ',
-                        'desc': 'Tìm kiếm phiên dịch viên cho nhiều ngôn ngữ và lĩnh vực khác nhau, từ hội nghị đến pháp lý và kỹ thuật.'
-                    },
-                    {
-                        'num': '04',
-                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
-                        'title': 'Quy trình làm việc rõ ràng',
-                        'desc': 'Hỗ trợ người thuê và phiên dịch viên trong toàn bộ quá trình từ trao đổi yêu cầu đến hoàn thành hợp tác.'
-                    },
-                    {
-                        'num': '05',
-                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>',
-                        'title': 'Cơ hội việc làm phiên dịch',
-                        'desc': 'Phiên dịch viên có thể chủ động khám phá và tiếp cận những công việc phù hợp với ngôn ngữ và chuyên môn.'
-                    },
-                    {
-                        'num': '06',
-                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
-                        'title': 'Kết nối nhanh chóng',
-                        'desc': 'Tìm đúng người hoặc đúng cơ hội mà không cần qua nhiều bước trung gian phức tạp.'
-                    }
-                ] %}
-
-                {% for r in reasons %}
-                <div class="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
-                    <div class="shrink-0">
-                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                {{ r.icon }}
-                            </svg>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-gray-300 mb-1">{{ r.num }}</p>
-                        <h3 class="font-bold text-gray-800 text-sm mb-1.5">{{ r.title }}</h3>
-                        <p class="text-xs text-gray-500 leading-relaxed">{{ r.desc }}</p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- ── SECTION 5: HƯỚNG DẪN 6 BƯỚC ── -->
-        <div id="huong-dan-thue-phien-dich" class="mb-16 scroll-mt-20">
-            <div class="text-center mb-10">
-                <h2 class="text-xl font-bold text-gray-900">Hướng dẫn thuê phiên dịch trong 6 bước</h2>
-                <p class="text-gray-500 text-sm mt-1">Từ xác định nhu cầu đến hoàn thành — đơn giản, rõ ràng và nhanh chóng.</p>
-            </div>
-
-            {% set steps = [
-                {'num': '01', 'title': 'Xác định nhu cầu', 'desc': 'Chọn ngôn ngữ, loại hình phiên dịch và các yêu cầu về thời gian, địa điểm.'},
-                {'num': '02', 'title': 'Tìm phiên dịch viên', 'desc': 'Khám phá danh sách phiên dịch viên theo ngôn ngữ và chuyên môn.'},
-                {'num': '03', 'title': 'So sánh hồ sơ', 'desc': 'Xem kinh nghiệm, đánh giá, portfolio và mức giá để chọn người phù hợp.'},
-                {'num': '04', 'title': 'Gửi yêu cầu', 'desc': 'Trao đổi chi tiết về công việc, thời gian và ngân sách với phiên dịch viên.'},
-                {'num': '05', 'title': 'Xác nhận hợp tác', 'desc': 'Thống nhất điều kiện và tiến hành thuê thông qua nền tảng.'},
-                {'num': '06', 'title': 'Hoàn thành & đánh giá', 'desc': 'Nhận kết quả, phê duyệt công việc và để lại đánh giá cho cộng đồng.'}
-            ] %}
-
-            <!-- Desktop: horizontal stepper -->
-            <div class="hidden md:block">
-                <div class="relative">
-                    <!-- Connector line -->
-                    <div class="absolute top-8 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent mx-20" aria-hidden="true"></div>
-                    <div class="grid grid-cols-6 gap-3">
-                        {% for s in steps %}
-                        <div class="text-center relative">
-                            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-lg font-bold shadow-sm relative z-10
-                                {% if loop.index <= 3 %}bg-primary text-white{% else %}bg-white text-primary border-2 border-primary/30{% endif %}">
-                                {{ s.num }}
-                            </div>
-                            <h3 class="font-bold text-gray-800 text-xs mb-1.5 leading-snug">{{ s.title }}</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">{{ s.desc }}</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mobile: vertical stepper -->
-            <div class="md:hidden space-y-4">
-                {% for s in steps %}
-                <div class="flex gap-4">
-                    <div class="flex flex-col items-center shrink-0">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold
-                            {% if loop.index <= 3 %}bg-primary text-white{% else %}bg-white text-primary border-2 border-primary/30{% endif %}">
-                            {{ s.num }}
-                        </div>
-                        {% if not loop.last %}
-                        <div class="w-px flex-grow bg-gray-200 mt-2" aria-hidden="true"></div>
-                        {% endif %}
-                    </div>
-                    <div class="pb-5">
-                        <h3 class="font-bold text-gray-800 text-sm mb-1">{{ s.title }}</h3>
-                        <p class="text-xs text-gray-500 leading-relaxed">{{ s.desc }}</p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="mt-10 text-center">
-                <a href="{{ url_for('translator_list') }}"
-                   class="inline-flex items-center gap-2 bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition shadow-sm">
-                    Tìm phiên dịch viên ngay
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                </a>
-            </div>
-        </div>
-
-        <!-- ── SECTION 6: GÓC PHIÊN DỊCH VIÊN ── -->
-        <div id="goc-phien-dich-vien" class="scroll-mt-20">
-            <!-- Section accent background -->
-            <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-8 sm:p-10 border border-indigo-100">
-                <div class="text-center mb-8">
-                    <span class="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-3">Dành cho phiên dịch viên</span>
-                    <h2 class="text-xl font-bold text-gray-900">Góc dành cho phiên dịch viên</h2>
-                    <p class="text-gray-500 text-sm mt-1 max-w-lg mx-auto">Khám phá cơ hội việc làm phiên dịch, xây dựng hồ sơ chuyên nghiệp và phát triển sự nghiệp.</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {% set translator_cards = [
-                        {
-                            'emoji': '💼',
-                            'title': 'Tìm việc phiên dịch',
-                            'desc': 'Tìm kiếm công việc phù hợp với ngôn ngữ và chuyên môn của bạn.',
-                            'cta': 'Xem việc làm',
-                            'route': 'job_list',
-                            'color': 'blue'
-                        },
-                        {
-                            'emoji': '👤',
-                            'title': 'Xây dựng hồ sơ nổi bật',
-                            'desc': 'Tạo profile chuyên nghiệp để khách hàng dễ dàng tìm thấy bạn.',
-                            'cta': 'Tạo hồ sơ',
-                            'route': 'register',
-                            'color': 'indigo'
-                        },
-                        {
-                            'emoji': '📋',
-                            'title': 'Portfolio phiên dịch',
-                            'desc': 'Giới thiệu kinh nghiệm, dự án đã thực hiện và thế mạnh chuyên môn.',
-                            'cta': 'Cập nhật portfolio',
-                            'route': 'account_profile',
-                            'color': 'violet'
-                        },
-                        {
-                            'emoji': '📈',
-                            'title': 'Phát triển thu nhập',
-                            'desc': 'Khám phá cách tìm kiếm và nhận những công việc phù hợp với kỹ năng.',
-                            'cta': 'Khám phá',
-                            'route': 'job_list',
-                            'color': 'purple'
-                        }
-                    ] %}
-
-                    {% for card in translator_cards %}
-                    <a href="{{ url_for(card.route) }}"
-                       class="group bg-white rounded-xl border border-white/80 p-5 flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-                       aria-label="{{ card.title }}">
-                        <span class="text-2xl mb-3 block" role="img" aria-hidden="true">{{ card.emoji }}</span>
-                        <h3 class="font-bold text-gray-800 text-sm mb-2">{{ card.title }}</h3>
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-grow">{{ card.desc }}</p>
-                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-primary group-hover:gap-2 transition-all">
-                            {{ card.cta }}
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </span>
-                    </a>
-                    {% endfor %}
-                </div>
-
-                <div class="mt-8 text-center">
-                    <a href="{{ url_for('register') }}"
-                       class="inline-flex items-center gap-2 bg-primary text-white font-semibold px-7 py-3 rounded-xl hover:bg-blue-700 transition shadow-sm text-sm">
-                        Đăng ký làm phiên dịch viên — Miễn phí 🚀
-                    </a>
-                </div>
-            </div>
         </div>
 
     </div>
 </section>
 
 {% endblock %}
+
 {% block scripts %}
 <script>
-function quickSearch(){
-    const lang = document.getElementById('qs-lang').value;
-    const url = lang ? `/translator?lang=${encodeURIComponent(lang)}` : '/translator';
-    window.location.href = url;
+function handleHeroSearch(e) {
+    e.preventDefault();
+    const intent = document.getElementById('search-intent').value;
+    const lang = document.getElementById('search-lang').value;
+    
+    if (intent === 'job') {
+        let url = '/jobs';
+        if (lang) {
+            url += `?lang=${encodeURIComponent(lang)}`;
+        }
+        window.location.href = url;
+    } else {
+        let url = '/translator';
+        if (lang) {
+            url += `?lang=${encodeURIComponent(lang)}`;
+        }
+        window.location.href = url;
+    }
 }
 </script>
 {% endblock %}

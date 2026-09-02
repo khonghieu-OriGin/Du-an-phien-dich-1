@@ -1,46 +1,53 @@
 {% extends "base.html" %}
-{% block content %}
 
-<div class="bg-gray-50 flex-grow flex flex-col h-[calc(100vh-64px)]">
-    <div class="container mx-auto px-4 py-6 max-w-4xl h-full flex flex-col">
+{% block title %}Trò chuyện với {{ other_user.name }} | VietTranslate{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50/60 flex-grow flex flex-col h-[calc(100vh-64px)]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 h-full w-full flex flex-col">
         
-        <div class="bg-white rounded-t-2xl shadow-sm border border-gray-200 p-4 flex items-center justify-between z-10">
+        <!-- Chat Header -->
+        <div class="bg-white rounded-t-2xl shadow-soft border border-slate-200/90 p-4 sm:p-5 flex items-center justify-between z-10">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                    {{ other_user.name[0]|upper }}
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-indigo-600 flex items-center justify-center text-white font-extrabold text-sm shrink-0">
+                    {{ other_user.name[0] | upper }}
                 </div>
                 <div>
-                    <h2 class="font-bold text-gray-800">{{ other_user.name }}</h2>
-                    <p class="text-xs text-gray-500">{{ 'Phiên dịch viên' if other_user.role == 'translator' else 'Khách hàng' }}</p>
+                    <h2 class="font-bold text-slate-900 text-sm sm:text-base">{{ other_user.name }}</h2>
+                    <p class="text-[11px] text-slate-400 font-medium">
+                        {{ 'Phiên dịch viên chuyên nghiệp' if other_user.role == 'translator' else 'Khách hàng' }}
+                    </p>
                 </div>
             </div>
-            {% if other_user.role == 'translator' %}
-            <a href="{{ url_for('translator_profile', profile_id=other_user.profile.id) }}" class="text-sm text-blue-600 font-medium hover:underline border border-blue-200 px-3 py-1.5 rounded-lg bg-blue-50">Xem hồ sơ</a>
+            
+            {% if other_user.role == 'translator' and other_user.profile %}
+            <a href="{{ url_for('translator_profile', profile_id=other_user.profile.id) }}" class="text-xs text-brand-600 font-bold hover:text-brand-700 border border-brand-200/70 px-3.5 py-1.5 rounded-xl bg-brand-50/60 transition">
+                Xem hồ sơ
+            </a>
             {% endif %}
         </div>
 
-        <div class="flex-grow bg-white border-x border-gray-200 overflow-hidden flex flex-col relative">
-            
-            <!-- Chat Box -->
-            <div id="chat-box" class="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50/50">
+        <!-- Chat Body -->
+        <div class="flex-grow bg-white border-x border-slate-200/90 overflow-hidden flex flex-col relative">
+            <div id="chat-box" class="flex-grow p-4 sm:p-6 overflow-y-auto space-y-3 bg-slate-50/40">
                 <!-- Messages go here via JS -->
             </div>
-            
         </div>
 
-        <div class="bg-white rounded-b-2xl shadow-sm border border-gray-200 p-3 z-10">
+        <!-- Chat Input Footer -->
+        <div class="bg-white rounded-b-2xl shadow-soft border border-slate-200/90 p-3.5 z-10">
             <div class="flex gap-2">
-                <input type="text" id="chat-input" class="flex-grow bg-gray-100 border-transparent focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-xl px-4 py-3 text-sm transition" placeholder="Nhập tin nhắn để trao đổi công việc...">
-                <button id="send-btn" class="bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700 transition flex items-center justify-center">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                <input type="text" id="chat-input" class="flex-grow bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-800 transition" placeholder="Nhập tin nhắn trao đổi công việc...">
+                <button id="send-btn" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl transition shadow-sm flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 </button>
             </div>
         </div>
         
     </div>
 </div>
-
 {% endblock %}
+
 {% block scripts %}
 <script>
     const otherUserId = {{ other_user.id }};
@@ -58,9 +65,9 @@
                 
                 if (data.length === 0) {
                     chatBox.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-gray-400 space-y-3">
-                            <svg class="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                            <p class="text-sm">Chưa có tin nhắn nào.<br>Hãy gửi lời chào để bắt đầu trao đổi công việc!</p>
+                        <div class="flex flex-col items-center justify-center h-full text-center text-slate-400 space-y-2 py-12">
+                            <span class="text-3xl">💬</span>
+                            <p class="text-xs sm:text-sm font-medium">Chưa có tin nhắn nào.<br>Hãy gửi lời chào để bắt đầu kết nối ngôn ngữ!</p>
                         </div>
                     `;
                     return;
@@ -72,8 +79,8 @@
                     div.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'}`;
                     
                     div.innerHTML = `
-                        <span class="text-[11px] text-gray-400 mb-1 px-1">${msg.time}</span>
-                        <div class="px-4 py-2.5 rounded-2xl max-w-[85%] md:max-w-[70%] text-sm shadow-sm ${isMe ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'}">
+                        <span class="text-[10px] text-slate-400 mb-0.5 px-1">${msg.time}</span>
+                        <div class="px-4 py-2 rounded-2xl max-w-[85%] md:max-w-[70%] text-xs sm:text-sm shadow-xs ${isMe ? 'bg-brand-600 text-white rounded-br-xs' : 'bg-white border border-slate-200/80 text-slate-800 rounded-bl-xs'}">
                             ${msg.content}
                         </div>
                     `;
@@ -90,7 +97,7 @@
         const text = chatInput.value.trim();
         if (!text) return;
         
-        chatInput.value = ''; // clear immediately
+        chatInput.value = '';
         
         fetch(`/api/direct-messages/${otherUserId}`, {
             method: 'POST',

@@ -1,163 +1,238 @@
 {% extends "base.html" %}
+
+{% block title %}{{ profile.user.name }} – Hồ Sơ Phiên Dịch Viên | VietTranslate{% endblock %}
+
 {% block content %}
 
-<div class="bg-gray-50 py-8 border-b border-gray-200">
-    <div class="container mx-auto px-4 max-w-6xl">
-        <div class="flex flex-col lg:flex-row gap-8">
-            
-            <!-- Left Column: Profile & Info -->
-            <div class="w-full lg:w-2/3 space-y-6">
-                <!-- Header -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <div class="flex flex-col md:flex-row gap-6 items-start">
-                        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex-shrink-0 flex items-center justify-center text-white text-4xl font-bold shadow-md">
-                            {{ profile.user.name[0]|upper }}
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-2">
-                                <div>
-                                    <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                                        {{ profile.user.name }}
-                                        {% if profile.is_verified %}
-                                        <span title="Tài khoản đã xác minh" class="bg-green-100 text-green-700 p-1 rounded-full"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg></span>
-                                        {% endif %}
-                                    </h1>
-                                    <p class="text-gray-600 mt-1">{{ profile.title }}</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 font-medium px-4 py-2 rounded-lg text-sm transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                        Trò chuyện ngay
-                                    </a>
-                                </div>
-                            </div>
+<!-- Breadcrumb -->
+<div class="bg-white border-b border-slate-200/70 py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <a href="{{ url_for('index') }}" class="hover:text-brand-600">Trang chủ</a>
+            <span>/</span>
+            <a href="{{ url_for('translator_list') }}" class="hover:text-brand-600">Phiên dịch viên</a>
+            <span>/</span>
+            <span class="text-slate-900 font-semibold">{{ profile.user.name }}</span>
+        </nav>
+    </div>
+</div>
 
-                            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
-                                <div class="flex items-center gap-1 text-yellow-500">
-                                    <span>★</span> <span class="font-bold text-gray-800">{{ profile.rating }}</span> <span>({{ profile.total_reviews }} đánh giá)</span>
-                                </div>
-                                <div>•</div>
-                                <div>Đã hoàn thành: <span class="font-bold text-gray-800">{{ profile.total_jobs }} việc</span></div>
-                                <div>•</div>
-                                <div>Phản hồi: <span class="font-bold text-gray-800">{{ profile.response_time }}</span></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div class="flex flex-col lg:flex-row gap-8">
+        
+        <!-- Left Column: Profile & Info -->
+        <div class="w-full lg:w-2/3 space-y-6">
+            
+            <!-- Header Profile Card -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-soft">
+                <div class="flex flex-col sm:flex-row gap-6 items-start">
+                    
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-600 flex-shrink-0 flex items-center justify-center text-white text-3xl sm:text-4xl font-extrabold shadow-sm">
+                        {{ profile.user.name[0] | upper }}
+                    </div>
+
+                    <div class="flex-grow min-w-0">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-2">
+                            <div>
+                                <h1 class="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                                    <span>{{ profile.user.name }}</span>
+                                    {% if profile.is_verified %}
+                                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md" title="Tài khoản đã xác minh danh tính và năng lực">
+                                        <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                        Xác minh
+                                    </span>
+                                    {% endif %}
+                                </h1>
+                                <p class="text-sm font-medium text-slate-600 mt-1">{{ profile.title or 'Phiên dịch viên chuyên nghiệp' }}</p>
                             </div>
                             
-                            <div class="flex flex-wrap gap-2">
-                                {% for lang in profile.languages.split(',') %}
-                                <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium border border-gray-200">{{ lang.strip() }}</span>
-                                {% endfor %}
+                            <div class="flex items-center gap-2 shrink-0">
+                                <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="inline-flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm transition shadow-sm shadow-brand-500/20">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                    Trò chuyện ngay
+                                </a>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Bio -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-bold mb-4 border-b border-gray-100 pb-2">Giới thiệu</h3>
-                    <div class="prose max-w-none text-gray-700 text-sm whitespace-pre-line">
-                        {{ profile.bio }}
-                    </div>
-                </div>
-
-                <!-- Reviews -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-bold mb-4 border-b border-gray-100 pb-2">Đánh giá từ khách hàng</h3>
-                    {% if reviews %}
-                        <div class="space-y-4">
-                            {% for r in reviews %}
-                            <div class="border-b border-gray-50 pb-4">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold">{{ r.reviewer.name[0]|upper }}</div>
-                                    <span class="font-bold text-sm">{{ r.reviewer.name }}</span>
-                                    <span class="text-yellow-400 text-xs">
-                                        {% for i in range(r.rating) %}★{% endfor %}{% for i in range(5 - r.rating) %}☆{% endfor %}
-                                    </span>
-                                    <span class="text-xs text-gray-400 ml-auto">{{ r.created_at.strftime('%d/%m/%Y') }}</span>
-                                </div>
-                                <p class="text-sm text-gray-600 pl-10">{{ r.comment }}</p>
-                                {% if r.contract.job %}
-                                <p class="text-xs text-gray-400 pl-10 mt-1">Dự án: {{ r.contract.job.title }}</p>
-                                {% endif %}
+                        <!-- Key Stats Row -->
+                        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 my-4 py-3 border-y border-slate-100">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-amber-500 font-bold">★</span>
+                                <span class="font-bold text-slate-800">{{ profile.rating }}</span>
+                                <span class="text-slate-400">({{ profile.total_reviews }} đánh giá)</span>
                             </div>
+                            <span class="text-slate-300">·</span>
+                            <div>Đã hoàn thành: <strong class="text-slate-800 font-semibold">{{ profile.total_jobs }} dự án</strong></div>
+                            <span class="text-slate-300">·</span>
+                            <div>Thời gian phản hồi: <strong class="text-slate-800 font-semibold">{{ profile.response_time }}</strong></div>
+                        </div>
+                        
+                        <!-- Language Tags -->
+                        {% if profile.languages %}
+                        <div class="flex flex-wrap gap-1.5">
+                            {% for lang in profile.languages.split(',') %}
+                            <span class="bg-slate-50 text-slate-700 px-2.5 py-1 rounded-lg text-xs font-semibold border border-slate-200/80">{{ lang.strip() }}</span>
                             {% endfor %}
+                            {% if profile.badges %}
+                            {% for b in profile.badges.split(',') %}
+                            <span class="bg-brand-50 text-brand-700 px-2.5 py-1 rounded-lg text-xs font-semibold border border-brand-200/80">{{ b.strip() }}</span>
+                            {% endfor %}
+                            {% endif %}
                         </div>
-                    {% else %}
-                        <p class="text-sm text-gray-500 italic">Chưa có đánh giá nào.</p>
-                    {% endif %}
+                        {% endif %}
+
+                    </div>
                 </div>
             </div>
 
-            <!-- Right Column: Services & Pricing -->
-            <div class="w-full lg:w-1/3">
-                <div class="sticky top-24 space-y-4">
-                    <h3 class="font-bold text-gray-800 text-lg">Các dịch vụ cung cấp</h3>
-                    
-                    {% for service in profile.services %}
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden" x-data="{ tab: 'basic' }">
-                        <!-- Tabs -->
-                        <div class="flex border-b border-gray-200 bg-gray-50">
-                            <button @click="tab = 'basic'" :class="{'bg-white border-t-2 border-t-blue-600 text-blue-600 font-bold': tab === 'basic', 'text-gray-500 hover:bg-gray-100': tab !== 'basic'}" class="flex-1 py-3 text-sm font-medium transition-colors">Cơ bản</button>
-                            <button @click="tab = 'standard'" :class="{'bg-white border-t-2 border-t-blue-600 text-blue-600 font-bold': tab === 'standard', 'text-gray-500 hover:bg-gray-100': tab !== 'standard'}" class="flex-1 py-3 text-sm font-medium transition-colors">Tiêu chuẩn</button>
-                            <button @click="tab = 'premium'" :class="{'bg-white border-t-2 border-t-blue-600 text-blue-600 font-bold': tab === 'premium', 'text-gray-500 hover:bg-gray-100': tab !== 'premium'}" class="flex-1 py-3 text-sm font-medium transition-colors">Cao cấp</button>
-                        </div>
-                        
-                        <!-- Content -->
-                        <div class="p-5">
-                            <div class="mb-4">
-                                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">{{ service.category }}</span>
-                                <h4 class="font-bold text-gray-800 mt-1">{{ service.name }}</h4>
-                                <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ service.description }}</p>
-                            </div>
-                            
-                            <!-- Basic -->
-                            <div x-show="tab === 'basic'">
-                                <div class="text-2xl font-bold text-gray-800 mb-4">{{ "{:,.0f}".format(service.basic_price) }}₫</div>
-                                <ul class="text-sm space-y-2 mb-6">
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> Giao trong {{ service.basic_delivery }}</li>
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> 1 lần chỉnh sửa</li>
-                                </ul>
-                                <a href="{{ url_for('book_service', service_id=service.id, tier='basic') }}" class="block w-full text-center bg-blue-600 text-white font-bold py-2.5 rounded-lg hover:bg-blue-700 transition">Thuê gói Cơ bản</a>
-                            </div>
-
-                            <!-- Standard -->
-                            <div x-show="tab === 'standard'" x-cloak>
-                                <div class="text-2xl font-bold text-gray-800 mb-4">{{ "{:,.0f}".format(service.standard_price) }}₫</div>
-                                <ul class="text-sm space-y-2 mb-6">
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> Giao trong {{ service.standard_delivery }}</li>
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> 3 lần chỉnh sửa</li>
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> Ưu tiên xử lý</li>
-                                </ul>
-                                <a href="{{ url_for('book_service', service_id=service.id, tier='standard') }}" class="block w-full text-center bg-blue-600 text-white font-bold py-2.5 rounded-lg hover:bg-blue-700 transition">Thuê gói Tiêu chuẩn</a>
-                            </div>
-
-                            <!-- Premium -->
-                            <div x-show="tab === 'premium'" x-cloak>
-                                <div class="text-2xl font-bold text-gray-800 mb-4">{{ "{:,.0f}".format(service.premium_price) }}₫</div>
-                                <ul class="text-sm space-y-2 mb-6">
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> Giao trong {{ service.premium_delivery }}</li>
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> Chỉnh sửa không giới hạn</li>
-                                    <li class="flex gap-2 text-gray-600"><span class="text-green-500">✓</span> Hỗ trợ 24/7</li>
-                                </ul>
-                                <a href="{{ url_for('book_service', service_id=service.id, tier='premium') }}" class="block w-full text-center bg-blue-600 text-white font-bold py-2.5 rounded-lg hover:bg-blue-700 transition">Thuê gói Cao cấp</a>
-                            </div>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="bg-white rounded-xl border border-gray-200 p-6 text-center shadow-sm">
-                        <p class="text-sm text-gray-500">Phiên dịch viên chưa cấu hình gói dịch vụ.</p>
-                        <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="mt-4 block w-full text-center border border-blue-600 text-blue-600 font-bold py-2 rounded-lg hover:bg-blue-50 transition">Nhắn tin thỏa thuận</a>
-                    </div>
-                    {% endfor %}
-
+            <!-- Bio / About -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-soft">
+                <h2 class="text-base font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-brand-600"></span>
+                    Giới thiệu & Kinh nghiệm chuyên môn
+                </h2>
+                <div class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
+                    {{ profile.bio or 'Chưa cập nhật thông tin giới thiệu.' }}
                 </div>
+            </div>
+
+            <!-- Customer Reviews -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-soft">
+                <h2 class="text-base font-bold text-slate-900 mb-6 pb-2 border-b border-slate-100 flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                        Đánh giá từ khách hàng ({{ reviews|length }})
+                    </span>
+                    <span class="text-xs font-normal text-slate-400">Đánh giá thực tế qua hệ thống Escrow</span>
+                </h2>
+
+                {% if reviews %}
+                    <div class="space-y-5">
+                        {% for r in reviews %}
+                        <div class="border-b border-slate-100 pb-5 last:border-0 last:pb-0">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-xs font-bold shrink-0">
+                                    {{ r.reviewer.name[0] | upper }}
+                                </div>
+                                <div>
+                                    <span class="font-bold text-xs sm:text-sm text-slate-800 block">{{ r.reviewer.name }}</span>
+                                    <div class="flex items-center gap-2 text-xs text-slate-400">
+                                        <span class="text-amber-500">
+                                            {% for i in range(r.rating) %}★{% endfor %}{% for i in range(5 - r.rating) %}☆{% endfor %}
+                                        </span>
+                                        <span>·</span>
+                                        <span>{{ r.created_at.strftime('%d/%m/%Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-600 pl-11 leading-relaxed">{{ r.comment }}</p>
+                            {% if r.contract.job %}
+                            <p class="text-[11px] text-slate-400 pl-11 mt-1.5">
+                                Dự án: <span class="text-slate-600 font-medium">{{ r.contract.job.title }}</span>
+                            </p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-slate-400 text-xs sm:text-sm">
+                        Chưa có đánh giá nào từ khách hàng.
+                    </div>
+                {% endif %}
             </div>
 
         </div>
+
+        <!-- Right Column: Services & Pricing -->
+        <div class="w-full lg:w-1/3">
+            <div class="sticky top-24 space-y-5">
+                <h3 class="font-bold text-slate-900 text-base tracking-tight">Các dịch vụ cung cấp</h3>
+                
+                {% for service in profile.services %}
+                <div class="bg-white rounded-2xl border border-slate-200/90 shadow-soft overflow-hidden" x-data="{ tab: 'basic' }">
+                    
+                    <!-- Tabs -->
+                    <div class="flex border-b border-slate-200/80 bg-slate-50 text-xs font-semibold">
+                        <button @click="tab = 'basic'" :class="{'bg-white border-t-2 border-t-brand-600 text-brand-600 font-bold': tab === 'basic', 'text-slate-500 hover:text-slate-800 hover:bg-slate-100': tab !== 'basic'}" class="flex-1 py-3 text-center transition-colors">
+                            Cơ bản
+                        </button>
+                        <button @click="tab = 'standard'" :class="{'bg-white border-t-2 border-t-brand-600 text-brand-600 font-bold': tab === 'standard', 'text-slate-500 hover:text-slate-800 hover:bg-slate-100': tab !== 'standard'}" class="flex-1 py-3 text-center transition-colors">
+                            Tiêu chuẩn
+                        </button>
+                        <button @click="tab = 'premium'" :class="{'bg-white border-t-2 border-t-brand-600 text-brand-600 font-bold': tab === 'premium', 'text-slate-500 hover:text-slate-800 hover:bg-slate-100': tab !== 'premium'}" class="flex-1 py-3 text-center transition-colors">
+                            Cao cấp
+                        </button>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-5 sm:p-6">
+                        <div class="mb-4">
+                            <span class="text-[11px] font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-md uppercase tracking-wider">{{ service.category }}</span>
+                            <h4 class="font-bold text-slate-900 text-base mt-2">{{ service.name }}</h4>
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ service.description }}</p>
+                        </div>
+                        
+                        <!-- Basic -->
+                        <div x-show="tab === 'basic'">
+                            <div class="text-2xl font-extrabold text-slate-900 mb-4">{{ "{:,.0f}".format(service.basic_price) }}₫</div>
+                            <ul class="text-xs space-y-2.5 mb-6 text-slate-600">
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Thời gian: {{ service.basic_delivery }}</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Cam kết chất lượng chuẩn xác</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Bảo vệ Escrow an toàn 100%</li>
+                            </ul>
+                            <a href="{{ url_for('book_service', service_id=service.id, tier='basic') }}" class="block w-full text-center bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-sm">
+                                Đặt gói Cơ bản
+                            </a>
+                        </div>
+
+                        <!-- Standard -->
+                        <div x-show="tab === 'standard'" x-cloak>
+                            <div class="text-2xl font-extrabold text-slate-900 mb-4">
+                                {{ "{:,.0f}".format(service.standard_price or service.basic_price * 1.5) }}₫
+                            </div>
+                            <ul class="text-xs space-y-2.5 mb-6 text-slate-600">
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Thời gian: {{ service.standard_delivery }}</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Ưu tiên lịch trình & hỗ trợ mở rộng</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Bảo vệ Escrow an toàn 100%</li>
+                            </ul>
+                            <a href="{{ url_for('book_service', service_id=service.id, tier='standard') }}" class="block w-full text-center bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-sm">
+                                Đặt gói Tiêu chuẩn
+                            </a>
+                        </div>
+
+                        <!-- Premium -->
+                        <div x-show="tab === 'premium'" x-cloak>
+                            <div class="text-2xl font-extrabold text-slate-900 mb-4">
+                                {{ "{:,.0f}".format(service.premium_price or service.basic_price * 2.2) }}₫
+                            </div>
+                            <ul class="text-xs space-y-2.5 mb-6 text-slate-600">
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Thời gian: {{ service.premium_delivery }}</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Hỗ trợ chuyên sâu 24/7 & sửa đổi linh hoạt</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500 font-bold">✓</span> Bảo vệ Escrow an toàn 100%</li>
+                            </ul>
+                            <a href="{{ url_for('book_service', service_id=service.id, tier='premium') }}" class="block w-full text-center bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-sm">
+                                Đặt gói Cao cấp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="bg-white rounded-2xl border border-slate-200/90 p-6 text-center shadow-soft">
+                    <p class="text-xs sm:text-sm text-slate-500 mb-4">Phiên dịch viên chưa niêm yết gói cố định.</p>
+                    <a href="{{ url_for('direct_chat', translator_user_id=profile.user_id) }}" class="block w-full text-center border border-brand-600 text-brand-600 font-bold text-xs py-2.5 rounded-xl hover:bg-brand-50 transition">
+                        Nhắn tin trao đổi trực tiếp
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
     </div>
 </div>
 
 {% endblock %}
+
 {% block scripts %}
-<!-- Thêm Alpine.js cho Tabs -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 {% endblock %}

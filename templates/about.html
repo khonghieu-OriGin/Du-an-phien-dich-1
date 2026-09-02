@@ -1,32 +1,77 @@
 {% extends "base.html" %}
 
+{% block title %}Về VietTranslate | Clean Global Language Platform{% endblock %}
+
 {% block content %}
-<div class="container mx-auto px-4 py-12 max-w-4xl text-center">
-    <h1 class="text-4xl font-bold mb-6 text-gray-800">Về VietTranslate</h1>
-    <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">Nền tảng kết nối trực tiếp giữa người cần thuê dịch thuật và phiên dịch viên/biên dịch chuyên nghiệp tại Việt Nam.</p>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
     
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+    <!-- Hero Statement -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 border border-brand-200/60 px-3.5 py-1 rounded-full mb-3">
+            Sứ mệnh của chúng tôi
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+            Kết Nối Ngôn Ngữ <br><span class="text-brand-600">Mở Lối Cơ Hội.</span>
+        </h1>
+        <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+            VietTranslate là nền tảng marketplace kết nối trực tiếp giữa các doanh nghiệp, tổ chức và chuyên gia phiên dịch hàng đầu trên toàn cầu.
+        </p>
+    </div>
+    
+    <!-- 3 Pillars Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div class="bg-white p-7 sm:p-8 rounded-2xl border border-slate-200/90 shadow-soft">
+            <div class="w-12 h-12 bg-brand-50 rounded-xl mb-5 flex items-center justify-center text-xl">
+                🌍
             </div>
-            <h3 class="text-xl font-bold mb-2">Cộng đồng chuyên nghiệp</h3>
-            <p class="text-gray-600 text-sm">Hơn 5000+ phiên dịch viên được xác minh danh tính và năng lực (JLPT, IELTS, TOPIK...).</p>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Mạng lưới quốc tế</h3>
+            <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                Hơn 5,000+ chuyên gia phiên dịch Cabin, tháp tùng, đàm phán thương mại đã qua thẩm định hồ sơ và chứng chỉ (JLPT N1, IELTS 8.0+, TOPIK 6...).
+            </p>
         </div>
-        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        
+        <div class="bg-white p-7 sm:p-8 rounded-2xl border border-slate-200/90 shadow-soft">
+            <div class="w-12 h-12 bg-emerald-50 rounded-xl mb-5 flex items-center justify-center text-xl">
+                🛡️
             </div>
-            <h3 class="text-xl font-bold mb-2">Thanh toán an toàn</h3>
-            <p class="text-gray-600 text-sm">Hệ thống Escrow giữ tiền an toàn cho đến khi bạn hoàn toàn hài lòng với chất lượng bản dịch.</p>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Bảo vệ quỹ Escrow</h3>
+            <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                100% hợp đồng được ký quỹ tạm giữ an toàn. Giải ngân chuẩn xác sau khi khách hàng hài lòng và nghiệm thu kết quả.
+            </p>
         </div>
-        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        
+        <div class="bg-white p-7 sm:p-8 rounded-2xl border border-slate-200/90 shadow-soft">
+            <div class="w-12 h-12 bg-indigo-50 rounded-xl mb-5 flex items-center justify-center text-xl">
+                ⚡
             </div>
-            <h3 class="text-xl font-bold mb-2">Nhanh chóng & Tiện lợi</h3>
-            <p class="text-gray-600 text-sm">Trao đổi trực tiếp, báo giá minh bạch, ký hợp đồng điện tử chỉ trong vài thao tác.</p>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Nhanh chóng & Trực tiếp</h3>
+            <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                Trao đổi 1-on-1 trực tiếp, không qua trung gian đôn giá, xem lịch khả dụng realtime và chốt hợp đồng chỉ trong vài phút.
+            </p>
         </div>
     </div>
+
+    <!-- Stats Banner -->
+    <div class="mesh-cta-bg rounded-2xl p-8 sm:p-12 text-white text-center">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div>
+                <p class="text-3xl sm:text-4xl font-black">10+</p>
+                <p class="text-xs text-blue-100 mt-1">Ngôn ngữ toàn cầu</p>
+            </div>
+            <div>
+                <p class="text-3xl sm:text-4xl font-black">5,200+</p>
+                <p class="text-xs text-blue-100 mt-1">Chuyên gia ngôn ngữ</p>
+            </div>
+            <div>
+                <p class="text-3xl sm:text-4xl font-black">12,400+</p>
+                <p class="text-xs text-blue-100 mt-1">Dự án hoàn thành</p>
+            </div>
+            <div>
+                <p class="text-3xl sm:text-4xl font-black">99.4%</p>
+                <p class="text-xs text-blue-100 mt-1">Đánh giá hài lòng</p>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

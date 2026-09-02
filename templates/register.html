@@ -1,64 +1,68 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="container mx-auto px-4 py-12 flex justify-center">
-    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 w-full max-w-lg">
-        <h2 class="text-2xl font-bold text-center mb-6">Tạo Tài Khoản Mới</h2>
+{% block title %}Đăng Ký Tài Khoản | VietTranslate{% endblock %}
 
-        <form method="POST" action="{{ url_for('register') }}">
+{% block content %}
+<div class="max-w-lg mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div class="bg-white p-8 sm:p-10 rounded-2xl shadow-soft border border-slate-200/90">
+        
+        <div class="text-center mb-8">
+            <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 border border-brand-200/60 px-3 py-1 rounded-full mb-2">
+                Tham gia mạng lưới
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Tạo Tài Khoản Mới</h1>
+            <p class="text-xs text-slate-500 mt-1">Gia nhập nền tảng ngôn ngữ chuyên nghiệp hàng đầu</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}" class="space-y-5">
             <!-- Role Selection -->
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-3 text-sm">Bạn muốn sử dụng nền tảng với vai trò gì?</label>
-                <div class="grid grid-cols-2 gap-4">
-                    <label class="cursor-pointer border border-gray-200 rounded-lg p-4 flex flex-col items-center text-center hover:border-blue-500 hover:bg-blue-50 transition relative">
-                        <input type="radio" name="role" value="hirer" class="absolute top-3 right-3" checked>
-                        <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <span class="font-bold text-gray-800 block">Người Thuê</span>
-                        <span class="text-xs text-gray-500 mt-1">Tìm và thuê phiên dịch</span>
+            <div>
+                <label class="block text-slate-700 font-bold mb-2.5 text-xs uppercase tracking-wider">Chọn vai trò của bạn</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="cursor-pointer border border-slate-200 rounded-2xl p-4 flex flex-col items-center text-center hover:border-brand-500 hover:bg-brand-50/40 transition relative group">
+                        <input type="radio" name="role" value="hirer" class="absolute top-3 right-3 text-brand-600" checked>
+                        <span class="text-2xl mb-1.5">🏢</span>
+                        <span class="font-bold text-slate-900 text-xs sm:text-sm block">Người Thuê</span>
+                        <span class="text-[11px] text-slate-400 mt-0.5">Tìm và thuê phiên dịch</span>
                     </label>
                     
-                    <label class="cursor-pointer border border-gray-200 rounded-lg p-4 flex flex-col items-center text-center hover:border-blue-500 hover:bg-blue-50 transition relative">
-                        <input type="radio" name="role" value="translator" class="absolute top-3 right-3">
-                        <svg class="w-8 h-8 text-indigo-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
-                        <span class="font-bold text-gray-800 block">Phiên Dịch Viên</span>
-                        <span class="text-xs text-gray-500 mt-1">Tìm việc và nhận dự án</span>
+                    <label class="cursor-pointer border border-slate-200 rounded-2xl p-4 flex flex-col items-center text-center hover:border-brand-500 hover:bg-brand-50/40 transition relative group">
+                        <input type="radio" name="role" value="translator" class="absolute top-3 right-3 text-brand-600">
+                        <span class="text-2xl mb-1.5">🎓</span>
+                        <span class="font-bold text-slate-900 text-xs sm:text-sm block">Phiên Dịch Viên</span>
+                        <span class="text-[11px] text-slate-400 mt-0.5">Nhận dự án & làm việc</span>
                     </label>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2 text-sm">Họ và tên</label>
-                    <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="VD: Nguyễn Văn A">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-wider">Họ và tên <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-xs sm:text-sm bg-slate-50/50" placeholder="VD: Hoàng Minh Nhật">
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2 text-sm">Số điện thoại</label>
-                    <input type="tel" name="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="09xxxxxxxxx">
+                <div>
+                    <label class="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-wider">Số điện thoại <span class="text-red-500">*</span></label>
+                    <input type="tel" name="phone" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-xs sm:text-sm bg-slate-50/50" placeholder="0901234567">
                 </div>
             </div>
             
-            <div class="mb-4">
-                <label class="block text-gray-700 font-medium mb-2 text-sm">Email</label>
-                <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="email@example.com">
+            <div>
+                <label class="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-wider">Email công việc <span class="text-red-500">*</span></label>
+                <input type="email" name="email" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-xs sm:text-sm bg-slate-50/50" placeholder="name@company.com">
             </div>
             
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2 text-sm">Mật khẩu</label>
-                <input type="password" name="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Tối thiểu 6 ký tự">
-            </div>
-            
-            <div class="mb-6 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm p-3 rounded-lg flex items-start gap-2">
-                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <p>Trong phiên bản thử nghiệm này, bước xác thực OTP qua SMS/Email đã được bỏ qua. Nhấn "Đăng Ký" để tạo tài khoản ngay lập tức.</p>
+            <div>
+                <label class="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-wider">Mật khẩu <span class="text-red-500">*</span></label>
+                <input type="password" name="password" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-xs sm:text-sm bg-slate-50/50" placeholder="Tối thiểu 6 ký tự">
             </div>
 
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
-                Đăng Ký Tài Khoản
+            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition shadow-sm text-xs sm:text-sm mt-2">
+                Đăng Ký Ngay
             </button>
         </form>
         
-        <p class="text-center mt-6 text-gray-600 text-sm">
-            Đã có tài khoản? <a href="{{ url_for('login') }}" class="text-blue-600 font-medium hover:underline">Đăng nhập</a>
+        <p class="text-center mt-6 text-slate-500 text-xs">
+            Đã có tài khoản? <a href="{{ url_for('login') }}" class="text-brand-600 font-bold hover:underline">Đăng nhập</a>
         </p>
     </div>
 </div>
