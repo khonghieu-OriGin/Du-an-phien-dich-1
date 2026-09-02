@@ -3,17 +3,27 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+class LanguageItem(dict):
+    def __init__(self, name, flag, cert, code, short_name=None):
+        short = short_name or name.replace('Tiếng ', '')
+        super().__init__(name=name, flag=flag, cert=cert, code=code, short_name=short)
+        self.__dict__ = self
+
+    def __iter__(self):
+        return iter((self['name'], self['flag'], self['cert']))
+
+
 LANGUAGES = [
-    ('Tiếng Anh', '🇬🇧', 'IELTS / TOEIC / VSTEP'),
-    ('Tiếng Nhật', '🇯🇵', 'JLPT N2 trở lên'),
-    ('Tiếng Hàn', '🇰🇷', 'TOPIK 4 trở lên'),
-    ('Tiếng Trung', '🇨🇳', 'HSK 5 trở lên'),
-    ('Tiếng Pháp', '🇫🇷', 'DELF B2 trở lên'),
-    ('Tiếng Đức', '🇩🇪', 'TestDaF / Goethe B2'),
-    ('Tiếng Nga', '🇷🇺', 'ТРКИ B2 trở lên'),
-    ('Tiếng Thái', '🇹🇭', 'Kiểm tra trực tiếp'),
-    ('Tiếng Bồ Đào Nha', '🇧🇷', 'CELPE-Bras'),
-    ('Tiếng Tây Ban Nha', '🇪🇸', 'DELE B2 trở lên'),
+    LanguageItem('Tiếng Anh', '🇬🇧', 'IELTS / TOEIC / VSTEP', 'GB'),
+    LanguageItem('Tiếng Nhật', '🇯🇵', 'JLPT N2 trở lên', 'JP'),
+    LanguageItem('Tiếng Hàn', '🇰🇷', 'TOPIK 4 trở lên', 'KR'),
+    LanguageItem('Tiếng Trung', '🇨🇳', 'HSK 5 trở lên', 'CN'),
+    LanguageItem('Tiếng Pháp', '🇫🇷', 'DELF B2 trở lên', 'FR'),
+    LanguageItem('Tiếng Đức', '🇩🇪', 'TestDaF / Goethe B2', 'DE'),
+    LanguageItem('Tiếng Nga', '🇷🇺', 'ТРКИ B2 trở lên', 'RU'),
+    LanguageItem('Tiếng Thái', '🇹🇭', 'Kiểm tra trực tiếp', 'TH'),
+    LanguageItem('Tiếng Bồ Đào Nha', '🇵🇹', 'CELPE-Bras', 'PT'),
+    LanguageItem('Tiếng Tây Ban Nha', '🇪🇸', 'DELE B2 trở lên', 'ES'),
 ]
 
 class User(db.Model):

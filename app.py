@@ -335,7 +335,7 @@ LANGUAGE_PAGES = {
     },
     "portuguese": {
         "name": "Tiếng Bồ Đào Nha",
-        "flag": "🇧🇷",
+        "flag": "🇵🇹",
         "slug": "portuguese",
         "title": "Phiên Dịch Tiếng Bồ Đào Nha",
         "subtitle": "Tìm phiên dịch viên tiếng Bồ Đào Nha (Brazil/Portugal) cho thương mại, đầu tư và hợp tác quốc tế.",
