@@ -1,6 +1,43 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
+
+{% block title %}{{ lang.title }} Chuyên Nghiệp | VietTranslate{% endblock %}
 
 {% block head %}
+<meta name="description" content="{{ lang.seo_description }}">
+<link rel="canonical" href="{{ request.url_root.rstrip('/') }}/translator/{{ lang.slug }}">
+<meta property="og:title" content="{{ lang.title }} Chuyên Nghiệp | VietTranslate">
+<meta property="og:description" content="{{ lang.seo_description }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.url_root.rstrip('/') }}/translator/{{ lang.slug }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Trang chủ","item":"{{ request.url_root }}"},
+    {"@type":"ListItem","position":2,"name":"Phiên dịch viên","item":"{{ request.url_root.rstrip('/') }}/translator"},
+    {"@type":"ListItem","position":3,"name":"{{ lang.title }}","item":"{{ request.url_root.rstrip('/') }}/translator/{{ lang.slug }}"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for faq in lang.faq %}
+    {
+      "@type": "Question",
+      "name": "{{ faq.q | e }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ faq.a | e }}"
+      }
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
 <style>
   .filter-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
   .filter-sidebar::-webkit-scrollbar { width: 4px; }
@@ -74,39 +111,87 @@
   }
   #mobile-filter-count.show { display: flex; }
   .filter-section + .filter-section { border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: 0.25rem; }
+  .seo-content { line-height: 1.8; }
+  .seo-content p { margin-bottom: 1rem; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="bg-blue-600 text-white py-12">
+
+{# ── BREADCRUMB ── #}
+<nav aria-label="Breadcrumb" class="bg-white border-b border-gray-100">
+  <div class="container mx-auto px-4 py-2.5">
+    <ol class="flex items-center gap-1.5 text-sm text-gray-500" itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="{{ url_for('index') }}" itemprop="item" class="hover:text-blue-600 transition">
+          <span itemprop="name">Trang chủ</span>
+        </a>
+        <meta itemprop="position" content="1">
+      </li>
+      <li class="text-gray-300">/</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="{{ url_for('translator_list') }}" itemprop="item" class="hover:text-blue-600 transition">
+          <span itemprop="name">Phiên dịch viên</span>
+        </a>
+        <meta itemprop="position" content="2">
+      </li>
+      <li class="text-gray-300">/</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="text-blue-600 font-medium">
+        <span itemprop="name">{{ lang.title }}</span>
+        <meta itemprop="position" content="3">
+      </li>
+    </ol>
+  </div>
+</nav>
+
+{# ── HERO ── #}
+<div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-12">
   <div class="container mx-auto px-4 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold mb-4">Tìm Phiên Dịch Viên Phù Hợp</h1>
-    <p class="text-blue-100 max-w-2xl mx-auto text-sm md:text-base">
-      Lựa chọn từ hàng ngàn chuyên gia được đánh giá cao. Tìm theo ngôn ngữ, giá, đánh giá và huy hiệu.
-    </p>
+    <div class="text-4xl mb-3" aria-hidden="true">{{ lang.flag }}</div>
+    <h1 class="text-3xl md:text-4xl font-bold mb-3">{{ lang.title }}</h1>
+    <p class="text-blue-100 max-w-2xl mx-auto text-sm md:text-base mb-6">{{ lang.subtitle }}</p>
+    <div class="flex flex-wrap justify-center gap-2">
+      {% for uc in lang.use_cases %}
+      <span class="bg-white/15 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full border border-white/20">{{ uc }}</span>
+      {% endfor %}
+    </div>
   </div>
 </div>
 
+{# ── MAIN CONTENT ── #}
 <div class="container mx-auto px-4 py-8">
   <div class="flex flex-col lg:flex-row gap-8">
+
+    {# ── FILTER SIDEBAR (Desktop) ── #}
     <aside class="hidden lg:block w-64 xl:w-72 shrink-0">
       <div class="filter-sidebar bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-        <div class="flex justify-between items-center mb-5">
+        <div class="flex justify-between items-center mb-4">
           <h3 class="font-bold text-gray-800 text-base">Bộ lọc</h3>
           <button id="clear-filters-desktop" class="text-xs text-blue-600 hover:text-blue-800 font-medium hidden transition">
             Xóa bộ lọc
           </button>
         </div>
+
+        {# Language context badge – always visible, not removable #}
+        <div class="mb-4 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
+          <span class="text-xs text-blue-700 font-medium">Đang xem: <strong>{{ lang.name }}</strong></span>
+          <span class="text-blue-400 text-lg">{{ lang.flag }}</span>
+        </div>
+
         <div id="filter-form-desktop"></div>
       </div>
     </aside>
 
+    {# ── FREELANCER LIST ── #}
     <div class="flex-1 min-w-0">
+      {# Top bar #}
       <div class="flex justify-between items-center mb-6 gap-3">
         <div class="flex items-center gap-2">
+          <h2 class="text-lg font-bold text-gray-800 sr-only">Phiên dịch viên {{ lang.name }} nổi bật</h2>
           <p class="text-gray-600 text-sm">Hiển thị <span id="result-count-badge">...</span> kết quả</p>
         </div>
         <div class="flex items-center gap-2">
+          {# Mobile filter button #}
           <div class="relative lg:hidden">
             <button id="mobile-filter-btn" class="flex items-center gap-1.5 text-sm font-medium border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-50 transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,8 +213,8 @@
       <div id="fl-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
 
       <div id="empty-state" class="text-center py-20 bg-white rounded-xl border border-gray-200">
-        <div class="text-5xl mb-4">&#128269;</div>
-        <h3 class="text-lg font-bold text-gray-800 mb-2">Không tìm thấy freelancer phù hợp</h3>
+        <div class="text-5xl mb-4">🔍</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Không tìm thấy phiên dịch viên phù hợp</h3>
         <p class="text-gray-500 text-sm max-w-sm mx-auto">Hãy thử thay đổi hoặc xóa một số bộ lọc để mở rộng kết quả.</p>
         <button onclick="clearAllFilters()" class="mt-4 text-sm text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
           Xóa tất cả bộ lọc
@@ -137,15 +222,108 @@
       </div>
     </div>
   </div>
+
+  {# ── PRICING SECTION ── #}
+  <section class="mt-16 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Bảng giá phiên dịch {{ lang.name }}</h2>
+    <p class="text-gray-500 text-sm mb-6">Giá tham khảo, mức giá thực tế do phiên dịch viên quyết định dựa trên yêu cầu cụ thể.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
+        <p class="text-xs text-gray-500 mb-1">Tham khảo từ</p>
+        <p class="text-2xl font-bold text-blue-600">{{ '{:,}'.format(lang.starting_price) }}đ</p>
+        <p class="text-xs text-gray-400 mt-1">/ trang / giờ</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-semibold text-gray-600 mb-2">📄 Phiên dịch tài liệu</p>
+        <p class="text-sm text-gray-700">Tính theo trang, từ {{ '{:,}'.format(lang.starting_price) }}đ/trang</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-semibold text-gray-600 mb-2">🎙️ Phiên dịch liên tục</p>
+        <p class="text-sm text-gray-700">Tính theo giờ, từ {{ '{:,}'.format(lang.starting_price * 10) }}đ/giờ</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-semibold text-gray-600 mb-2">🎤 Phiên dịch cabin</p>
+        <p class="text-sm text-gray-700">Liên hệ trực tiếp phiên dịch viên</p>
+      </div>
+    </div>
+    <p class="text-xs text-gray-400 mt-4">* Mức giá mang tính tham khảo. Giá thực tế có thể thay đổi tùy độ phức tạp, chuyên ngành và thời lượng.</p>
+  </section>
+
+  {# ── CERTIFICATES SECTION ── #}
+  <section class="mt-8 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Yêu cầu và chứng chỉ phiên dịch {{ lang.name }}</h2>
+    {% if lang.certificates %}
+    <p class="text-gray-600 text-sm mb-4">Phiên dịch viên {{ lang.name }} chuyên nghiệp trên VietTranslate thường sở hữu các chứng chỉ sau:</p>
+    <div class="flex flex-wrap gap-3">
+      {% for cert in lang.certificates %}
+      <span class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-2 rounded-full font-medium">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+        </svg>
+        {{ cert }}
+      </span>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-500 text-sm">Yêu cầu chuyên môn tùy theo từng công việc cụ thể. Liên hệ trực tiếp với phiên dịch viên để thảo luận về yêu cầu của bạn.</p>
+    {% endif %}
+  </section>
+
+  {# ── SEO CONTENT ── #}
+  <section class="mt-8 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Tìm phiên dịch viên {{ lang.name }} phù hợp</h2>
+    <div class="seo-content text-gray-600 text-sm max-w-3xl">
+      <p>{{ lang.seo_content }}</p>
+    </div>
+  </section>
+
+  {# ── FAQ ── #}
+  <section class="mt-8 bg-white rounded-xl border border-gray-200 p-6 md:p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Câu hỏi thường gặp về phiên dịch {{ lang.name }}</h2>
+    <div class="space-y-4 max-w-3xl">
+      {% for faq in lang.faq %}
+      <details class="group border border-gray-200 rounded-xl overflow-hidden">
+        <summary class="flex justify-between items-center px-5 py-4 cursor-pointer font-semibold text-gray-800 text-sm list-none hover:bg-gray-50 transition">
+          {{ faq.q }}
+          <svg class="w-5 h-5 text-gray-400 shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </summary>
+        <div class="px-5 pb-4 pt-1 text-sm text-gray-600 border-t border-gray-100">
+          {{ faq.a }}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  {# ── INTERNAL LINKING ── #}
+  <section class="mt-8 bg-gray-50 rounded-xl border border-gray-200 p-6 md:p-8">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Khám phá các ngôn ngữ khác</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      {% for slug, other in other_languages.items() %}
+      <a href="{{ url_for('translator_language', lang_slug=slug) }}"
+         class="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition">
+        <span>{{ other.flag }}</span>
+        <span>{{ other.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
 </div>
 
+{# ── MOBILE FILTER DRAWER ── #}
 <div id="drawer-overlay"></div>
 <div id="filter-drawer" role="dialog" aria-modal="true" aria-label="Bộ lọc">
   <div class="flex justify-center pt-3 pb-1">
     <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
   </div>
   <div class="flex justify-between items-center px-5 py-3 border-b border-gray-100 sticky top-0 bg-white z-10">
-    <h3 class="font-bold text-gray-800 text-base">Bộ lọc</h3>
+    <div>
+      <h3 class="font-bold text-gray-800 text-base">Bộ lọc</h3>
+      <p class="text-xs text-blue-600 font-medium">Đang xem: {{ lang.flag }} {{ lang.name }}</p>
+    </div>
     <button id="close-drawer" aria-label="Đóng bộ lọc" class="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -166,46 +344,37 @@
 
 {% block scripts %}
 <script>
-let filters = { languages: [], priceRange: null, minRating: null, completionTime: null, badges: [] };
+// ── LOCKED LANGUAGE (injected from server) ──
+const LOCKED_LANGUAGE = {{ lang.name | tojson }};
+
+let filters = { languages: [LOCKED_LANGUAGE], priceRange: null, minRating: null, completionTime: null, badges: [] };
 let allFreelancers = [];
 let sortBy = 'rating';
 
-const LANG_LIST = [
-  { name: 'Ti\u1ebfng Anh', flag: '\ud83c\uddec\ud83c\udde7' },
-  { name: 'Ti\u1ebfng Nh\u1eadt', flag: '\ud83c\uddef\ud83c\uddf5' },
-  { name: 'Ti\u1ebfng H\u00e0n', flag: '\ud83c\uddf0\ud83c\uddf7' },
-  { name: 'Ti\u1ebfng Trung', flag: '\ud83c\udde8\ud83c\uddf3' },
-  { name: 'Ti\u1ebfng Nga', flag: '\ud83c\uddf7\ud83c\uddfa' },
-  { name: 'Ti\u1ebfng Th\u00e1i', flag: '\ud83c\uddf9\ud83c\udded' },
-  { name: 'Ti\u1ebfng Ph\u00e1p', flag: '\ud83c\uddeb\ud83c\uddf7' },
-  { name: 'Ti\u1ebfng \u0110\u1ee9c', flag: '\ud83c\udde9\ud83c\uddea' },
-  { name: 'Ti\u1ebfng B\u1ed3 \u0110\u00e0o Nha', flag: '\ud83c\udde7\ud83c\uddf7' },
-  { name: 'Ti\u1ebfng T\u00e2y Ban Nha', flag: '\ud83c\uddea\ud83c\uddf8' },
-];
 const PRICE_RANGES = [
-  { label: 'D\u01b0\u1edbi 500.000\u0111', value: 'under500', min: 0, max: 499999 },
-  { label: '500.000 - 1.000.000\u0111', value: '500-1m', min: 500000, max: 1000000 },
-  { label: '1.000.000 - 3.000.000\u0111', value: '1m-3m', min: 1000000, max: 3000000 },
-  { label: '3.000.000 - 5.000.000\u0111', value: '3m-5m', min: 3000000, max: 5000000 },
-  { label: 'Tr\u00ean 5.000.000\u0111', value: 'over5m', min: 5000001, max: Infinity },
+  { label: 'Dưới 500.000đ', value: 'under500', min: 0, max: 499999 },
+  { label: '500.000 – 1.000.000đ', value: '500-1m', min: 500000, max: 1000000 },
+  { label: '1.000.000 – 3.000.000đ', value: '1m-3m', min: 1000000, max: 3000000 },
+  { label: '3.000.000 – 5.000.000đ', value: '3m-5m', min: 3000000, max: 5000000 },
+  { label: 'Trên 5.000.000đ', value: 'over5m', min: 5000001, max: Infinity },
 ];
 const RATINGS = [
   { label: '5 sao', value: 5 },
-  { label: '4 sao tr\u1edf l\u00ean', value: 4 },
-  { label: '3 sao tr\u1edf l\u00ean', value: 3 },
-  { label: '2 sao tr\u1edf l\u00ean', value: 2 },
-  { label: '1 sao tr\u1edf l\u00ean', value: 1 },
+  { label: '4 sao trở lên', value: 4 },
+  { label: '3 sao trở lên', value: 3 },
+  { label: '2 sao trở lên', value: 2 },
+  { label: '1 sao trở lên', value: 1 },
 ];
 const COMPLETION_TIMES = [
-  { label: 'Trong ng\u00e0y', value: 'day', maxDays: 1 },
-  { label: '1 \u2013 3 ng\u00e0y', value: '1-3', minDays: 2, maxDays: 3 },
-  { label: '3 \u2013 7 ng\u00e0y', value: '3-7', minDays: 4, maxDays: 7 },
-  { label: 'Tr\u00ean 7 ng\u00e0y', value: 'over7', minDays: 8 },
+  { label: 'Trong ngày', value: 'day', maxDays: 1 },
+  { label: '1 – 3 ngày', value: '1-3', minDays: 2, maxDays: 3 },
+  { label: '3 – 7 ngày', value: '3-7', minDays: 4, maxDays: 7 },
+  { label: 'Trên 7 ngày', value: 'over7', minDays: 8 },
 ];
 const BADGES = [
-  { name: 'Rising Star', desc: 'Freelancer m\u1edbi, \u0111\u01b0\u1ee3c \u0111\u00e1nh gi\u00e1 cao nhanh', key: 'rising', cls: 'badge-rising' },
-  { name: 'Local Champion', desc: 'Nhi\u1ec1u \u0111\u01a1n th\u00e0nh c\u00f4ng trong khu v\u1ef1c', key: 'local', cls: 'badge-local' },
-  { name: 'Rehire Badge', desc: '\u0110\u01b0\u1ee3c kh\u00e1ch c\u0169 thu\u00ea l\u1ea1i nhi\u1ec1u l\u1ea7n', key: 'rehire', cls: 'badge-rehire' },
+  { name: 'Rising Star', desc: 'Freelancer mới, được đánh giá cao nhanh', key: 'rising', cls: 'badge-rising' },
+  { name: 'Local Champion', desc: 'Nhiều đơn thành công trong khu vực', key: 'local', cls: 'badge-local' },
+  { name: 'Rehire Badge', desc: 'Được khách cũ thuê lại nhiều lần', key: 'rehire', cls: 'badge-rehire' },
 ];
 
 function renderStarsSmall(count) {
@@ -214,18 +383,11 @@ function renderStarsSmall(count) {
   ).join('');
 }
 
+// Build filter form WITHOUT language section (language is locked)
 function buildFilterForm(s) {
   let html = '';
-  // Languages
-  html += `<div class="filter-section"><h4 class="text-sm font-semibold text-gray-800 mb-2">Ng\u00f4n ng\u1eef</h4><div class="space-y-0.5">`;
-  LANG_LIST.forEach(l => {
-    const id = `lang-${l.name.replace(/\s/g,'-')}-${s}`;
-    html += `<div><input type="checkbox" class="filter-cb lang-cb-${s}" id="${id}" value="${l.name}">
-    <label for="${id}" class="filter-label"><span class="filter-indicator"></span><span>${l.flag} ${l.name}</span></label></div>`;
-  });
-  html += `</div></div>`;
   // Price
-  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">M\u1ee9c gi\u00e1</h4><div class="space-y-0.5">`;
+  html += `<div class="filter-section"><h4 class="text-sm font-semibold text-gray-800 mb-2">Mức giá</h4><div class="space-y-0.5">`;
   PRICE_RANGES.forEach(p => {
     const id = `price-${p.value}-${s}`;
     html += `<div><input type="radio" class="filter-rb price-rb-${s}" id="${id}" name="price-${s}" value="${p.value}">
@@ -233,7 +395,7 @@ function buildFilterForm(s) {
   });
   html += `</div></div>`;
   // Rating
-  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">\u0110\u00e1nh gi\u00e1</h4><div class="space-y-0.5">`;
+  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Đánh giá</h4><div class="space-y-0.5">`;
   RATINGS.forEach(r => {
     const id = `rating-${r.value}-${s}`;
     html += `<div><input type="radio" class="filter-rb rating-rb-${s}" id="${id}" name="rating-${s}" value="${r.value}">
@@ -242,7 +404,7 @@ function buildFilterForm(s) {
   });
   html += `</div></div>`;
   // Time
-  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Th\u1eddi gian ho\u00e0n th\u00e0nh</h4><div class="space-y-0.5">`;
+  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Thời gian hoàn thành</h4><div class="space-y-0.5">`;
   COMPLETION_TIMES.forEach(t => {
     const id = `time-${t.value}-${s}`;
     html += `<div><input type="radio" class="filter-rb time-rb-${s}" id="${id}" name="time-${s}" value="${t.value}">
@@ -250,7 +412,7 @@ function buildFilterForm(s) {
   });
   html += `</div></div>`;
   // Badges
-  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Huy hi\u1ec7u</h4><div class="space-y-1">`;
+  html += `<div class="filter-section mt-4"><h4 class="text-sm font-semibold text-gray-800 mb-2">Huy hiệu</h4><div class="space-y-1">`;
   BADGES.forEach(b => {
     const id = `badge-${b.key}-${s}`;
     html += `<div><input type="checkbox" class="filter-cb badge-cb-${s}" id="${id}" value="${b.name}">
@@ -265,9 +427,8 @@ function buildFilterForm(s) {
 
 function filterFreelancers(list, f) {
   return list.filter(fl => {
-    if (f.languages.length > 0) {
-      if (!f.languages.some(lang => fl.languages.some(l => l.toLowerCase().includes(lang.toLowerCase())))) return false;
-    }
+    // Language is always locked to LOCKED_LANGUAGE
+    if (!fl.languages.some(l => l.toLowerCase().includes(LOCKED_LANGUAGE.toLowerCase()))) return false;
     if (f.priceRange) {
       const r = PRICE_RANGES.find(p => p.value === f.priceRange);
       if (r && fl.min_price != null) { if (fl.min_price < r.min || fl.min_price > r.max) return false; }
@@ -312,8 +473,8 @@ function badgeClass(name) {
 }
 
 function renderCard(fl) {
-  const priceStr = fl.min_price != null ? `T\u1eeb ${fl.min_price.toLocaleString('vi-VN')}\u0111` : 'Li\u00ean h\u1ec7';
-  const timeStr = fl.completion_days != null ? (fl.completion_days <= 1 ? 'Trong ng\u00e0y' : `${fl.completion_days} ng\u00e0y`) : '';
+  const priceStr = fl.min_price != null ? `Từ ${fl.min_price.toLocaleString('vi-VN')}đ` : 'Liên hệ';
+  const timeStr = fl.completion_days != null ? (fl.completion_days <= 1 ? 'Trong ngày' : `${fl.completion_days} ngày`) : '';
   const badgesHtml = fl.badges.length ? fl.badges.map(b => `<span class="text-xs px-2 py-0.5 rounded-full font-medium ${badgeClass(b)}">${b}</span>`).join('') : '';
   const verifiedHtml = fl.is_verified ? `<span class="bg-green-50 border border-green-200 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">&#10003; Verified</span>` : '';
   return `<div class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col">
@@ -327,11 +488,11 @@ function renderCard(fl) {
       <div class="flex items-center gap-1 text-sm mb-2">
         <div class="flex">${renderStars(fl.rating)}</div>
         <span class="font-bold text-gray-800 text-xs">${fl.rating.toFixed(1)}</span>
-        <span class="text-gray-400 text-xs">(${fl.total_reviews} \u0111\u00e1nh gi\u00e1)</span>
+        <span class="text-gray-400 text-xs">(${fl.total_reviews} đánh giá)</span>
       </div>
       <div class="text-xs text-gray-600 mb-3 flex items-start gap-1">
         <svg class="w-4 h-4 text-gray-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
-        <span class="line-clamp-1">${fl.languages.join(', ') || 'Ch\u01b0a c\u1eadp nh\u1eadt'}</span>
+        <span class="line-clamp-1">${fl.languages.join(', ') || 'Chưa cập nhật'}</span>
       </div>
       <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
         <span class="font-semibold text-blue-700 text-sm">${priceStr}</span>
@@ -340,7 +501,7 @@ function renderCard(fl) {
       ${badgesHtml ? `<div class="flex flex-wrap gap-1">${badgesHtml}</div>` : ''}
     </div>
     <div class="border-t border-gray-100 p-3 bg-gray-50 flex gap-2">
-      <a href="${fl.profile_url}" class="flex-1 text-center text-xs font-medium text-blue-600 border border-blue-600 bg-white rounded-lg py-2 hover:bg-blue-50 transition">Xem h\u1ed3 s\u01a1</a>
+      <a href="${fl.profile_url}" class="flex-1 text-center text-xs font-medium text-blue-600 border border-blue-600 bg-white rounded-lg py-2 hover:bg-blue-50 transition">Xem hồ sơ</a>
       <a href="${fl.chat_url}" class="flex-1 text-center text-xs font-medium text-white bg-blue-600 rounded-lg py-2 hover:bg-blue-700 transition">Chat ngay</a>
     </div>
   </div>`;
@@ -348,7 +509,6 @@ function renderCard(fl) {
 
 function countActiveFilters() {
   let c = 0;
-  if (filters.languages.length) c++;
   if (filters.priceRange) c++;
   if (filters.minRating !== null) c++;
   if (filters.completionTime) c++;
@@ -372,7 +532,6 @@ function renderList() {
 }
 
 function syncFiltersFromDOM(s) {
-  filters.languages = [...document.querySelectorAll(`.lang-cb-${s}:checked`)].map(e=>e.value);
   const pe = document.querySelector(`.price-rb-${s}:checked`); filters.priceRange = pe?pe.value:null;
   const re = document.querySelector(`.rating-rb-${s}:checked`); filters.minRating = re?parseFloat(re.value):null;
   const te = document.querySelector(`.time-rb-${s}:checked`); filters.completionTime = te?te.value:null;
@@ -380,16 +539,22 @@ function syncFiltersFromDOM(s) {
 }
 
 function syncDOMFromFilters(s) {
-  document.querySelectorAll(`.lang-cb-${s}`).forEach(e=>{ e.checked=filters.languages.includes(e.value); });
   document.querySelectorAll(`.price-rb-${s}`).forEach(e=>{ e.checked=e.value===filters.priceRange; });
   document.querySelectorAll(`.rating-rb-${s}`).forEach(e=>{ e.checked=parseFloat(e.value)===filters.minRating; });
   document.querySelectorAll(`.time-rb-${s}`).forEach(e=>{ e.checked=e.value===filters.completionTime; });
   document.querySelectorAll(`.badge-cb-${s}`).forEach(e=>{ e.checked=filters.badges.includes(e.value); });
 }
 
+// Override: clear only secondary filters, KEEP language context
 function clearAllFilters() {
-  filters = { languages:[], priceRange:null, minRating:null, completionTime:null, badges:[] };
-  syncDOMFromFilters('d'); syncDOMFromFilters('m'); renderList();
+  filters.priceRange = null;
+  filters.minRating = null;
+  filters.completionTime = null;
+  filters.badges = [];
+  // language stays locked at LOCKED_LANGUAGE
+  syncDOMFromFilters('d');
+  syncDOMFromFilters('m');
+  renderList();
 }
 
 function openDrawer() {

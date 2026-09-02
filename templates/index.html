@@ -168,6 +168,456 @@
     </div>
 </section>
 
+<!-- ═══ SEO CONTENT HUB ═══ -->
+<section class="bg-slate-50 border-t border-gray-200" aria-label="Thông tin và tài nguyên về phiên dịch">
+    <div class="container mx-auto px-4 pt-16 pb-20">
+
+        <!-- Hub Header -->
+        <div class="text-center mb-14">
+            <p class="text-xs font-semibold tracking-widest text-primary uppercase mb-3">Trung tâm thông tin</p>
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Khám phá dịch vụ phiên dịch</h2>
+            <p class="text-gray-500 text-sm max-w-xl mx-auto">Tham khảo giá, tìm phiên dịch viên phù hợp và khám phá cơ hội việc làm trên VietTranslate.</p>
+        </div>
+
+        <!-- ── SECTION 1: BẢNG GIÁ ── -->
+        <div id="bang-gia-phien-dich" class="mb-16 scroll-mt-20">
+            <div class="flex items-end justify-between mb-2">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900">Bảng giá phiên dịch theo ngôn ngữ</h2>
+                    <p class="text-gray-500 text-sm mt-1">Tham khảo mức giá phổ biến để lựa chọn phiên dịch viên phù hợp với nhu cầu và ngân sách.</p>
+                </div>
+            </div>
+
+            <!-- Table wrapper with horizontal scroll on mobile -->
+            <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm mt-5">
+                <table class="w-full text-sm min-w-[560px]" role="table">
+                    <thead>
+                        <tr class="border-b border-gray-100 bg-gray-50 text-gray-600 text-xs uppercase tracking-wide">
+                            <th scope="col" class="text-left px-5 py-3.5 font-semibold">Ngôn ngữ</th>
+                            <th scope="col" class="text-left px-5 py-3.5 font-semibold">Mức giá tham khảo <span class="text-gray-400 font-normal normal-case">(minh họa *)</span></th>
+                            <th scope="col" class="text-left px-5 py-3.5 font-semibold">Tìm phiên dịch</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% set price_data = {
+                            'Tiếng Anh': '300.000 – 800.000 đ/buổi',
+                            'Tiếng Nhật': '500.000 – 1.500.000 đ/buổi',
+                            'Tiếng Hàn': '500.000 – 1.200.000 đ/buổi',
+                            'Tiếng Trung': '400.000 – 1.000.000 đ/buổi',
+                            'Tiếng Pháp': '500.000 – 1.200.000 đ/buổi',
+                            'Tiếng Đức': '500.000 – 1.300.000 đ/buổi',
+                            'Tiếng Nga': '600.000 – 1.500.000 đ/buổi',
+                            'Tiếng Thái': '400.000 – 1.000.000 đ/buổi',
+                            'Tiếng Bồ Đào Nha': '600.000 – 1.500.000 đ/buổi',
+                            'Tiếng Tây Ban Nha': '500.000 – 1.200.000 đ/buổi'
+                        } %}
+                        {% for lang, flag, cert in LANGUAGES %}
+                        <tr class="hover:bg-blue-50/40 transition-colors">
+                            <td class="px-5 py-3.5">
+                                <span class="mr-2 text-base">{{ flag }}</span>
+                                <span class="font-medium text-gray-800">{{ lang }}</span>
+                            </td>
+                            <td class="px-5 py-3.5 text-gray-600 tabular-nums">
+                                {{ price_data.get(lang, 'Liên hệ để báo giá') }}
+                            </td>
+                            <td class="px-5 py-3.5">
+                                <a href="{{ url_for('translator_list', lang=lang) }}"
+                                   class="inline-flex items-center gap-1 text-primary font-medium text-xs hover:underline"
+                                   aria-label="Tìm phiên dịch viên {{ lang }}">
+                                    Tìm ngay
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">* Mức giá mang tính tham khảo, có thể thay đổi tùy theo yêu cầu, kinh nghiệm và thỏa thuận với phiên dịch viên.</p>
+        </div>
+
+        <!-- ── SECTION 2: PHIÊN DỊCH VIÊN NỔI BẬT ── -->
+        <div id="phien-dich-vien-noi-bat" class="mb-16 scroll-mt-20">
+            <div class="flex items-end justify-between mb-5">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900">Phiên dịch viên nổi bật</h2>
+                    <p class="text-gray-500 text-sm mt-1">Khám phá những phiên dịch viên được đánh giá cao và phù hợp với nhiều nhu cầu khác nhau.</p>
+                </div>
+                <a href="{{ url_for('translator_list') }}" class="hidden sm:block text-sm text-primary font-medium hover:underline shrink-0 ml-4">
+                    Xem tất cả →
+                </a>
+            </div>
+
+            {% if top_translators %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                {% for profile in top_translators[:4] %}
+                <article class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold shrink-0" aria-hidden="true">
+                                {{ profile.user.name[0]|upper }}
+                            </div>
+                            {% if profile.is_verified %}
+                            <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">✓ Verified</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="font-bold text-gray-800 text-sm mb-0.5">{{ profile.user.name }}</h3>
+                        <p class="text-xs text-gray-500 mb-2 line-clamp-1">{{ profile.title or 'Phiên dịch viên chuyên nghiệp' }}</p>
+                        <div class="flex items-center gap-1 text-yellow-500 text-sm mb-3" aria-label="Đánh giá {{ profile.rating }} sao">
+                            <span aria-hidden="true">★</span>
+                            <span class="font-bold text-gray-800 text-xs">{{ profile.rating }}</span>
+                            <span class="text-gray-400 text-xs">({{ profile.total_reviews }} đánh giá)</span>
+                        </div>
+                        {% if profile.languages %}
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            {% for lang_item in profile.languages.split(',')[:2] %}
+                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{{ lang_item.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if profile.badges %}
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            {% for b in profile.badges.split(',')[:1] %}
+                            <span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">{{ b.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if profile.services %}
+                        <p class="text-xs text-gray-400">
+                            Từ <span class="font-semibold text-gray-700">{{ '{:,.0f}'.format(profile.services[0].basic_price) }} đ</span>
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="border-t border-gray-100 px-5 py-3">
+                        <a href="{{ url_for('translator_profile', profile_id=profile.id) }}"
+                           class="block text-center text-xs font-medium text-primary border border-primary rounded-lg py-2 hover:bg-blue-50 transition"
+                           aria-label="Xem hồ sơ của {{ profile.user.name }}">
+                            Xem hồ sơ
+                        </a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Fallback mock khi chưa có data -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {% set mock_translators = [
+                    {'name': 'Nguyễn Minh Anh', 'title': 'Phiên dịch Nhật – Việt · Hội nghị & Doanh nghiệp', 'langs': 'Tiếng Nhật, Tiếng Anh', 'rating': '4.9', 'reviews': '47', 'badge': 'Rising Star', 'price': '700.000'},
+                    {'name': 'Trần Thị Hà', 'title': 'Phiên dịch Hàn – Việt · Thương mại & Sự kiện', 'langs': 'Tiếng Hàn, Tiếng Anh', 'rating': '4.8', 'reviews': '32', 'badge': 'Top Rated', 'price': '600.000'},
+                    {'name': 'Lê Hoàng Nam', 'title': 'Phiên dịch Anh – Việt · Pháp lý & Kỹ thuật', 'langs': 'Tiếng Anh, Tiếng Pháp', 'rating': '4.7', 'reviews': '28', 'badge': 'Verified', 'price': '500.000'}
+                ] %}
+                {% for t in mock_translators %}
+                <article class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold" aria-hidden="true">
+                                {{ t.name[0] }}
+                            </div>
+                            <span class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full font-medium">{{ t.badge }}</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800 text-sm mb-0.5">{{ t.name }}</h3>
+                        <p class="text-xs text-gray-500 mb-2 line-clamp-2">{{ t.title }}</p>
+                        <div class="flex items-center gap-1 text-yellow-500 text-sm mb-3" aria-label="Đánh giá {{ t.rating }} sao">
+                            <span aria-hidden="true">★</span>
+                            <span class="font-bold text-gray-800 text-xs">{{ t.rating }}</span>
+                            <span class="text-gray-400 text-xs">({{ t.reviews }})</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            {% for l in t.langs.split(', ') %}
+                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{{ l }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="text-xs text-gray-400">Từ <span class="font-semibold text-gray-700">{{ t.price }} đ</span>/buổi <span class="text-gray-300 text-xs">[Minh họa]</span></p>
+                    </div>
+                    <div class="border-t border-gray-100 px-5 py-3">
+                        <a href="{{ url_for('translator_list') }}" class="block text-center text-xs font-medium text-primary border border-primary rounded-lg py-2 hover:bg-blue-50 transition">
+                            Xem phiên dịch viên
+                        </a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="mt-6 text-center sm:hidden">
+                <a href="{{ url_for('translator_list') }}" class="inline-flex items-center gap-1 text-sm text-primary font-medium hover:underline">
+                    Xem tất cả phiên dịch viên →
+                </a>
+            </div>
+        </div>
+
+        <!-- ── SECTION 3: PORTFOLIO MẪU ── -->
+        <div id="mau-portfolio-phien-dich" class="mb-16 scroll-mt-20">
+            <div class="mb-5">
+                <h2 class="text-xl font-bold text-gray-900">Mẫu portfolio phiên dịch thực tế</h2>
+                <p class="text-gray-500 text-sm mt-1">Tham khảo kinh nghiệm, chuyên môn và những dự án mà phiên dịch viên đã thực hiện.</p>
+            </div>
+
+            <!-- Portfolio grid — mock data có nhãn rõ -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {% set portfolios = [
+                    {
+                        'title': 'Phiên dịch hội thảo doanh nghiệp Nhật – Việt',
+                        'langs': 'Tiếng Nhật → Tiếng Việt',
+                        'field': 'Doanh nghiệp · Hội nghị',
+                        'desc': 'Phiên dịch cabin và tháp tùng cho chuỗi hội thảo xúc tiến thương mại với đối tác Nhật Bản, quy mô 200 người tham dự.',
+                        'by': 'Nguyễn Minh Anh',
+                        'emoji': '🇯🇵'
+                    },
+                    {
+                        'title': 'Phiên dịch pháp lý hợp đồng Hàn – Việt',
+                        'langs': 'Tiếng Hàn → Tiếng Việt',
+                        'field': 'Pháp lý · Thương mại',
+                        'desc': 'Hỗ trợ phiên dịch trực tiếp trong buổi đàm phán và ký kết hợp đồng đầu tư giữa doanh nghiệp Hàn Quốc và đối tác Việt.',
+                        'by': 'Trần Thị Hà',
+                        'emoji': '🇰🇷'
+                    },
+                    {
+                        'title': 'Phiên dịch kỹ thuật triển lãm công nghệ',
+                        'langs': 'Tiếng Anh ↔ Tiếng Việt',
+                        'field': 'Kỹ thuật · Công nghệ',
+                        'desc': 'Phiên dịch cabin tại triển lãm công nghệ quốc tế, hỗ trợ thuyết trình sản phẩm và buổi Q&A kỹ thuật.',
+                        'by': 'Lê Hoàng Nam',
+                        'emoji': '🇬🇧'
+                    }
+                ] %}
+
+                {% for p in portfolios %}
+                <article class="card-hover bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col">
+                    <!-- Visual header -->
+                    <div class="bg-gradient-to-br from-slate-100 to-blue-50 px-6 py-8 flex items-center gap-4">
+                        <span class="text-4xl" role="img" aria-label="{{ p.langs }}">{{ p.emoji }}</span>
+                        <div>
+                            <span class="text-xs font-semibold text-primary bg-blue-50 px-2 py-0.5 rounded-full">{{ p.field }}</span>
+                            <p class="text-xs text-gray-500 mt-1.5">{{ p.langs }}</p>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-gray-800 text-sm mb-2 leading-snug">{{ p.title }}</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-grow">{{ p.desc }}</p>
+                        <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+                            <p class="text-xs text-gray-400">
+                                bởi <span class="font-medium text-gray-600">{{ p.by }}</span>
+                            </p>
+                            <span class="text-xs text-gray-300 italic">[Minh họa]</span>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            <p class="text-xs text-gray-400 mt-3">* Các dự án trên là ví dụ minh họa. Hồ sơ và portfolio thực tế có thể xem trên trang phiên dịch viên.</p>
+            <div class="mt-5 text-center">
+                <a href="{{ url_for('translator_list') }}" class="inline-flex items-center gap-2 text-sm text-primary font-medium border border-primary/30 bg-white px-5 py-2.5 rounded-lg hover:bg-blue-50 transition">
+                    Khám phá hồ sơ phiên dịch viên →
+                </a>
+            </div>
+        </div>
+
+        <!-- ── SECTION 4: VÌ SAO CHỌN VIETTRANSLATE ── -->
+        <div id="vi-sao-chon-viettranslate" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-8">
+                <h2 class="text-xl font-bold text-gray-900">Vì sao chọn VietTranslate?</h2>
+                <p class="text-gray-500 text-sm mt-1">Nền tảng kết nối minh bạch cho cả người thuê và phiên dịch viên.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {% set reasons = [
+                    {
+                        'num': '01',
+                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>',
+                        'title': 'Phiên dịch viên có hồ sơ rõ ràng',
+                        'desc': 'Kết nối với đội ngũ phiên dịch viên có chuyên môn, kinh nghiệm và đánh giá từ người dùng thực tế.'
+                    },
+                    {
+                        'num': '02',
+                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>',
+                        'title': 'Thông tin minh bạch',
+                        'desc': 'Xem trước kinh nghiệm, chuyên môn, đánh giá và mức giá trước khi đưa ra quyết định.'
+                    },
+                    {
+                        'num': '03',
+                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>',
+                        'title': 'Đa dạng ngôn ngữ',
+                        'desc': 'Tìm kiếm phiên dịch viên cho nhiều ngôn ngữ và lĩnh vực khác nhau, từ hội nghị đến pháp lý và kỹ thuật.'
+                    },
+                    {
+                        'num': '04',
+                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
+                        'title': 'Quy trình làm việc rõ ràng',
+                        'desc': 'Hỗ trợ người thuê và phiên dịch viên trong toàn bộ quá trình từ trao đổi yêu cầu đến hoàn thành hợp tác.'
+                    },
+                    {
+                        'num': '05',
+                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>',
+                        'title': 'Cơ hội việc làm phiên dịch',
+                        'desc': 'Phiên dịch viên có thể chủ động khám phá và tiếp cận những công việc phù hợp với ngôn ngữ và chuyên môn.'
+                    },
+                    {
+                        'num': '06',
+                        'icon': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
+                        'title': 'Kết nối nhanh chóng',
+                        'desc': 'Tìm đúng người hoặc đúng cơ hội mà không cần qua nhiều bước trung gian phức tạp.'
+                    }
+                ] %}
+
+                {% for r in reasons %}
+                <div class="bg-white rounded-xl border border-gray-200 p-6 flex gap-4">
+                    <div class="shrink-0">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                {{ r.icon }}
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-300 mb-1">{{ r.num }}</p>
+                        <h3 class="font-bold text-gray-800 text-sm mb-1.5">{{ r.title }}</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">{{ r.desc }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ── SECTION 5: HƯỚNG DẪN 6 BƯỚC ── -->
+        <div id="huong-dan-thue-phien-dich" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-xl font-bold text-gray-900">Hướng dẫn thuê phiên dịch trong 6 bước</h2>
+                <p class="text-gray-500 text-sm mt-1">Từ xác định nhu cầu đến hoàn thành — đơn giản, rõ ràng và nhanh chóng.</p>
+            </div>
+
+            {% set steps = [
+                {'num': '01', 'title': 'Xác định nhu cầu', 'desc': 'Chọn ngôn ngữ, loại hình phiên dịch và các yêu cầu về thời gian, địa điểm.'},
+                {'num': '02', 'title': 'Tìm phiên dịch viên', 'desc': 'Khám phá danh sách phiên dịch viên theo ngôn ngữ và chuyên môn.'},
+                {'num': '03', 'title': 'So sánh hồ sơ', 'desc': 'Xem kinh nghiệm, đánh giá, portfolio và mức giá để chọn người phù hợp.'},
+                {'num': '04', 'title': 'Gửi yêu cầu', 'desc': 'Trao đổi chi tiết về công việc, thời gian và ngân sách với phiên dịch viên.'},
+                {'num': '05', 'title': 'Xác nhận hợp tác', 'desc': 'Thống nhất điều kiện và tiến hành thuê thông qua nền tảng.'},
+                {'num': '06', 'title': 'Hoàn thành & đánh giá', 'desc': 'Nhận kết quả, phê duyệt công việc và để lại đánh giá cho cộng đồng.'}
+            ] %}
+
+            <!-- Desktop: horizontal stepper -->
+            <div class="hidden md:block">
+                <div class="relative">
+                    <!-- Connector line -->
+                    <div class="absolute top-8 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent mx-20" aria-hidden="true"></div>
+                    <div class="grid grid-cols-6 gap-3">
+                        {% for s in steps %}
+                        <div class="text-center relative">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-lg font-bold shadow-sm relative z-10
+                                {% if loop.index <= 3 %}bg-primary text-white{% else %}bg-white text-primary border-2 border-primary/30{% endif %}">
+                                {{ s.num }}
+                            </div>
+                            <h3 class="font-bold text-gray-800 text-xs mb-1.5 leading-snug">{{ s.title }}</h3>
+                            <p class="text-xs text-gray-500 leading-relaxed">{{ s.desc }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile: vertical stepper -->
+            <div class="md:hidden space-y-4">
+                {% for s in steps %}
+                <div class="flex gap-4">
+                    <div class="flex flex-col items-center shrink-0">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold
+                            {% if loop.index <= 3 %}bg-primary text-white{% else %}bg-white text-primary border-2 border-primary/30{% endif %}">
+                            {{ s.num }}
+                        </div>
+                        {% if not loop.last %}
+                        <div class="w-px flex-grow bg-gray-200 mt-2" aria-hidden="true"></div>
+                        {% endif %}
+                    </div>
+                    <div class="pb-5">
+                        <h3 class="font-bold text-gray-800 text-sm mb-1">{{ s.title }}</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">{{ s.desc }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-10 text-center">
+                <a href="{{ url_for('translator_list') }}"
+                   class="inline-flex items-center gap-2 bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition shadow-sm">
+                    Tìm phiên dịch viên ngay
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- ── SECTION 6: GÓC PHIÊN DỊCH VIÊN ── -->
+        <div id="goc-phien-dich-vien" class="scroll-mt-20">
+            <!-- Section accent background -->
+            <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-8 sm:p-10 border border-indigo-100">
+                <div class="text-center mb-8">
+                    <span class="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-3">Dành cho phiên dịch viên</span>
+                    <h2 class="text-xl font-bold text-gray-900">Góc dành cho phiên dịch viên</h2>
+                    <p class="text-gray-500 text-sm mt-1 max-w-lg mx-auto">Khám phá cơ hội việc làm phiên dịch, xây dựng hồ sơ chuyên nghiệp và phát triển sự nghiệp.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {% set translator_cards = [
+                        {
+                            'emoji': '💼',
+                            'title': 'Tìm việc phiên dịch',
+                            'desc': 'Tìm kiếm công việc phù hợp với ngôn ngữ và chuyên môn của bạn.',
+                            'cta': 'Xem việc làm',
+                            'route': 'job_list',
+                            'color': 'blue'
+                        },
+                        {
+                            'emoji': '👤',
+                            'title': 'Xây dựng hồ sơ nổi bật',
+                            'desc': 'Tạo profile chuyên nghiệp để khách hàng dễ dàng tìm thấy bạn.',
+                            'cta': 'Tạo hồ sơ',
+                            'route': 'register',
+                            'color': 'indigo'
+                        },
+                        {
+                            'emoji': '📋',
+                            'title': 'Portfolio phiên dịch',
+                            'desc': 'Giới thiệu kinh nghiệm, dự án đã thực hiện và thế mạnh chuyên môn.',
+                            'cta': 'Cập nhật portfolio',
+                            'route': 'account_profile',
+                            'color': 'violet'
+                        },
+                        {
+                            'emoji': '📈',
+                            'title': 'Phát triển thu nhập',
+                            'desc': 'Khám phá cách tìm kiếm và nhận những công việc phù hợp với kỹ năng.',
+                            'cta': 'Khám phá',
+                            'route': 'job_list',
+                            'color': 'purple'
+                        }
+                    ] %}
+
+                    {% for card in translator_cards %}
+                    <a href="{{ url_for(card.route) }}"
+                       class="group bg-white rounded-xl border border-white/80 p-5 flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+                       aria-label="{{ card.title }}">
+                        <span class="text-2xl mb-3 block" role="img" aria-hidden="true">{{ card.emoji }}</span>
+                        <h3 class="font-bold text-gray-800 text-sm mb-2">{{ card.title }}</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-grow">{{ card.desc }}</p>
+                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-primary group-hover:gap-2 transition-all">
+                            {{ card.cta }}
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-8 text-center">
+                    <a href="{{ url_for('register') }}"
+                       class="inline-flex items-center gap-2 bg-primary text-white font-semibold px-7 py-3 rounded-xl hover:bg-blue-700 transition shadow-sm text-sm">
+                        Đăng ký làm phiên dịch viên — Miễn phí 🚀
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 {% endblock %}
 {% block scripts %}
 <script>
